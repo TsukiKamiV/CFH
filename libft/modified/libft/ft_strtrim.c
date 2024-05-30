@@ -21,7 +21,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 
 	if (!s1 || !set)
 		return (NULL);
-	ret = NULL;
 	s1_len = ft_strlen(s1);
 	start = (unsigned char *)s1;
 	end = (unsigned char *)s1 + s1_len - 1;
@@ -30,12 +29,13 @@ char	*ft_strtrim(char const *s1, char const *set)
 	while (end >= start && is_in_set(*end, set))
 		end--;
 	ret_len = end - start + 1;
-	ft_memcpy(ret, start, ret_len);
-	if (ret == NULL)
+	ret = (char *)malloc((ret_len + 1) * sizeof(char));
+	if (!ret)
 		return (NULL);
+	ft_strlcpy(ret, (char const *)start, ret_len);
 	return (ret);
 }
-
+/*
 #include <stdio.h>
 int main()
 {
@@ -44,4 +44,4 @@ int main()
 	char *res = ft_strtrim(s, set);
 	printf("%s\n", res);
 	return (0);
-}
+}*/
