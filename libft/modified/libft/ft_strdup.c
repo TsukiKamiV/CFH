@@ -10,15 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strdup.h"
-#include "ft_strlen.h"
-
+#include "libft.h"
 
 char	*ft_strdup(const char *s)
 {
 	char	*dest;
 	int		i;
-	int		len;
+	size_t		len;
 
 	len = ft_strlen(s);
 	dest = (char *)malloc ((len + 1) * sizeof(char));
