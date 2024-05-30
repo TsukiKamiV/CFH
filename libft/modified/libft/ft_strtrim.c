@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <unistd.h>
+
 
 int	is_in_set(char c, char const *set)
 {
@@ -25,8 +26,8 @@ int	is_in_set(char c, char const *set)
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char const	*start;
-	char const	*end;
+	unsigned char	*start;
+	unsigned char	*end;
 	char	*ret;
 	size_t	s1_len;
 	size_t	set_len;	
@@ -38,10 +39,10 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = (unsigned char *)s1 + s1_len - 1;
 	while (*start && is_in_set(*start, set))
 		start++;
-	while (end >= start && is_in_set(*end, set)
+	while (end >= start && is_in_set(*end, set))
 		end--;
 	ret_len = end - start + 1;
-	ret = strdup(start, len);
+	ret = ft_strdup(start);
 	if (ret == NULL)
 		return (NULL);
 	return (ret);
