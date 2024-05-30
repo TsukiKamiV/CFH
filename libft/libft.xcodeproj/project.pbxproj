@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		095CF4C12C0740C200FB2879 /* ft_strtrim.c in Sources */ = {isa = PBXBuildFile; fileRef = 095CF4C02C0740C200FB2879 /* ft_strtrim.c */; };
 		09B621452C039A6E00DDD419 /* ft_strmapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 09B621442C039A6E00DDD419 /* ft_strmapi.c */; };
 		09B621482C039B6000DDD419 /* ft_toggle_case.c in Sources */ = {isa = PBXBuildFile; fileRef = 09B621472C039B6000DDD419 /* ft_toggle_case.c */; };
 		09B6214A2C039E9D00DDD419 /* ft_strlen.c in Sources */ = {isa = PBXBuildFile; fileRef = 09B621492C039E9D00DDD419 /* ft_strlen.c */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		095CF4C02C0740C200FB2879 /* ft_strtrim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ft_strtrim.c; sourceTree = "<group>"; };
 		09B621422C039A4800DDD419 /* ft_strlen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ft_strlen.h; sourceTree = "<group>"; };
 		09B621432C039A5E00DDD419 /* ft_strmapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft_strmapi.h; sourceTree = "<group>"; };
 		09B621442C039A6E00DDD419 /* ft_strmapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ft_strmapi.c; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				09B6216A2C061EA000DDD419 /* ft_lstdelone.h */,
 				09B6216B2C061EA000DDD419 /* ft_lstdelone.c */,
 				09B6216D2C0621F400DDD419 /* ft_lstclear.h */,
+				095CF4C02C0740C200FB2879 /* ft_strtrim.c */,
 				09B6216E2C0621F400DDD419 /* ft_lstclear.c */,
 				09B621702C0625C800DDD419 /* ft_lstiter.h */,
 				09B621712C0625C800DDD419 /* ft_lstiter.c */,
@@ -231,6 +234,7 @@
 				09B6215C2C05E58C00DDD419 /* ft_lstnew.c in Sources */,
 				09B621452C039A6E00DDD419 /* ft_strmapi.c in Sources */,
 				09F3ED6B2C00D31700781AD6 /* ft_memcpy.c in Sources */,
+				095CF4C12C0740C200FB2879 /* ft_strtrim.c in Sources */,
 				09B621722C0625C800DDD419 /* ft_lstiter.c in Sources */,
 				09B6216C2C061EA000DDD419 /* ft_lstdelone.c in Sources */,
 				09B621502C04929400DDD419 /* ft_putchar_fd.c in Sources */,
