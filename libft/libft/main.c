@@ -15,10 +15,12 @@
 #include "ft_itoa.h"
 #include "ft_strmapi.h"
 #include "ft_toggle_case.h"
+#include "ft_strtrim.h"
 
 void test_split(void);
 void test_itoa(void);
 void test_strmapi(void);
+void test_strtrim(void);
 
 int main()
 {
@@ -32,7 +34,10 @@ int main()
     //test_itoa();
     
     //test: strmapi
-    test_strmapi();
+    //test_strmapi();
+    
+    //test: strtrim
+    test_strtrim();
     
     return (0);
 }
@@ -93,4 +98,13 @@ void test_strmapi(void)
         printf("Modified: %s\n", result);
         free(result);
     }
+}
+
+
+void  test_strtrim()
+{
+    char const *s = "Hello world Hello";
+    char const *set = "Hello";
+    char *res = ft_strtrim(s, set);
+    printf("%s\n", res);
 }

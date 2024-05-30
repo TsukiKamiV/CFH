@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		095CF4C52C08B0CC00FB2879 /* ft_strdup.c in Sources */ = {isa = PBXBuildFile; fileRef = 095CF4C42C08B0CC00FB2879 /* ft_strdup.c */; };
 		095CF4CA2C08B5B100FB2879 /* ft_strtrim.c in Sources */ = {isa = PBXBuildFile; fileRef = 095CF4C92C08B5B100FB2879 /* ft_strtrim.c */; };
+		095CF4CD2C08C4CF00FB2879 /* ft_strlcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = 095CF4CC2C08C4CF00FB2879 /* ft_strlcpy.c */; };
 		09B621452C039A6E00DDD419 /* ft_strmapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 09B621442C039A6E00DDD419 /* ft_strmapi.c */; };
 		09B621482C039B6000DDD419 /* ft_toggle_case.c in Sources */ = {isa = PBXBuildFile; fileRef = 09B621472C039B6000DDD419 /* ft_toggle_case.c */; };
 		09B6214A2C039E9D00DDD419 /* ft_strlen.c in Sources */ = {isa = PBXBuildFile; fileRef = 09B621492C039E9D00DDD419 /* ft_strlen.c */; };
@@ -49,6 +50,8 @@
 		095CF4C62C08B15600FB2879 /* ft_strdup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ft_strdup.h; sourceTree = "<group>"; };
 		095CF4C82C08B5B100FB2879 /* ft_strtrim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ft_strtrim.h; sourceTree = "<group>"; };
 		095CF4C92C08B5B100FB2879 /* ft_strtrim.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_strtrim.c; sourceTree = "<group>"; };
+		095CF4CB2C08C4CF00FB2879 /* ft_strlcpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ft_strlcpy.h; sourceTree = "<group>"; };
+		095CF4CC2C08C4CF00FB2879 /* ft_strlcpy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_strlcpy.c; sourceTree = "<group>"; };
 		09B621422C039A4800DDD419 /* ft_strlen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ft_strlen.h; sourceTree = "<group>"; };
 		09B621432C039A5E00DDD419 /* ft_strmapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft_strmapi.h; sourceTree = "<group>"; };
 		09B621442C039A6E00DDD419 /* ft_strmapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ft_strmapi.c; sourceTree = "<group>"; };
@@ -154,6 +157,8 @@
 				095CF4C62C08B15600FB2879 /* ft_strdup.h */,
 				09F3ED6E2C00DE7D00781AD6 /* ft_split.h */,
 				09B6214B2C04851C00DDD419 /* ft_striteri.h */,
+				095CF4CB2C08C4CF00FB2879 /* ft_strlcpy.h */,
+				095CF4CC2C08C4CF00FB2879 /* ft_strlcpy.c */,
 				09B6214E2C04929400DDD419 /* ft_putchar_fd.h */,
 				09B6214F2C04929400DDD419 /* ft_putchar_fd.c */,
 				09B621512C04A4C200DDD419 /* ft_putstr_fd.h */,
@@ -247,6 +252,7 @@
 				09B6216C2C061EA000DDD419 /* ft_lstdelone.c in Sources */,
 				09B621502C04929400DDD419 /* ft_putchar_fd.c in Sources */,
 				09B621532C04A4C200DDD419 /* ft_putstr_fd.c in Sources */,
+				095CF4CD2C08C4CF00FB2879 /* ft_strlcpy.c in Sources */,
 				09B621482C039B6000DDD419 /* ft_toggle_case.c in Sources */,
 				09B621562C04A59500DDD419 /* ft_putendl_fd.c in Sources */,
 				09B6214D2C04851C00DDD419 /* ft_striteri.c in Sources */,

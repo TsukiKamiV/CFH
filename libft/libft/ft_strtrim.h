@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "ft_strdup.h"
+#include "ft_strlcpy.h"
 #include "ft_strlen.h"
 
 char    *ft_strtrim(char const *s1, char const *set);
