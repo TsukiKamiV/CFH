@@ -1,80 +1,8 @@
-ft_isalpha:    [FAILED] 
-[fail]: your isalpha just doesn't work, REALLY ?!
-Test code:
-	int i;
-
-	i = -1;
-	while (i < 530)
-	{
-		if (!!ft_isalpha(i) != !!((*__ctype_b_loc ())[(int) ((i))] & (unsigned short int) _ISalpha))
-			exit(TEST_FAILED);
-		i++;
-	}
-	exit(TEST_SUCCESS);
-
-Diffs:
-
-
-ft_isdigit:    [FAILED] 
-[fail]: your isdigit just doesn't work, REALLY ?!
-Test code:
-	int i;
-
-	i = -1;
-	while (i < 530)
-	{
-		if (!!ft_isdigit(i) != !!((*__ctype_b_loc ())[(int) ((i))] & (unsigned short int) _ISdigit))
-			exit(TEST_FAILED);
-		i++;
-	}
-	exit(TEST_SUCCESS);
-
-Diffs:
-
-
+ft_isalpha:    [OK] 
+ft_isdigit:    [OK] 
 ft_isalnum:    [OK] 
-ft_isascii:    [FAILED] 
-[fail]: your isascii just doesn't work, REALLY ?!
-Test code:
-	int i;
-
-	i = -1;
-	while (i < 530)
-	{
-		if (!!ft_isascii(i) != !!(((i) & ~0x7f) == 0))
-		{
-			exit(TEST_FAILED);
-		}
-		i++;
-	}
-	exit(TEST_SUCCESS);
-
-Diffs:
-     isascii: |0|
-  ft_isascii: |1|
-param: (256)
-
-ft_isprint:    [FAILED] 
-[fail]: your isprint just doesn't work, REALLY ?!
-Test code:
-	int i;
-
-	i = -1;
-	while (i < 530)
-	{
-		if (!!ft_isprint(i) != !!((*__ctype_b_loc ())[(int) ((i))] & (unsigned short int) _ISprint))
-		{
-			exit(TEST_FAILED);
-		}
-		i++;
-	}
-	exit(TEST_SUCCESS);
-
-Diffs:
-     isprint: |0|
-  ft_isprint: |1|
-param: (288)
-
+ft_isascii:    [OK] 
+ft_isprint:    [OK] 
 ft_strlen:     [OK] [OK] [OK] [OK] [OK] [OK] [OK] [OK] [OK] 
 ft_memset:     [OK] [OK] [OK] [OK] [OK] [OK] [OK] 
 ft_bzero:      [OK] [OK] [OK] [OK] 
