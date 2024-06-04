@@ -1,0 +1,58 @@
+##==##==##&&##==##==##test_split.out
+For [0;36mft_split[0m, in [1;37m/home/luxu/francinette/tests/libft/fsoares/test_split.c[0m:
+
+[1;31mError[0m in test 1: [0;36mft_split("hello!", 32:' '):
+[0;35mmalloc [0mprotection check for 1th malloc:
+[0m: [1;31mSegmentation fault![0m
+##==##==##&&##==##==##test_lstmap.out
+For [0;36mft_lstmap[0m, in [1;37m/home/luxu/francinette/tests/libft/fsoares/test_lstmap.c[0m:
+
+[1;31mError[0m in test 2: [0;36mft_lstmap(<list: {node: "hello!"}->(null)>, [s => __strlen(s)], [x => free(x)])[0m NULL check for 1th malloc[0m: 
+Memory leak: 0x561dee24f9f0 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling [1;35mdel[0m on the content when a new list node allocation fails.
+
+[1;31mError[0m in test 3: [0;36mft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)])[0m NULL check for 1th malloc[0m: 
+Memory leak: 0x561dee24fe70 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling [1;35mdel[0m on the content when a new list node allocation fails.
+
+[1;31mError[0m in test 3: [0;36mft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)])[0m NULL check for 3th malloc[0m: 
+Memory leak: 0x561dee24fef0 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24ff20 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fec0 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling [1;35mdel[0m on the content when a new list node allocation fails.
+
+[1;31mError[0m in test 3: [0;36mft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)])[0m NULL check for 5th malloc[0m: 
+Memory leak: 0x561dee24ffc0 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fff0 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24ff70 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24ffa0 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fe20 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling [1;35mdel[0m on the content when a new list node allocation fails.
+
+[1;31mError[0m in test 3: [0;36mft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)])[0m NULL check for 7th malloc[0m: 
+Memory leak: 0x561dee2514e0 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee251510 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250040 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250090 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250010 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250070 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fd80 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling [1;35mdel[0m on the content when a new list node allocation fails.
+
+[1;31mError[0m in test 3: [0;36mft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)])[0m NULL check for 9th malloc[0m: 
+Memory leak: 0x561dee2516a0 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling [1;35mdel[0m on the content when a new list node allocation fails.
+
+

@@ -1,0 +1,56 @@
+For ft_split, in /home/luxu/francinette/tests/libft/fsoares/test_split.c:
+
+Error in test 1: ft_split("hello!", 32:' '):
+malloc protection check for 1th malloc:
+: Segmentation fault!
+For ft_lstmap, in /home/luxu/francinette/tests/libft/fsoares/test_lstmap.c:
+
+Error in test 2: ft_lstmap(<list: {node: "hello!"}->(null)>, [s => __strlen(s)], [x => free(x)]) NULL check for 1th malloc: 
+Memory leak: 0x561dee24f9f0 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling del on the content when a new list node allocation fails.
+
+Error in test 3: ft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)]) NULL check for 1th malloc: 
+Memory leak: 0x561dee24fe70 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling del on the content when a new list node allocation fails.
+
+Error in test 3: ft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)]) NULL check for 3th malloc: 
+Memory leak: 0x561dee24fef0 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24ff20 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fec0 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling del on the content when a new list node allocation fails.
+
+Error in test 3: ft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)]) NULL check for 5th malloc: 
+Memory leak: 0x561dee24ffc0 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fff0 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24ff70 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24ffa0 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fe20 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling del on the content when a new list node allocation fails.
+
+Error in test 3: ft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)]) NULL check for 7th malloc: 
+Memory leak: 0x561dee2514e0 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee251510 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250040 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250090 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250010 - 30 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee250070 - 16 bytes
+You failed to free the memory allocated at:
+Memory leak: 0x561dee24fd80 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling del on the content when a new list node allocation fails.
+
+Error in test 3: ft_lstmap(<list: {node: "one"}->{node: "two"}->{node: "three"}->{node: "four"}->{node: "five"}->(null)>, [s => __strlen(s)], [x => free(x)]) NULL check for 9th malloc: 
+Memory leak: 0x561dee2516a0 - 30 bytes
+You failed to free the memory allocated at:Most likely you are not calling del on the content when a new list node allocation fails.
+
+
