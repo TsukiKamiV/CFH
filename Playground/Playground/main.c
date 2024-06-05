@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-char    *myFunc(const char *s, char c);
+char    **myFunc(const char *s, char c);
 char    **ft_allocation(size_t n);
 size_t  ft_count_words(char const *s, char c);
 char    *ft_substr(char const *s, unsigned int start, size_t len);
@@ -23,13 +23,14 @@ int main()
 {
     //myFunc_memchr(((void *)0), '\0', 0x20);
     //myFunc(((void *)0));
-    char *s = "      split       this for   me  !       ";
-    
-    char **result = myFunc(s, ' ');
-    if (!result)
-        printf("Success");
-    else
-        printf("Error");
+    char *s = "^^^1^^2a,^^^^3^^^^--h^^^^";
+    char **result = myFunc(s, '^');
+    while (*result)
+   {
+       printf("%s\n", *result);
+       free (*result);
+       result++;
+   }
 }
 
 size_t  ft_strlen(const char *s)
@@ -86,16 +87,6 @@ size_t  ft_count_words(char const *s, char c)
     return (count);
 }
 
-char    **ft_allocation(size_t n)
-{
-    char    **ret;
-    
-    ret = (char **)malloc((n + 1) * sizeof (char *));
-    if (!ret)
-        return (NULL);
-    return (ret);
-}
-
 char    *ft_substr(char const *s, unsigned int start, size_t len)
 {
     size_t  s_len;
@@ -115,14 +106,38 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
     ret_len = s_len - start;
     if (ret_len > len)
         ret_len = len;
-    ret = (char *)malloc((ret_len + 1) * sizeof(char));
+    ret = (char *)malloc((ret_len + 1) * sizeof(char)); //memory leak
     if (!ret)
         return (NULL);
     ft_strlcpy(ret, s + start, ret_len + 1);
     return (ret);
 }
 
-char *myFunc(const char *s, char c) //split
+char    **ft_alloc_arr(size_t n)
+{
+    char    **ret;
+    
+    ret = (char **)malloc((n + 1) * sizeof (char *));
+    if (!ret)
+        return (NULL);
+    return (ret);
+}
+
+size_t  ft_skip_set(size_t start, char const *s, char c)
+{
+    while (s[start] == c && s[start])
+        start++;
+    return (start);
+}
+
+size_t  ft_cut_words(size_t end, char const *s, char c)
+{
+    while (s[end] != c && s[end])
+        end++;
+    return (end);
+}
+
+char    **myFunc(char const *s, char c)
 {
     char    **ret;
     size_t  words;
@@ -131,21 +146,22 @@ char *myFunc(const char *s, char c) //split
     size_t  end;
     
     words = ft_count_words(s, c);
-    ret = ft_allocation(words);
+    ret = ft_alloc_arr(words);
     if (!ret)
         return (NULL);
     index = 0;
     start = 0;
     while (index < words)
     {
-        while (s[start] == (unsigned char)c && s[start])
-            start++;
+        start = ft_skip_set(start, s, c);
         end = start;
-        while (s[end] != c && s[end])
-            end++;
+        end = ft_cut_words(end, s, c);
         ret[index] = ft_substr(s, start, end - start);
         if (!ret[index])
+        {
+            free (ret);
             return (NULL);
+        }
         start = end;
         index++;
     }

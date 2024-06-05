@@ -37,7 +37,7 @@ size_t	ft_count_words(char const *s, char c)
 	return (count);
 }
 
-char	**ft_allocation(size_t n)
+char	**ft_alloc_arr(size_t n)
 {
 	char	**ret;
 
@@ -45,6 +45,20 @@ char	**ft_allocation(size_t n)
 	if (!ret)
 		return (NULL);
 	return (ret);
+}
+
+size_t	ft_skip_set(size_t start, char const *s, char c)
+{
+	while (s[start] == c && s[start])
+		start++;
+	return (start);
+}
+
+size_t	ft_cut_words(size_t end, char const *s, char c)
+{
+	while (s[end] != c && s[end])
+		end++;
+	return (end);
 }
 
 char	**ft_split(char const *s, char c)
@@ -56,21 +70,22 @@ char	**ft_split(char const *s, char c)
 	size_t	end;
 
 	words = ft_count_words(s, c);
-	ret = ft_allocation(words);
-	if (!ret)
+	ret = ft_alloc_arr(words);
+	if (!ret || !s)
 		return (NULL);
 	index = 0;
 	start = 0;
 	while (index < words)
 	{
-		while (s[start] == (unsigned char)c && s[start])
-			start++;
+		start = ft_skip_set(start, s, c);
 		end = start;
-		while (s[end] != c && s[end])
-			end++;
+		end = ft_cut_words(end, s, c);
 		ret[index] = ft_substr(s, start, end - start);
 		if (!ret[index])
+		{
+			free (ret);
 			return (NULL);
+		}
 		start = end;
 		index++;
 	}
