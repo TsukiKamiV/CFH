@@ -187,3 +187,36 @@ void *myFunc_memchr(const void *s, int c, size_t n)
     }
     return NULL;
 }
+
+char    **ft_split(char const *s, char c)
+{
+    char    **ret;
+    size_t  word_len;
+    int     i;
+    
+    ret = (char **)malloc((sizeof(char *) * (ft_count_words(s, c) + 1)));
+    if (!ret || !s)
+        return (NULL);
+    i = 0;
+    while (*s)
+    {
+        while (*s == c && *s)
+            s++;
+        if (*s)
+        {
+            if (!ft_strchr(s, c))
+                word_len = ft_strlen(s);
+            else
+                word_len = ft_strchr(s, c) - s;
+            ret[i++] = ft_substr(s, 0, word_len);
+            if (!ret[i++])
+            {
+                free_array(ret);
+                return (NULL);
+            }
+            s += word_len;
+        }
+    }
+    ret[i] = NULL;
+    return (ret);
+}

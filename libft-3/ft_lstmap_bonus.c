@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
@@ -14,24 +13,29 @@
 
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	t_list	*mapped;
-	t_list	*tmp;
+	t_list	*new_list;
+	t_list	*new_node;
+	void	*set;
 
 	if (!lst || !f || !del)
 		return (NULL);
-	mapped = NULL;
+	new_list = NULL;
 	while (lst)
 	{
-		if ((tmp = ft_lstnew((*f)(lst->content))) == NULL)
+		set = f(lst->content);
+		new_node = ft_lstnew(set);
+		if (!new_node)
 		{
-			ft_lstclear(&tmp, del);
-			return (NULL);
+			del(set);
+			ft_lstclear(&new_list, (*del));
+			return (new_list);
 		}
-		ft_lstadd_back(&mapped, tmp);
+		ft_lstadd_back(&new_list, new_node);
 		lst = lst->next;
 	}
-	return (mapped);
+	return (new_list);
 }
+
 /*
 {
 	t_list	*ret;
