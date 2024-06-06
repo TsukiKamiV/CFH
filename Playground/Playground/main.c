@@ -17,14 +17,18 @@ size_t  ft_count_words(char const *s, char c);
 char    *ft_substr(char const *s, unsigned int start, size_t len);
 size_t  ft_strlcpy(char *dest, const char *src, size_t size);
 size_t  ft_strlen(const char *s);
+char    **ft_split_f(char const *s, char c);
 
 
 int main()
 {
     //myFunc_memchr(((void *)0), '\0', 0x20);
     //myFunc(((void *)0));
-    char *s = "^^^1^^2a,^^^^3^^^^--h^^^^";
-    char **result = myFunc(s, '^');
+    //char *s = "Hello!";
+    
+    //char **result = myFunc("hello!", ' ');
+    char **result = ft_split_f("hello!", ' ');
+    
     while (*result)
    {
        printf("%s\n", *result);
@@ -123,18 +127,19 @@ char    **ft_alloc_arr(size_t n)
     return (ret);
 }
 
-size_t  ft_skip_set(size_t start, char const *s, char c)
+static void     ft_free_split(char **tab)
 {
-    while (s[start] == c && s[start])
-        start++;
-    return (start);
-}
-
-size_t  ft_cut_words(size_t end, char const *s, char c)
-{
-    while (s[end] != c && s[end])
-        end++;
-    return (end);
+    int     i;
+    
+    if (tab == NULL)
+        return ;
+    i = 0;
+    while (tab[i] != NULL)
+    {
+        free(tab[i]);
+        i++;
+    }
+    free(tab);
 }
 
 char    **myFunc(char const *s, char c)
@@ -151,22 +156,21 @@ char    **myFunc(char const *s, char c)
         return (NULL);
     index = 0;
     start = 0;
+    
     while (index < words)
     {
-        start = ft_skip_set(start, s, c);
+        while (s[start] == c && s[start])
+            start++;
         end = start;
-        end = ft_cut_words(end, s, c);
+        while (s[end] != c && s[end])
+            end++;
         ret[index] = ft_substr(s, start, end - start);
         if (!ret[index])
-        {
-            free (ret);
-            return (NULL);
-        }
+            return ((void)(ft_free_split(ret)), NULL);
         start = end;
         index++;
     }
-    ret[index] = NULL;
-    return (ret);
+    return (ret[index] = NULL, ret);
 }
 
 void *myFunc_memchr(const void *s, int c, size_t n)
@@ -188,35 +192,32 @@ void *myFunc_memchr(const void *s, int c, size_t n)
     return NULL;
 }
 
-char    **ft_split(char const *s, char c)
+
+char    **ft_split_f(char const *s, char c)
 {
-    char    **ret;
-    size_t  word_len;
-    int     i;
+    int             i;
+    int             j;
+    int             k;
+    char    **tab;
     
-    ret = (char **)malloc((sizeof(char *) * (ft_count_words(s, c) + 1)));
-    if (!ret || !s)
-        return (NULL);
     i = 0;
-    while (*s)
+    k = 0;
+    tab = (char **)malloc(sizeof(char *) * ((count_words(s, c)) + 1));
+    if (!tab)
+        return (NULL);
+    while (s[i])
     {
-        while (*s == c && *s)
-            s++;
-        if (*s)
+        while (s[i] == c)
+            i++;
+        j = i;
+        while (s[i] && s[i] != c)
+            i++;
+        if (i > j)
         {
-            if (!ft_strchr(s, c))
-                word_len = ft_strlen(s);
-            else
-                word_len = ft_strchr(s, c) - s;
-            ret[i++] = ft_substr(s, 0, word_len);
-            if (!ret[i++])
-            {
-                free_array(ret);
-                return (NULL);
-            }
-            s += word_len;
+            tab[k] = ft_strndup(s + j, i - j);
+            if (!tab[k++])
+                return (ft_free_split(tab), NULL);
         }
     }
-    ret[i] = NULL;
-    return (ret);
+    return (tab[k] = NULL, tab);
 }

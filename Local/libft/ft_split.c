@@ -47,31 +47,46 @@ char	**ft_allocation(size_t n)
 	return (ret);
 }
 
+static void	ft_free_split(char **tab)
+{
+	int	i;
+
+	if (tab == NULL)
+		return ;
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
 char	**ft_split(char const *s, char c)
 {
 	char	**ret;
-	size_t	words;
 	size_t	index;
 	size_t	start;
 	size_t	end;
-
-	words = ft_count_words(s, c);
-	ret = ft_allocation(words);
+	
+	ret = (char **)malloc(sizeof(char **) * (ft_count_words(s, c) + 1));
+	if (!ret)
+		return (NULL);
 	index = 0;
-	start = 0;
-	while (index < words)
+	end = 0;
+	while (s[end])
 	{
+		start = end;
 		while (s[start] == c && s[start])
 			start++;
 		end = start;
-		while (s[end] != c && s[end])
+		while (s[end] != c && s[end])  
 			end++;
-		ret[index] = ft_substr(s, start, end - start);
-		if (!ret[index])
-			return (NULL);
-		start = end;
-		index++;
+		if (end > start) {
+			ret[index] = ft_substr(s, start, end - start);
+			if (!ret[index++])
+		 		return (ft_free_split(ret), NULL);
+		}
 	}
-	ret[index] = NULL;
-	return (ret);
+	return (ret[index] = NULL, ret);
 }
