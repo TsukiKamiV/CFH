@@ -82,7 +82,8 @@ char	**ft_split(char const *s, char c)
 		end = start;
 		while (s[end] != c && s[end])  
 			end++;
-		if (end > start) {
+		if (end > start) 
+		{
 			ret[index] = ft_substr(s, start, end - start);
 			if (!ret[index++])
 		 		return (ft_free_split(ret), NULL);
