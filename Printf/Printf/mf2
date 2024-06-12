@@ -1,0 +1,39 @@
+NAME = libftprintf.a
+
+LIBFT_NAME = libft.a
+
+LIBFT_PATH = ./libft
+
+CC = cc
+
+CFLAGS = -Wall -Werror -Wextra
+
+SRCS = ft_print.c\
+       print_char.c\
+       print_string.c\
+       print_int.c\
+       print_unsigned.c\
+       print_hex.c\
+       print_pointer.c
+
+OBJS = $(SRCS:.c=.o)
+
+all : $(NAME)
+
+makelibft:
+	make -C $(LIBFT_PATH)
+	cp $(LIBFT_PATH)/$(LIBFT_NAME) .
+	mv $(LIBFT_NAME) $(NAME)
+
+$(NAME): makelibft $(OBJS)
+	 ar -r $(NAME) $(OBJS)
+
+clean:
+	rm -f $(OBJS)
+	cd $(LIBFT_PATH) && make clean
+
+fclean: clean
+	rm -f $(NAME)
+	cd $(LIBFT_PATH) && make fclean
+
+re: fclean all
