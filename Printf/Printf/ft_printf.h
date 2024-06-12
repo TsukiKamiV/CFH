@@ -11,7 +11,7 @@ int ft_printf(const char *fmt, ...);
 
 int print_char(char const c);
 
-int print_string(char *s);
+int print_string(const char *s);
 
 int print_int(int n);
 

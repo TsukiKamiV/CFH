@@ -11,9 +11,9 @@
 #include "ft_printf.h"
 #include "libft.h"
 
-static int  print_format(char const *s, void *arg);
+static int  print_format(const char *s, void *arg);
 
-static int  print_format(char const *s, void *arg)
+static int  print_format(const char *s, void *arg)
 {
     int i = 0;
     if (*s == 'c')
