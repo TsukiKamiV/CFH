@@ -8,7 +8,7 @@
 
 #include "ft_printf.h"
 
-int print_char(char const c)
+int print_char(const char c)
 {
     ft_putchar_fd(c, 1);
     return (1);

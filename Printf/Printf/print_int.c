@@ -7,7 +7,6 @@
 //
 
 #include "ft_printf.h"
-#include <stdlib.h>
 
 // Function to print an integer and return its length
 int print_int(int n)

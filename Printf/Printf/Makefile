@@ -4,11 +4,9 @@ LIBFT_NAME = libft.a
 
 LIBFT_PATH = ./libft
 
-CC = cc
+CC = cc -Wall -Wextra -Werror -I./includes
 
-CFLAGS = -Wall -Werror -Wextra
-
-SRCS = ft_print.c\
+SRCS = ft_printf.c\
        print_char.c\
        print_string.c\
        print_int.c\
@@ -18,6 +16,9 @@ SRCS = ft_print.c\
 
 OBJS = $(SRCS:.c=.o)
 
+%.o: %.c ft_printf.h
+			$(CC) -I. -c $< -o $(<:.c=.o)
+
 all: $(NAME)
 
 makelibft:
@@ -25,7 +26,7 @@ makelibft:
 	cp $(LIBFT_PATH)/$(LIBFT_NAME) .
 
 $(NAME): makelibft $(OBJS)
-	ar -r $(NAME) $(LIBFT_NAME) $(OBJS)
+	ar rsc $(NAME) $(LIBFT_NAME) $(OBJS)
 
 clean:
 	rm -f $(OBJS)

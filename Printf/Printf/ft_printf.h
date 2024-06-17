@@ -5,13 +5,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "libft.h"
+#include "./includes/libft.h"
 
-int ft_printf(const char *fmt, ...);
+int ft_printf(const char *arg, ...);
 
-int print_char(char const c);
+int print_char(const char c);
 
-int print_string(const char *s);
+int print_string(char *s);
 
 int print_int(int n);
 
@@ -19,6 +19,6 @@ int print_unsigned(unsigned int nb);
 
 int print_hex(unsigned int n, const char fmt);
 
-int print_ptr(unsigned long long ptr);
+int print_pointer(unsigned long long ptr);
 
 #endif /* ft_printf_h */

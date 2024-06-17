@@ -8,7 +8,7 @@
 
 #include "ft_printf.h"
 
-int print_string(const char *s)
+int print_string(char *s)
 {
     unsigned int    i;
     

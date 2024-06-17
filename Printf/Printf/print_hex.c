@@ -32,7 +32,7 @@ void    put_hex(unsigned int n, const char fmt)
     else
     {
         if (n <= 9)
-            ft_putchar_ft(n + '0', 1)
+            ft_putchar_fd(n + '0', 1);
         else
         {
             if (fmt == 'x')
