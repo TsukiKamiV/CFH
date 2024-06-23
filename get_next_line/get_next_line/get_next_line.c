@@ -13,11 +13,11 @@ char    *get_next_line(int fd)
     ret = NULL;
     while (fd >= 0)
     {
-        buffer = (char *)calloc((BUFFER_SIZE + 1), sizeof(char));
-        if (!buffer)
-            return (NULL);
         if (!remainder || remainder[0] == '\0')
         {
+            buffer = (char *)calloc((BUFFER_SIZE + 1), sizeof(char));
+            if (!buffer)
+                return (NULL);
             bytes_read = read(fd, buffer, BUFFER_SIZE);
             if (bytes_read  < 0)
             {
@@ -46,6 +46,8 @@ char    *get_next_line(int fd)
             {
                 *new_line_ptr = '\0';
                 remainder = ft_strdup(new_line_ptr + 1);
+                if (remainder && remainder[0] == '\0')
+                    free (remainder);
                 ret = add_to_line(ret, current);
                 ret = add_to_line(ret, "\n");
                 return (ret);
