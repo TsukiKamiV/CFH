@@ -37,7 +37,7 @@ char    *get_next_line(int fd)
         else
         {
             current = remainder; //此时两个PTR指向同一个内存地址， 还有用，所以不能free任何一个*
-            //remainder = NULL;
+            remainder = NULL;
         }
         while (current && current[0] != '\0')
         {
