@@ -10,7 +10,7 @@
 # define get_next_line_h
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
+# define BUFFER_SIZE 42
 #endif
 
 #include <unistd.h>
@@ -22,7 +22,8 @@ char    *get_next_line(int fd);
 size_t  ft_strlen(const char *s);
 size_t  ft_strlcat(char *dest, const char *src, size_t size);
 void    *ft_calloc(size_t nmemb, size_t size);
-char    *add_to_line(char *dest, const char *src);
+char    *add(char *a, char *b);
+char    *add_break(char *a);
 char    *find_residue(char *buffer);
 char    *ft_strdup(const char *s);
 char    *ft_strchr(const char *s, int c);

@@ -20,13 +20,18 @@ int main(int argc, const char * argv[])
     
     i = 1;
     fd = open("/Users/Luyao/CFH/get_next_line/get_next_line/test.txt", O_RDONLY);
-    while (i < 5)
+    while (fd)
     {
         printf("get_next_line即将运行第%d次\n", i);
         line = get_next_line(fd);
         printf("结果是：%s\n\n", line);
+        free (line);
+        if (line == NULL)
+        {
+            close (fd);
+            exit (0);
+        }
         i++;
     }
-    close (fd);
     return (0);
 }
