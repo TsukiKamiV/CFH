@@ -1,3 +1,4 @@
+#include "common.h"
 #include "get_next_line.h"
 
 size_t  ft_strlen(const char *s)
@@ -83,7 +84,7 @@ char    *ft_strjoin(const char *s1, const char *s2)
     
     len1 = ft_strlen(s1);
     len2 = ft_strlen(s2);
-    dest = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
+    dest = (char *)malloc(sizeof(char) * (len1 + len2 + 1));//how to free
     if (!dest)
         return (NULL);
     ft_strlcpy(dest, s1, len1 + 1);
@@ -99,7 +100,7 @@ char    *ft_strdup(const char *s)
     size_t  len;
     
     len = ft_strlen(s);
-    dest = (char *)malloc((len + 1) * sizeof(char));
+    dest = (char *)malloc((len + 1) * sizeof(char));//how to free
     if (!dest)
         return (NULL);
     i = 0;

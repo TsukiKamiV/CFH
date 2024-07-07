@@ -10,7 +10,7 @@
 # define get_next_line_h
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+# define BUFFER_SIZE 3
 #endif
 
 #include <unistd.h>
@@ -30,4 +30,6 @@ char    *ft_strchr(const char *s, int c);
 char    *ft_strjoin(const char *s1, const char *s2);
 size_t  ft_strlcpy(char *dest, const char *src, size_t size);
 
+char    *gimme_current(int fd, char **remainder, char **ret_to_free);
+char    *process_current(char **current, char **ret, char **remainder_to_fill);
 #endif

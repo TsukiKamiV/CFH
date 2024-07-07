@@ -127,3 +127,33 @@ char    *ft_strchr(const char *s, int c)
         return ((char *)(s + i));
     return (NULL);
 }
+/*
+char    *read_from_fd(int fd, char **remainder, char **current)
+{
+    char    *buffer;
+    ssize_t bytes_read;
+    
+    buffer = (char *)ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+    if (!buffer)
+        return (NULL);
+    bytes_read = read(fd, buffer, BUFFER_SIZE);
+    if (bytes_read <= 0)
+    {
+        free(buffer);
+        if (bytes_read == 0) {
+            return NULL;
+        } else {
+            free(*remainder);
+            free(*current);
+            return NULL;
+        }
+    }
+    *current = ft_strdup(buffer);
+    free(buffer);
+    if (!*current) {
+        free(*current);
+        return NULL;
+    }
+    return (*current);
+}
+*/
