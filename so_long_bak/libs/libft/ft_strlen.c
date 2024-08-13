@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 14:12:37 by luxu              #+#    #+#             */
-/*   Updated: 2024/05/31 19:13:19 by luxu             ###   ########.fr       */
+/*   Created: 2024/05/17 16:57:02 by luxu              #+#    #+#             */
+/*   Updated: 2024/05/31 19:18:49 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+size_t	ft_strlen(const char *s)
 {
-	void	*dest;
+	size_t	i;
 
-	dest = (void *)malloc(nmemb * size);
-	if (dest == NULL)
-		return (NULL);
-	ft_bzero(dest, (nmemb * size));
-	return (dest);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }

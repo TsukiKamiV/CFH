@@ -1,24 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 14:12:37 by luxu              #+#    #+#             */
-/*   Updated: 2024/05/31 19:13:19 by luxu             ###   ########.fr       */
+/*   Created: 2024/05/20 17:39:53 by luxu              #+#    #+#             */
+/*   Updated: 2024/06/03 12:34:27 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+char	*ft_strchr(const char *s, int c)
 {
-	void	*dest;
+	int	i;
 
-	dest = (void *)malloc(nmemb * size);
-	if (dest == NULL)
-		return (NULL);
-	ft_bzero(dest, (nmemb * size));
-	return (dest);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i++;
+	}
+	if (s[i] == (char)c)
+		return ((char *)(s + i));
+	return (NULL);
 }
+/*
+#include <string.h>
+#include <stdio.h>
+int main()
+{
+	char *str = "Hello World";
+	char c = 'k';
+	printf("%s\n", ft_strchr(str, c));
+	printf("%s\n", strchr(str, c));
+	return (0);
+}*/

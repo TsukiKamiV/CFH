@@ -1,24 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 14:12:37 by luxu              #+#    #+#             */
-/*   Updated: 2024/05/31 19:13:19 by luxu             ###   ########.fr       */
+/*   Created: 2024/05/20 17:13:59 by luxu              #+#    #+#             */
+/*   Updated: 2024/05/31 20:01:38 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
 {
-	void	*dest;
+	size_t	i;
+	size_t	j;
+	size_t	res;
 
-	dest = (void *)malloc(nmemb * size);
-	if (dest == NULL)
-		return (NULL);
-	ft_bzero(dest, (nmemb * size));
-	return (dest);
+	i = 0;
+	j = 0;
+	res = 0;
+	while (dest[i])
+		i++;
+	while (src[res])
+		res++;
+	if (size < i)
+		res += size;
+	else
+		res += i;
+	while (src[j] && i + 1 < size)
+	{
+		dest[i] = src[j];
+		i++;
+		j++;
+	}
+	dest[i] = '\0';
+	return (res);
 }

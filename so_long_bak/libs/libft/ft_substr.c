@@ -1,24 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 14:12:37 by luxu              #+#    #+#             */
-/*   Updated: 2024/05/31 19:13:19 by luxu             ###   ########.fr       */
+/*   Created: 2024/05/22 14:43:52 by luxu              #+#    #+#             */
+/*   Updated: 2024/06/03 12:06:18 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	void	*dest;
+	size_t	s_len;
+	size_t	ret_len;
+	char	*ret;
 
-	dest = (void *)malloc(nmemb * size);
-	if (dest == NULL)
+	if (!s)
 		return (NULL);
-	ft_bzero(dest, (nmemb * size));
-	return (dest);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+	{
+		ret = (char *)malloc(1);
+		if (ret)
+			ret[0] = '\0';
+		return (ret);
+	}
+	ret_len = s_len - start;
+	if (ret_len > len)
+		ret_len = len;
+	ret = (char *)malloc((ret_len + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	ft_strlcpy(ret, s + start, ret_len + 1);
+	return (ret);
 }
