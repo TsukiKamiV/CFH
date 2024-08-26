@@ -1,6 +1,6 @@
 #include "../includes/so_long.h"
 
-int	ft_verify_map(int argc, char *argv[])
+int	ft_verify_arg(int argc, char *argv[])
 {
 	size_t	argv_len;
 
@@ -22,3 +22,5 @@ int	ft_verify_map(int argc, char *argv[])
 	}
 	return (1);
 }
+
+
