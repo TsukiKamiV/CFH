@@ -94,7 +94,7 @@ void	ft_empty_line(char *map)
 	i = 0;
 	while (map[i])
 	{
-		if (map[i] == '\n' && map[i + 1] != '1')
+		if (map[i] == '\n' && map[i + 1] == '\n')
 		{
 			ft_printf("Error\nEmpty line in map, exiting game.\n");
 			exit (EXIT_FAILURE);
