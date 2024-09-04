@@ -45,13 +45,15 @@ int	ft_check_map_form(char **tab)
 	return (1);
 }
 
-int	ft_check_item(char **tab)
+int	ft_check_item(t_game *game)
 {
 	int	i;
 	int	j;
 	t_item_count count;
 	t_position	size;
+	char **tab;
 	
+	tab = game->map.full;
 	size.y = ft_strlen(tab[0]);
 	size.x = 0;
 	count.c_count = 0;
@@ -70,7 +72,11 @@ int	ft_check_item(char **tab)
 			else if (tab[i][j] == 'E')
 				count.e_count++;
 			else if (tab[i][j] == 'P')
+			{
 				count.p_count++;
+				game->person_pos.x = j;
+				game->person_pos.y = i;
+			}
 			else if (tab[i][j] != 'E' &&tab[i][j] != 'P' && tab[i][j] != 'C' && tab[i][j] != '0' && tab[i][j] != '1')
 				return (0);
 			j++;
@@ -94,7 +100,7 @@ void	ft_empty_line(char *map)
 	i = 0;
 	while (map[i])
 	{
-		if (map[i] == '\n' && map[i + 1] != '1')
+		if (map[i] == '\n' && map[i + 1] == '\n')
 		{
 			ft_printf("Error\nEmpty line in map, exiting game.\n");
 			exit (EXIT_FAILURE);

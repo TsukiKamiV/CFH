@@ -10,7 +10,8 @@ void	ft_init_images(t_game *game)
 	game->carrot.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, CARROTS_PATH, &game->carrot.size.width, &game->carrot.size.height);
 	game->wall.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, WALL_PATH, &game->wall.size.width, &game->wall.size.height);
 	game->exit.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, EXIT_PATH, &game->exit.size.width, &game->exit.size.height);
-	if (!game->person.xpm_ptr || !game->carrot.xpm_ptr || !game->wall.xpm_ptr || !game->exit.xpm_ptr)
+	game->enemy.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, ENEMY_PATH, &game->enemy.size.width, &game->enemy.size.height);
+	if (!game->person.xpm_ptr || !game->person_front.xpm_ptr || !game->person_back.xpm_ptr || !game->person_right.xpm_ptr || !game->person_left.xpm_ptr || !game->carrot.xpm_ptr || !game->wall.xpm_ptr || !game->exit.xpm_ptr || !game->enemy.xpm_ptr)
 	{
 		ft_printf("Error\nFaild to load the images, stopping game\n");
 		exit (EXIT_FAILURE);
@@ -77,6 +78,12 @@ void	ft_render_map(t_game *game)
 				game->person_pos.y = grid_pos.y;
 				img_current = &game->person_right;
 				delta_y = PERSON_DY;
+			}
+			else if ((char)map_current[grid_pos.y][grid_pos.x] == 'M')
+			{
+				game->enemy_pos.x = grid_pos.x;
+				game->enemy_pos.y = grid_pos.y;
+				img_current = &game->enemy;
 			}
 			else
 			{

@@ -71,7 +71,7 @@ int	ft_check_item(char **tab)
 				count.e_count++;
 			else if (tab[i][j] == 'P')
 				count.p_count++;
-			else if (tab[i][j] != 'E' &&tab[i][j] != 'P' && tab[i][j] != 'C' && tab[i][j] != '0' && tab[i][j] != '1')
+			else if (tab[i][j] != 'E' && tab[i][j] != 'P' && tab[i][j] != 'C' && tab[i][j] != '0' && tab[i][j] != '1' && tab[i][j] != 'M')
 				return (0);
 			j++;
 		}

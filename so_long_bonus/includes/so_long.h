@@ -6,7 +6,8 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <string.h>
-# include <fcntl.h>
+//# include <fcntl.h>
+# include <time.h>
 # include "../libs/libft/libft.h"
 # include "../libs/ft_printf/ft_printf.h"
 
@@ -17,6 +18,13 @@ typedef struct	s_position
 	int	x;
 	int	y;
 }				t_position;
+
+typedef struct s_time
+{
+	time_t	start_time;
+	time_t	end_time;
+	time_t	current_time;
+}				t_time;
 
 typedef struct	s_size
 {
@@ -32,7 +40,7 @@ typedef struct	s_map
 	int	columns;
 	int	carrots;
 	int	exit;
-	int	players;
+	//int	players;
 	//t_position	player;
 }	t_map;
 
@@ -90,14 +98,17 @@ typedef struct	s_game
 	t_image	exit;
 	t_image	start;
 	t_image person;
+	t_image enemy;
 	t_position person_pos;
 	t_position	exit_pos;
+	t_position enemy_pos;
 	t_image	person_front;
 	t_image	person_back;
 	t_image	person_left;
 	t_image	person_right;
 	int	total_collectables;
 	int	move_count;
+	t_time	g_time;
 }	t_game;
 
 
@@ -163,4 +174,6 @@ void	ft_empty_line(char *map);
 # define PERSON_BACK_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_back.xpm"
 # define PERSON_LEFT_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_left.xpm"
 # define PERSON_RIGHT_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_right.xpm"
+# define ENEMY_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/enemy.xpm"
+
 #endif

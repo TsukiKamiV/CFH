@@ -14,7 +14,7 @@ int	my_mlx_hook_callback(int keycode, t_game *game)
 }
 
 void	ft_init_window(t_game *game, char *map)
-{
+{	
 	game->move_count = 0;
 	game->mlx_ptr = mlx_init();
 	ft_init_map(map, &game->map);
@@ -38,9 +38,16 @@ void	ft_init_window(t_game *game, char *map)
 		ft_printf("Error\nCan't find valid path in this map, exiting game.\n");
 		exit (EXIT_FAILURE);
 	}
-	printf("There're %d carrots in this map.\n", ft_find_collectables(game));
+	//printf("There're %d carrots in this map.\n", ft_find_collectables(game));
 	//printf("map has %d columns and %d rows\n", game->map.columns, game->map.rows);
 	game->win_ptr = mlx_new_window(game->mlx_ptr, game->map.columns * 16 + ((game->map.columns - 1) * 1), game->map.rows * 16 + ((game->map.rows - 1) * 1), "so_long");
+	//get the current time at the window initialisation
+	game->g_time.current_time = time(NULL);
+	if (game->g_time.current_time == ((time_t)-1))
+	{
+		ft_printf("Failed to obtain the current time.\n");
+		exit (EXIT_FAILURE);
+	}
 	ft_init_floor(game);
 	ft_init_images(game);
 	//ft_put_floor(*game);

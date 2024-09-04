@@ -43,46 +43,13 @@ void	ft_render_map(t_game *game)
 				game->exit_pos.y = grid_pos.y;
 				img_current = &game->exit;
 			}
-			else if ((char)map_current[grid_pos.y][grid_pos.x] == 'P')
-			{
-				game->person_pos.x = grid_pos.x;
-				game->person_pos.y = grid_pos.y;
-				img_current = &game->person;
-				delta_y = PERSON_DY;
-			}
-			else if ((char)map_current[grid_pos.y][grid_pos.x] == 'B')
-			{
-				game->person_pos.x = grid_pos.x;
-				game->person_pos.y = grid_pos.y;
-				img_current = &game->person_back;
-				delta_y = PERSON_DY;
-			}
-			else if ((char)map_current[grid_pos.y][grid_pos.x] == 'F')
-			{
-				game->person_pos.x = grid_pos.x;
-				game->person_pos.y = grid_pos.y;
-				img_current = &game->person_front;
-				delta_y = PERSON_DY;
-			}
-			else if ((char)map_current[grid_pos.y][grid_pos.x] == 'L')
-			{
-				game->person_pos.x = grid_pos.x;
-				game->person_pos.y = grid_pos.y;
-				img_current = &game->person_left;
-				delta_y = PERSON_DY;
-			}
-			else if ((char)map_current[grid_pos.y][grid_pos.x] == 'R')
-			{
-				game->person_pos.x = grid_pos.x;
-				game->person_pos.y = grid_pos.y;
-				img_current = &game->person_right;
-				delta_y = PERSON_DY;
-			}
-			else
+			else if ((char)map_current[grid_pos.y][grid_pos.x] == '0')
 			{
 				grid_pos.x++;
 				continue;
 			}
+			else
+				img_current = ft_process_person_dir(game, grid_pos, map_current, img_current, delta_y);
 			pixel_pos.y = (grid_pos.y * (16 + 1)) + ((16 - img_current->size.height) / 2) + delta_y;
 			pixel_pos.x = (grid_pos.x * (16 + 1)) + ((16 - img_current->size.width) / 2);
 			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img_current->xpm_ptr, pixel_pos.x, pixel_pos.y);
@@ -91,3 +58,56 @@ void	ft_render_map(t_game *game)
 		grid_pos.y++;
 	}
 }
+
+
+t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, t_image *image, int *delta_y)
+{
+	if ((char)map[grid_pos.y][grid_pos.x] == 'P')
+		image = &game->person;
+	else if ((char)map[grid_pos.y][grid_pos.x] == 'B')
+		image = &game->person_back;
+	else if ((char)map[grid_pos.y][grid_pos.x] == 'F')
+		image = &game->person_front;
+	else if ((char)map[grid_pos.y][grid_pos.x] == 'L')
+		image = &game->person_left;
+	else if ((char)map[grid_pos.y][grid_pos.x] == 'R')
+		image = &game->person_right;
+	delta_y = PERSON_DY;
+	return (image);
+}
+
+
+
+
+
+/*
+ else if ((char)map_current[grid_pos.y][grid_pos.x] == 'P')
+ {
+ img_current = &game->person;
+ delta_y = PERSON_DY;
+ }
+ else if ((char)map_current[grid_pos.y][grid_pos.x] == 'B')
+ {
+ img_current = &game->person_back;
+ delta_y = PERSON_DY;
+ }
+ else if ((char)map_current[grid_pos.y][grid_pos.x] == 'F')
+ {
+ img_current = &game->person_front;
+ delta_y = PERSON_DY;
+ }
+ else if ((char)map_current[grid_pos.y][grid_pos.x] == 'L')
+ {
+ img_current = &game->person_left;
+ delta_y = PERSON_DY;
+ }
+ else if ((char)map_current[grid_pos.y][grid_pos.x] == 'R')
+ {
+ img_current = &game->person_right;
+ delta_y = PERSON_DY;
+ }*/
+/*else
+ {
+ grid_pos.x++;//如果check item已经排除了地图中有其他元素的情况，这里就不需要else了
+ continue;
+ }*/

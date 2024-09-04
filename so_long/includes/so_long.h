@@ -36,6 +36,7 @@ typedef struct	s_map
 	//t_position	player;
 }	t_map;
 
+/*
 typedef struct s_vector
 {
 	int	front;
@@ -43,7 +44,7 @@ typedef struct s_vector
 	int	left;
 	int	right;
 }				t_vector;
-
+*/
 typedef struct s_item_count
 {
 	int	p_count;
@@ -56,7 +57,7 @@ typedef struct	s_image
 	void	*xpm_ptr;
 	t_size	size;
 	t_position position;
-	t_vector face;
+	//t_vector face;
 }	t_image;
 
 //s_data from mlx docs
@@ -108,6 +109,8 @@ int	ft_verify_arg(int argc, char *argv[]);
 
 void	ft_init_window(t_game *game, char *map);
 
+void	ft_check_map(t_game *game);
+
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 void	ft_init_img(t_game game);
@@ -120,8 +123,11 @@ void	ft_init_map(char *map, t_map *map_struct);
 
 void	ft_init_images(t_game *game);
 
+t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, t_image *image, int *delta_y);
+
 void	ft_render_map(t_game *game);
 
+///include exit(0);
 int		close_window(int keycode, t_game *game);
 
 int	ft_key_hook(int keycode, t_game *game);
@@ -132,6 +138,8 @@ int	ft_loop_hook(t_game *game);
 
 void	ft_manage_event(t_game *game);
 
+//void	ft_find_person(t_game *game);
+
 int	ft_find_collectables(t_game *game);
 
 void  flood_fill(char **tab, t_position size, t_position begin);
@@ -140,7 +148,7 @@ int	ft_verify_path(char **tab);
 
 int	ft_check_wall(char **tab);
 
-int	ft_check_item(char **tab);
+int	ft_check_item(t_game *game);
 
 int	ft_check_map_form(char **tab);
 
@@ -151,6 +159,16 @@ void	ft_destroy_images(t_game *game);
 void	ft_free_all_allocated_memory(t_game *game);
 
 void	ft_empty_line(char *map);
+
+void	ft_catch_keycode(int keycode, t_game *game);
+
+///return 1: ok, return 0: wall
+int	ft_handle_move_trend(int dx, int dy, t_game *game);
+
+//runtime debugging
+void	print_map(char **tab);
+
+int	my_mlx_hook_callback(int keycode, t_game *game);
 
 //# define WIN_WIDTH	game.map.columns * 16
 //# define WIN_HEIGHT	game.map.rows * 16

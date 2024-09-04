@@ -32,7 +32,7 @@ void	ft_init_map(char *map, t_map *map_struct)
 	free (map_tmp);
 }
 
-int	ft_find_collectables(t_game *game)
+int	ft_find_collectables(t_game *game) //这里还兼顾了初始化person_pos的功能，可能需要给函数改名 （但是为什么重新定义一个遍历地图寻找P的函数就报错退出？？）
 {
 	char	**map;
 	int	line;
@@ -48,9 +48,38 @@ int	ft_find_collectables(t_game *game)
 		{
 			if (map[line][i] == 'C')
 				game->total_collectables++;
+			else if (map[line][i] == 'P')
+			{
+				game->person_pos.x = i;
+				game->person_pos.y = line;
+			}
 			i++;
 		}
 		line++;
 	}
 	return (game->total_collectables);
 }
+/*
+void	ft_find_person(t_game *game)
+{
+	char	**map;
+	int	line;
+	int	i;
+	
+	line = 0;
+	map = game->map.full;
+	while (map[line])
+	{
+		i = 0;
+		while (map[line][i])
+		{
+			if (map[line][i] == 'P')
+			{
+				game->person_pos.x = i;
+				game->person_pos.y = line;
+			}
+			i++;
+		}
+		line++;
+	}
+}*/
