@@ -4,6 +4,8 @@ int	main(int argc, char *argv[])
 {
 	t_game	*game;
 	
+	game->exit
+	
 	if (!ft_verify_arg(argc, argv))
 		exit (EXIT_FAILURE);
 	
@@ -13,7 +15,7 @@ int	main(int argc, char *argv[])
 	ft_init_map(argv[1], &game->map);
 	ft_check_map(game);
 	game->total_collectables = ft_find_collectables(game);
-	ft_init_window(game, argv[1]);
+	ft_init_window(game);
 	game->move_count = 0;
 	mlx_loop_hook(game->mlx_ptr, ft_loop_hook, game);
 	mlx_key_hook(game->win_ptr, ft_key_hook, game);

@@ -101,13 +101,11 @@ typedef struct	s_game
 	int	move_count;
 }	t_game;
 
-
-
 int	main(int argc, char *argv[]);
 
 int	ft_verify_arg(int argc, char *argv[]);
 
-void	ft_init_window(t_game *game, char *map);
+void	ft_init_window(t_game *game);
 
 void	ft_check_map(t_game *game);
 
@@ -123,12 +121,12 @@ void	ft_init_map(char *map, t_map *map_struct);
 
 void	ft_init_images(t_game *game);
 
-t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, t_image *image, int *delta_y);
+t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, int *delta_y);
 
 void	ft_render_map(t_game *game);
 
 ///include exit(0);
-int		close_window(int keycode, t_game *game);
+int		close_window(t_game *game);
 
 int	ft_key_hook(int keycode, t_game *game);
 

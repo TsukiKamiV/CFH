@@ -49,7 +49,7 @@ void	ft_render_map(t_game *game)
 				continue;
 			}
 			else
-				img_current = ft_process_person_dir(game, grid_pos, map_current, img_current, delta_y);
+				img_current = ft_process_person_dir(game, grid_pos, map_current, &delta_y);
 			pixel_pos.y = (grid_pos.y * (16 + 1)) + ((16 - img_current->size.height) / 2) + delta_y;
 			pixel_pos.x = (grid_pos.x * (16 + 1)) + ((16 - img_current->size.width) / 2);
 			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img_current->xpm_ptr, pixel_pos.x, pixel_pos.y);
@@ -60,8 +60,9 @@ void	ft_render_map(t_game *game)
 }
 
 
-t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, t_image *image, int *delta_y)
+t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, int *delta_y)
 {
+	t_image *image;
 	if ((char)map[grid_pos.y][grid_pos.x] == 'P')
 		image = &game->person;
 	else if ((char)map[grid_pos.y][grid_pos.x] == 'B')
@@ -72,7 +73,7 @@ t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, t_
 		image = &game->person_left;
 	else if ((char)map[grid_pos.y][grid_pos.x] == 'R')
 		image = &game->person_right;
-	delta_y = PERSON_DY;
+	*delta_y = PERSON_DY;
 	return (image);
 }
 

@@ -37,7 +37,7 @@ void	ft_check_map(t_game *game)
 	}
 }
 
-void	ft_init_window(t_game *game, char *map)
+void	ft_init_window(t_game *game)
 {
 	//game->move_count = 0;
 	//game->mlx_ptr = mlx_init();
