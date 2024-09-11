@@ -4,7 +4,7 @@ int	main(int argc, char *argv[])
 {
 	t_game	*game;
 	
-	game->exit
+	//game->exit
 	
 	if (!ft_verify_arg(argc, argv))
 		exit (EXIT_FAILURE);

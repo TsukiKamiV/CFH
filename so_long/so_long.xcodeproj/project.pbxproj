@@ -69,6 +69,7 @@
 		095AA4872C6E2DAC0036770B /* ft_init_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 095AA4862C6E2DAC0036770B /* ft_init_map.c */; };
 		095AA4892C6F7DB40036770B /* ft_render_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 095AA4882C6F7DB40036770B /* ft_render_map.c */; };
 		095AA48B2C7372300036770B /* ft_manage_event.c in Sources */ = {isa = PBXBuildFile; fileRef = 095AA48A2C7372300036770B /* ft_manage_event.c */; };
+		0964658F2C91EF70004BDC29 /* ft_verify_path.c in Sources */ = {isa = PBXBuildFile; fileRef = 0964658E2C91EF70004BDC29 /* ft_verify_path.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -151,6 +152,7 @@
 		095AA4862C6E2DAC0036770B /* ft_init_map.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_init_map.c; sourceTree = "<group>"; };
 		095AA4882C6F7DB40036770B /* ft_render_map.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_render_map.c; sourceTree = "<group>"; };
 		095AA48A2C7372300036770B /* ft_manage_event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_manage_event.c; sourceTree = "<group>"; };
+		0964658E2C91EF70004BDC29 /* ft_verify_path.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_verify_path.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +194,7 @@
 			children = (
 				095AA4392C6B9AE60036770B /* ft_verify_map.c */,
 				095AA3B92C6B871A0036770B /* main.c */,
+				0964658E2C91EF70004BDC29 /* ft_verify_path.c */,
 				095AA48A2C7372300036770B /* ft_manage_event.c */,
 				095AA4882C6F7DB40036770B /* ft_render_map.c */,
 				095AA4862C6E2DAC0036770B /* ft_init_map.c */,
@@ -376,6 +379,7 @@
 				095AA42F2C6B934B0036770B /* ft_strncmp.c in Sources */,
 				095AA40E2C6B934B0036770B /* ft_isalnum.c in Sources */,
 				095AA4322C6B934B0036770B /* ft_strtrim.c in Sources */,
+				0964658F2C91EF70004BDC29 /* ft_verify_path.c in Sources */,
 				095AA4342C6B934B0036770B /* ft_tolower.c in Sources */,
 				095AA4262C6B934B0036770B /* ft_split.c in Sources */,
 				095AA4352C6B934B0036770B /* ft_toupper.c in Sources */,

@@ -123,6 +123,8 @@ void	ft_init_images(t_game *game);
 
 t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, int *delta_y);
 
+t_image *ft_process_elements(t_game *game, t_position grid_pos, char **map);
+
 void	ft_render_map(t_game *game);
 
 ///include exit(0);
@@ -144,9 +146,13 @@ void  flood_fill(char **tab, t_position size, t_position begin);
 
 int	ft_verify_path(char **tab);
 
+void	find_p(char **tab_copy, t_position size, t_position *begin);
+
 int	ft_check_wall(char **tab);
 
 int	ft_check_item(t_game *game);
+
+void	ft_check_item_annex(char c, t_game *game, t_item_count *count, t_position *size, int i, int j);
 
 int	ft_check_map_form(char **tab);
 
@@ -171,7 +177,7 @@ int	my_mlx_hook_callback(int keycode, t_game *game);
 //# define WIN_WIDTH	game.map.columns * 16
 //# define WIN_HEIGHT	game.map.rows * 16
 # define CARROTS_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/carrot.xpm"
-# define WALL_PATH	"/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/wall_tmp.xpm"
+# define WALL_PATH	"/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/wall-2.xpm"
 # define PERSON_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_front.xpm"
 # define EXIT_PATH	"/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/exit.xpm"
 # define START_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/start.xpm"
