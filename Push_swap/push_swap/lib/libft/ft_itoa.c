@@ -62,3 +62,4 @@ char	*ft_itoa(int n)
 		size--;
 	}
 	return (str);
+}
