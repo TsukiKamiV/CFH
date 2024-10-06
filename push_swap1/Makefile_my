@@ -1,0 +1,58 @@
+NAME = push_swap
+
+LIBFT = ./libs/libft.a
+
+INC = ./includes/
+
+SRC_DIR = ./srcs/
+
+OBJ_DIR = obj/
+
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -I
+
+RM = rm -f
+
+OP_DIR = $(SRC_DIR)operations/a_to_b.c \ 
+						$(SRC_DIR)operations/b_to_a.c \
+						$(SRC_DIR)operations/push.c \
+						$(SRC_DIR)operations/swap.c \
+						$(SRC_DIR)operations/rotate.c \
+						$(SRC_DIR)operations/reverse_rotate.c
+
+PUSH_SWAP_DIR = $(SRC_DIR)push_swap/check_stack_utils.c \
+						$(SRC_DIR)process_stack.c \
+						$(SRC_DIR)push_swap.c\
+						$(SRC_DIR)sort_stack.c \
+						$(SRC_DIR)sorting_utils.c
+
+SRCS = $(OP_DIR) $(PUSH_SWAP_DIR)
+
+OBJ = $(patsuabst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
+
+start:	
+		@make all
+
+$(LIBFT):
+		@make -C ./lib/libft
+
+all:	$(NAME)
+
+$(NAME):	$(OBJ) $(LIBFT)
+			  @$(CC) $(CFLAGS) $(INC) $(OBJ) $(LIBFT) -o $(NAME)
+
+$(OBJ_DIR)%.o:	$(SRC_DIR)%.c
+								@mkdir -p $(@D)
+								@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+clean:
+								@$(RM) -r $(OBJ_DIR)
+								@make clean -C ./lib/libft
+
+fclean:							clean
+									@$(RM) $(NAME)
+									@$(RM) $(LIBFT)
+
+re:	fclean all
+
+.PHONY:	start all clean fclean re
