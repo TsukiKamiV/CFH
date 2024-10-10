@@ -59,7 +59,17 @@ static void	append_node(t_stack **stack, int n)
 	}
 }
 
-void	init_stack_a(t_stack **a, char **argv)
+void	print_tab(char **tab)
+{
+	int i = 0;
+	while (tab[i] != NULL)
+	{
+		ft_printf("%s\n", tab[i]);
+		i++;
+	}
+}
+
+void	init_stack_a(t_stack **a, int argc, char **argv)
 {
 	long	n;
 	int		i;
@@ -67,13 +77,20 @@ void	init_stack_a(t_stack **a, char **argv)
 	i = 0;
 	while (argv[i])
 	{
+		print_tab(argv);
 		if (error_syntax(argv[i]))
+		{
+			if (argc == 2)
+				free (argv[i]);
 			free_errors(a);
+		}
 		n = ft_atol(argv[i]);
-		if (n > INT_MAX || n < INT_MIN)
+		if ((n > INT_MAX || n < INT_MIN) || (error_duplicate(*a, (int)n)))
+		{
+			if (argc == 2)
+				free (argv[i]);
 			free_errors(a);
-		if (error_duplicate(*a, (int)n))
-			free_errors(a);
+		}
 		append_node(a, (int)n);
 		i++;
 	}

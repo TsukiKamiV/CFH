@@ -33,8 +33,9 @@ int			error_syntax(char *str);
 int			error_duplicate(t_stack *a, int n);
 void		free_stack(t_stack **stack);
 void		free_errors(t_stack **a);
+void		ft_free_tab(char **tab);
 
-void		init_stack_a(t_stack **a, char **argv);
+void		init_stack_a(t_stack **a, int argc, char **argv);
 char		**split(char *s, char c);
 
 void		init_nodes_a(t_stack *a, t_stack *b);

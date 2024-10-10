@@ -19,7 +19,7 @@ void	ft_free_tab(char **tab)
 	if (!tab)
 		return ;
 	i = 0;
-	while (tab[i])
+	while (tab[i] != NULL)
 	{
 		free (tab[i]);
 		i++;
@@ -41,7 +41,7 @@ int	main(int argc, char *argv[])
 	}
 	else if (argc == 2)
 		argv = split(argv[1], ' ');
-	init_stack_a(&a, argv + 1);
+	init_stack_a(&a, argc, argv + 1);
 	if (!stack_sorted(a))
 	{
 		if (stack_len(a) == 2)
