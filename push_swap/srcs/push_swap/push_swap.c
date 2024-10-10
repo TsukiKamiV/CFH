@@ -12,6 +12,21 @@
 
 #include "../../inc/push_swap.h"
 
+void	ft_free_tab(char **tab)
+{
+	int	i;
+	
+	if (!tab)
+		return ;
+	i = 0;
+	while (tab[i])
+	{
+		free (tab[i]);
+		i++;
+	}
+	free (tab);
+}
+
 int	main(int argc, char *argv[])
 {
 	t_stack	*a;
@@ -37,5 +52,7 @@ int	main(int argc, char *argv[])
 			sort_stacks(&a, &b);
 	}
 	free_stack(&a);
+	if (argc == 2)
+		ft_free_tab(argv);
 	return (0);
 }
