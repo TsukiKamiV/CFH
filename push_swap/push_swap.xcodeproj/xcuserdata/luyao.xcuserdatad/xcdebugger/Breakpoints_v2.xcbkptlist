@@ -128,7 +128,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "30"
             endingLineNumber = "30"
-            landmarkName = "main(argc, argv)"
+            landmarkName = "print_error()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
