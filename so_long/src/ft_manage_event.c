@@ -177,6 +177,7 @@ int	ft_handle_move_trend(int dx, int dy, t_game *game)
 		return (0);
 	
 	game->move_count++;
+	ft_printf("%d\n", game->move_count);
 	
 	//2. Check win case
 	if (next == 'E' && game->total_collectables == 0) {
@@ -207,6 +208,6 @@ int	ft_loop_hook(t_game *game)
 	//print_map(game->map.full);
 	mlx_clear_window(game->mlx_ptr, game->win_ptr);
 	ft_put_floor(*game);
-	ft_render_map(game);
+	ft_render_map(game, game->map.full);
 	return (0);
 }

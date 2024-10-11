@@ -1,9 +1,10 @@
 #include "../includes/so_long.h"
 
-/*void	ft_error_exit(t_game game, char *map)
+void	ft_error_exit(t_game *game)
 {
-	
-}*/
+	free (game);
+	exit (EXIT_FAILURE);
+}
 
 int	close_window(t_game *game)
 {

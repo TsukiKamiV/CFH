@@ -33,31 +33,22 @@ typedef struct	s_map
 	int	carrots;
 	int	exit;
 	int	players;
-	//t_position	player;
 }	t_map;
 
-/*
-typedef struct s_vector
-{
-	int	front;
-	int	back;
-	int	left;
-	int	right;
-}				t_vector;
-*/
-typedef struct s_item_count
+
+typedef struct s_map_validator
 {
 	int	p_count;
 	int	c_count;
 	int	e_count;
-}				t_item_count;
+	int invalid_count;
+}				t_map_validator;
 
 typedef struct	s_image
 {
 	void	*xpm_ptr;
 	t_size	size;
 	t_position position;
-	//t_vector face;
 }	t_image;
 
 //s_data from mlx docs
@@ -103,6 +94,8 @@ typedef struct	s_game
 
 int	main(int argc, char *argv[]);
 
+t_map	ft_init_map(char *map);
+
 int	ft_verify_arg(int argc, char *argv[]);
 
 void	ft_init_window(t_game *game);
@@ -117,15 +110,13 @@ void	ft_init_floor(t_game *game);
 
 void	ft_put_floor(t_game game);
 
-void	ft_init_map(char *map, t_map *map_struct);
-
 void	ft_init_images(t_game *game);
 
-t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, int *delta_y);
+t_image	*ft_facing(t_game *game, char c, int *delta_y);
 
-t_image *ft_process_elements(t_game *game, t_position grid_pos, char **map);
+t_image *ft_process_elements(t_game *game, t_position grid_pos, char c);
 
-void	ft_render_map(t_game *game);
+void	ft_render_map(t_game *game, char **map);
 
 ///include exit(0);
 int		close_window(t_game *game);
@@ -137,8 +128,6 @@ int	ft_mouse_hook(int button, t_game *game);
 int	ft_loop_hook(t_game *game);
 
 void	ft_manage_event(t_game *game);
-
-//void	ft_find_person(t_game *game);
 
 int	ft_find_collectables(t_game *game);
 
@@ -152,7 +141,7 @@ int	ft_check_wall(char **tab);
 
 int	ft_check_item(t_game *game);
 
-void	ft_check_item_annex(char c, t_game *game, t_item_count *count, t_position *size, int i, int j);
+void	ft_check_item_annex(char **tab, t_position size, t_map_validator *map_validator);
 
 int	ft_check_map_form(char **tab);
 
@@ -174,6 +163,10 @@ void	print_map(char **tab);
 
 int	my_mlx_hook_callback(int keycode, t_game *game);
 
+int	ft_detect_c(char c);
+
+void	ft_error_exit(t_game *game);
+
 //# define WIN_WIDTH	game.map.columns * 16
 //# define WIN_HEIGHT	game.map.rows * 16
 # define CARROTS_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/carrot.xpm"
@@ -185,4 +178,7 @@ int	my_mlx_hook_callback(int keycode, t_game *game);
 # define PERSON_BACK_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_back.xpm"
 # define PERSON_LEFT_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_left.xpm"
 # define PERSON_RIGHT_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/person_right.xpm"
+# define FLOOR_TILE_PATH "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/floor.xpm"
+
+# define draw_img(mlx_ptr, win_ptr, img_ptr, x, y) mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, x, y)
 #endif

@@ -57,8 +57,12 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_no_path_simple.ber"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_valid_1_mogai.ber"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_item_2.ber"
@@ -67,6 +71,10 @@
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_empty_line.ber"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_empty.ber"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_empty_line_2.ber"
@@ -106,6 +114,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_wall_1.ber"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_wall_2.ber"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

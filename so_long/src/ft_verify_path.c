@@ -18,7 +18,6 @@ char	**ft_make_tab_copy(char **tab, t_position *size)
 		tab_copy[row_index] = ft_strdup(tab[row_index]);
 		row_index++;
 	}
-	
 	size->x = (int)ft_strlen(tab[0]);
 	size->y = row_counting;
 	return (tab_copy);
@@ -44,10 +43,10 @@ void	find_p(char **tab_copy, t_position size, t_position *begin)
 	
 	i = 0;
 	j = 0;
-	while (tab_copy[i])
+	while (i < size.y)
 	{
 		j = 0;
-		while (tab_copy[i][j])
+		while (j < size.x)
 		{
 			if (tab_copy[i][j] == 'P')
 			{
@@ -71,22 +70,8 @@ int	ft_verify_path(char **tab)
 	
 	tab_copy = ft_make_tab_copy(tab, &size);
 	find_p(tab_copy, size, &begin);
-	//i = 0;
-	//while (tab_copy[i])
-	//{
-	//	j = 0;
-	//	while (tab_copy[i][j])
-	//	{
-	//		if (tab_copy[i][j] == 'P')
-	//		{
-	//			begin.y = i;
-	//			begin.x = j;
-	//		}
-	//		j++;
-	//	}
-	//	i++;
-	//}
 	flood_fill(tab_copy, size, begin);
+	print_map(tab_copy);
 	i = 0;
 	ret = 1;
 	while (i < size.y)
@@ -104,84 +89,29 @@ int	ft_verify_path(char **tab)
 	return (ret);
 }
 
-/* //tutu's version
-int	ft_verify_path(char **tab)
+
+void	fill(char **tab, t_position size, t_position cur)
 {
-	int	i;
-	int	j;
-	t_position	size;
-	t_position	begin;
-	char	**tab_copy;
+	if (cur.y < 0 || cur.y >= size.y || cur.x < 0 || cur.x >= size.x)
+		return;
 	
-	size.y = ft_strlen(tab[0]);
-	size.x = 0;
-	while (tab[size.x] != NULL)
-		size.x++;
-	tab_copy = malloc(sizeof(char *) * size.x);
-	i = 0;
-	while (i < size.x)
-	{
-		tab_copy[i] = ft_strdup(tab[i]);
-		i++;
-	}
-	size.y = 0;
-	while (tab_copy[size.y])
-	{
-		size.x = 0;
-		while (tab_copy[size.y][size.x])
-		{
-			if (tab_copy[size.y][size.x] == 'P')
-			{
-				begin.x = size.x;
-				begin.y = size.y;
-			}
-			size.x++;
-		}
-		size.y++;
-	}
-	flood_fill(tab_copy, size, begin);
-	i = 0;
-	while (i < size.y)
-	{
-		j = 0;
-		while (j < size.x)
-		{
-			if (tab_copy[i][j] == 'C' || tab_copy[i][j] == 'E')
-				return (0);
-			j++;
-		}
-		i++;
-	}
-	return (1);
+	// Check if the current cell is '0', 'C', or 'E'
+	if (tab[cur.y][cur.x] != '0' && tab[cur.y][cur.x] != 'C' && tab[cur.y][cur.x] != 'E' && tab[cur.y][cur.x] != 'P')
+		return;
+	
+	// Fill the current cell
+	tab[cur.y][cur.x] = 'F';
+	
+	// Recursively fill adjacent cells
+	fill(tab, size, (t_position){cur.x - 1, cur.y}); // Left
+	fill(tab, size, (t_position){cur.x + 1, cur.y}); // Right
+	fill(tab, size, (t_position){cur.x, cur.y - 1}); // Up
+	fill(tab, size, (t_position){cur.x, cur.y + 1}); // Down
 }
-*/
-void  flood_fill(char **tab, t_position size, t_position begin)
+
+void	flood_fill(char **tab, t_position size, t_position begin)
 {
-	t_position p;
-	
-	tab[begin.y][begin.x] = 'F';
-	if (begin.y > 0 && (tab[begin.y - 1][begin.x] == '0' || tab[begin.y - 1][begin.x] == 'C' || tab[begin.y - 1][begin.x] == 'E'))
-	{
-		p.x = begin.x;
-		p.y = begin.y - 1;
-		flood_fill(tab, size, p);
-	}
-	if ((begin.y < (size.y - 1)) && (tab[begin.y + 1][begin.x] == '0' || tab[begin.y + 1] [begin.x] == 'C' || tab[begin.y + 1][begin.x] == 'E'))
-	{
-		p.x = begin.x;
-		p.y = begin.y + 1;
-		flood_fill(tab, size, p);
-	}
-	if ((begin.x < (size.x - 1)) && (tab[begin.y][begin.x + 1] == '0' || tab[begin.y][begin.x + 1] == 'C' || tab[begin.y][begin.x + 1] == 'E'))
-	{
-		p.x = begin.x + 1;
-		p.y = begin.y;
-		flood_fill(tab, size, p);
-	}
-	if (begin.x > 0 && (tab[begin.y][begin.x - 1] == '0' || tab[begin.y][begin.x - 1] == 'C' || tab[begin.y][begin.x - 1] == 'E'))
-	{
-		p.x = begin.x - 1;
-		p.y = begin.y;
-		flood_fill(tab, size, p);
-	}
+	fill(tab, size, begin);
+	ft_printf("\n");
+	print_map(tab);
 }

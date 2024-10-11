@@ -3,12 +3,12 @@
 
 void	ft_init_floor(t_game *game)
 {
-	t_image floor_tile;
-	int	floor_tile_width;
-	int	floor_tile_height;
+	//t_image floor_tile;
+	//int	floor_tile_width;
+	//int	floor_tile_height;
 	
-	game->floor.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, "/Users/luyao/Projects/CFH/so_long_bak/assets/sprites/floor.xpm", &game->floor.size.width, &game->floor.size.height);
-	if (!floor_tile.xpm_ptr)
+	game->floor.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, FLOOR_TILE_PATH, &game->floor.size.width, &game->floor.size.height);
+	if (!game->floor.xpm_ptr)
 	{
 		ft_printf("Error\nFaild to load the floor, stopping game.\n");
 		exit (EXIT_FAILURE);

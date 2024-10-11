@@ -70,6 +70,7 @@
 		095AA4892C6F7DB40036770B /* ft_render_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 095AA4882C6F7DB40036770B /* ft_render_map.c */; };
 		095AA48B2C7372300036770B /* ft_manage_event.c in Sources */ = {isa = PBXBuildFile; fileRef = 095AA48A2C7372300036770B /* ft_manage_event.c */; };
 		0964658F2C91EF70004BDC29 /* ft_verify_path.c in Sources */ = {isa = PBXBuildFile; fileRef = 0964658E2C91EF70004BDC29 /* ft_verify_path.c */; };
+		09A14DF02CAC18510079C7F1 /* ft_verify_map_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 09A14DEF2CAC18510079C7F1 /* ft_verify_map_utils.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -153,6 +154,7 @@
 		095AA4882C6F7DB40036770B /* ft_render_map.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_render_map.c; sourceTree = "<group>"; };
 		095AA48A2C7372300036770B /* ft_manage_event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_manage_event.c; sourceTree = "<group>"; };
 		0964658E2C91EF70004BDC29 /* ft_verify_path.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_verify_path.c; sourceTree = "<group>"; };
+		09A14DEF2CAC18510079C7F1 /* ft_verify_map_utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ft_verify_map_utils.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 				095AA4402C6E08870036770B /* ft_put_floor.c */,
 				095AA43E2C6BA8CA0036770B /* ft_exit_game.c */,
 				095AA43C2C6BA6250036770B /* ft_init_window.c */,
+				09A14DEF2CAC18510079C7F1 /* ft_verify_map_utils.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				095AA42F2C6B934B0036770B /* ft_strncmp.c in Sources */,
 				095AA40E2C6B934B0036770B /* ft_isalnum.c in Sources */,
 				095AA4322C6B934B0036770B /* ft_strtrim.c in Sources */,
+				09A14DF02CAC18510079C7F1 /* ft_verify_map_utils.c in Sources */,
 				0964658F2C91EF70004BDC29 /* ft_verify_path.c in Sources */,
 				095AA4342C6B934B0036770B /* ft_tolower.c in Sources */,
 				095AA4262C6B934B0036770B /* ft_split.c in Sources */,

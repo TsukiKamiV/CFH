@@ -17,51 +17,59 @@ void	ft_init_images(t_game *game)
 	}
 }
 
-void	ft_render_map(t_game *game)
+void	ft_render_pos(t_game *game, char c, t_position grid)
 {
-	char	**map_current;
-	t_position	grid_pos;
-	t_position	pixel_pos;
-	int			delta_y;
-	t_image		*img_current;
+	int			dy;
+	t_image		*img;
+	t_position pixel;
 	
-	grid_pos.y = 0;
-	map_current = game->map.full;
-	while (map_current[grid_pos.y])
+	dy = 0;
+	if (ft_detect_c(c) == 0)
+		img = ft_process_elements(game, grid, c);
+	else
+		img = ft_facing(game, c, &dy);
+	pixel.y = (grid.y * (16 + 1)) + ((16 - img->size.height) / 2) + dy;
+	pixel.x = (grid.x * (16 + 1)) + ((16 - img->size.width) / 2);
+	draw_img(game->mlx_ptr, game->win_ptr, img->xpm_ptr, pixel.x, pixel.y);
+}
+
+void	ft_render_map(t_game *game, char **map)
+{
+	t_position	grid;
+	char	c;
+	
+	grid.y = 0;
+	while (map[grid.y])
 	{
-		grid_pos.x = 0;
-		while (map_current[grid_pos.y][grid_pos.x])
+		grid.x = 0;
+		while (map[grid.y][grid.x])
 		{
-			delta_y = 0;
-			//[1]
-			if ((char)map_current[grid_pos.y][grid_pos.x] == 'C' || (char)map_current[grid_pos.y][grid_pos.x] == 'E' || (char)map_current[grid_pos.y][grid_pos.x] == '1')
-				img_current = ft_process_elements(game, grid_pos, map_current);
-			else if ((char)map_current[grid_pos.y][grid_pos.x] == '0')
-			{
-				grid_pos.x++;
-				continue;
-			}
-			else
-				img_current = ft_process_person_dir(game, grid_pos, map_current, &delta_y);
-			pixel_pos.y = (grid_pos.y * (16 + 1)) + ((16 - img_current->size.height) / 2) + delta_y;
-			pixel_pos.x = (grid_pos.x * (16 + 1)) + ((16 - img_current->size.width) / 2);
-			mlx_put_image_to_window(game->mlx_ptr, game->win_ptr, img_current->xpm_ptr, pixel_pos.x, pixel_pos.y);
-			grid_pos.x++;
+			c = (char)map[grid.y][grid.x];
+			if (c != '0')
+				ft_render_pos(game, c, grid);
+			grid.x++;
 		}
-		grid_pos.y++;
+		grid.y++;
 	}
 }
 
-t_image *ft_process_elements(t_game *game, t_position grid_pos, char **map)
+int	ft_detect_c(char c)
+{
+	if (c == 'C' || c == 'E' || c == '1')
+		return (0);
+	return (1);
+}
+
+t_image *ft_process_elements(t_game *game, t_position grid_pos, char c)
 {
 	t_image	*ret_image;
 	
 	ret_image = NULL;
-	if ((char)map[grid_pos.y][grid_pos.x] == 'C')
+	if (c == 'C')
 		ret_image = &game->carrot;
-	else if ((char)map[grid_pos.y][grid_pos.x] == '1')
+	else if (c == '1')
 		ret_image = &game->wall;
-	else if ((char)map[grid_pos.y][grid_pos.x] == 'E')
+	else if (c == 'E')
 	{
 		game->exit_pos.x = grid_pos.x;
 		game->exit_pos.y = grid_pos.y;
@@ -70,18 +78,18 @@ t_image *ft_process_elements(t_game *game, t_position grid_pos, char **map)
 	return (ret_image);
 }
 
-t_image	*ft_process_person_dir(t_game *game, t_position grid_pos, char **map, int *delta_y)
+t_image	*ft_facing(t_game *game, char c, int *delta_y)
 {
 	t_image *image;
-	if ((char)map[grid_pos.y][grid_pos.x] == 'P')
+	if (c == 'P')
 		image = &game->person;
-	else if ((char)map[grid_pos.y][grid_pos.x] == 'B')
+	else if (c == 'B')
 		image = &game->person_back;
-	else if ((char)map[grid_pos.y][grid_pos.x] == 'F')
+	else if (c == 'F')
 		image = &game->person_front;
-	else if ((char)map[grid_pos.y][grid_pos.x] == 'L')
+	else if (c == 'L')
 		image = &game->person_left;
-	else if ((char)map[grid_pos.y][grid_pos.x] == 'R')
+	else if (c == 'R')
 		image = &game->person_right;
 	*delta_y = PERSON_DY;
 	return (image);

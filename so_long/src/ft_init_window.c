@@ -20,12 +20,13 @@ void	ft_check_map(t_game *game)
 		ft_printf("Error\nMap is not rectangular! Exiting game.\n");
 		exit (EXIT_FAILURE);
 	}
-	if (!ft_check_wall(game->map.full))
+	if (ft_check_wall(game->map.full) != 1)
 	{
+		printf("%d\n", ft_check_wall(game->map.full));
 		ft_printf("Error\nMap is not surrounded by wall.\n");
 		exit (EXIT_FAILURE);
 	}
-	if (!ft_check_item(game))
+	if (ft_check_item(game) != 1)
 	{
 		ft_printf("Error\nInvalid elements, exiting game.\n");
 		exit (EXIT_FAILURE);
