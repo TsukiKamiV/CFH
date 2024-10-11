@@ -15,7 +15,7 @@
 void	ft_free_tab(char **tab)
 {
 	int	i;
-	
+
 	if (!tab)
 		return ;
 	i = 0;
@@ -27,6 +27,12 @@ void	ft_free_tab(char **tab)
 	free (tab);
 }
 
+void	print_error()
+{
+	ft_printf("Error\n");
+	exit(EXIT_FAILURE);
+}
+
 int	main(int argc, char *argv[])
 {
 	t_stack	*a;
@@ -35,10 +41,7 @@ int	main(int argc, char *argv[])
 	a = NULL;
 	b = NULL;
 	if (argc == 1 || (argc == 2 && !argv[1][0]))
-	{
-		ft_printf("Error\n");
-		return (1);
-	}
+		print_error();
 	else if (argc == 2)
 		argv = split(argv[1], ' ');
 	init_stack_a(&a, argc, argv);

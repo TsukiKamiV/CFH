@@ -59,16 +59,6 @@ static void	append_node(t_stack **stack, int n)
 	}
 }
 
-void	print_tab(char **tab)
-{
-	int i = 0;
-	while (tab[i] != NULL)
-	{
-		ft_printf("%s\n", tab[i]);
-		i++;
-	}
-}
-
 void	init_stack_a(t_stack **a, int argc, char **argv)
 {
 	long	n;
