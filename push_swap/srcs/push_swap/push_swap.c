@@ -27,7 +27,7 @@ void	ft_free_tab(char **tab)
 	free (tab);
 }
 
-void	print_error()
+void	print_error(void)
 {
 	ft_printf("Error\n");
 	exit(EXIT_FAILURE);
