@@ -32,18 +32,18 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I ./
 
 %.o: %.c
-	${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} -c $< -o $@
 
 ${NAME}: ${OBJS}
-		ar rcs ${NAME} ${OBJS}
+		@ar rcs ${NAME} ${OBJS}
 
 all: ${NAME}
 
 clean:
-	rm -f ${OBJS}
+	@rm -f ${OBJS}
 
 fclean:
-	rm -f ${OBJS} ${NAME}
+	@rm -f ${OBJS} ${NAME}
 
 re:	fclean all
 

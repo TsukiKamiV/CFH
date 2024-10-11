@@ -46,7 +46,7 @@ void	p_parent(char **argv, char **envp, int *fd)
 {
 	int	fd_parent;
 	
-	fd_parent = open(argv[4], O_RDONLY | O_CREAT | O_TRUNC, 0777);
+	fd_parent = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd_parent == -1)
 		ft_error();
 	dup2(fd[0], STDIN_FILENO);
