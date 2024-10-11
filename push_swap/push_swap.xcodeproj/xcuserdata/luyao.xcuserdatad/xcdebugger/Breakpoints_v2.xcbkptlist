@@ -135,8 +135,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C369A52E-D47A-4E8C-A160-55D8CF6962F6"
-            shouldBeEnabled = "Yes"
+            uuid = "8A7FE631-AD2C-4569-87DA-78B4315020D4"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "srcs/push_swap/push_swap.c"

@@ -36,12 +36,12 @@ int	main(int argc, char *argv[])
 	b = NULL;
 	if (argc == 1 || (argc == 2 && !argv[1][0]))
 	{
-		//ft_printf("Error\n");
+		ft_printf("Error\n");
 		return (1);
 	}
 	else if (argc == 2)
 		argv = split(argv[1], ' ');
-	init_stack_a(&a, argc, argv + 1);
+	init_stack_a(&a, argc, argv);
 	if (!stack_sorted(a))
 	{
 		if (stack_len(a) == 2)

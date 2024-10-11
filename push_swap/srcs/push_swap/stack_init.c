@@ -74,21 +74,20 @@ void	init_stack_a(t_stack **a, int argc, char **argv)
 	long	n;
 	int		i;
 
-	i = 0;
-	while (argv[i])
+	i = 1;
+	while (argv[i] != NULL)
 	{
-		print_tab(argv);
 		if (error_syntax(argv[i]))
 		{
 			if (argc == 2)
-				free (argv[i]);
+				ft_free_tab(argv);
 			free_errors(a);
 		}
 		n = ft_atol(argv[i]);
 		if ((n > INT_MAX || n < INT_MIN) || (error_duplicate(*a, (int)n)))
 		{
 			if (argc == 2)
-				free (argv[i]);
+				ft_free_tab(argv);
 			free_errors(a);
 		}
 		append_node(a, (int)n);
