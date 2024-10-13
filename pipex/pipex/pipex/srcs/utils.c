@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/13 11:51:24 by luxu              #+#    #+#             */
+/*   Updated: 2024/10/13 11:53:11 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/pipex.h"
 
 void	ft_error(void)
@@ -12,7 +24,7 @@ char	*find_path(char *cmd, char **envp)
 	char	*path;
 	int		i;
 	char	*part_path;
-	
+
 	i = 0;
 	while (ft_strnstr(envp[i], "PATH", 4) == 0)
 		i++;
@@ -40,7 +52,7 @@ void	ft_execute(char *argv, char **envp)
 	char	**cmd;
 	int		i;
 	char	*path;
-	
+
 	i = -1;
 	cmd = ft_split(argv, ' ');
 	path = find_path(cmd[0], envp);

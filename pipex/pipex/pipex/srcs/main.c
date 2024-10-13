@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/13 11:50:59 by luxu              #+#    #+#             */
+/*   Updated: 2024/10/13 11:52:43 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/pipex.h"
 
 void	p_child(char **argv, char **envp, int *fd);
 void	p_parent(char **argv, char **envp, int *fd);
 
-int	main(int argc, char * argv[], char **envp)
+int	main(int argc, char *argv[], char **envp)
 {
 	int		pipefd[2];
 	pid_t	pid;
-	
+
 	if (argc == 5)
 	{
 		if (pipe(pipefd) == -1)
@@ -25,14 +37,13 @@ int	main(int argc, char * argv[], char **envp)
 		ft_putstr_fd("\033[31mError: Bad arguments\n\e[0m", 2);
 		ft_putstr_fd("Ex: ./pipex <file1> <cmd1> <cmd2> <file2>\n", 1);
 	}
-	return 0;
+	return (0);
 }
-
 
 void	p_child(char **argv, char **envp, int *fd)
 {
 	int	fd_child;
-	
+
 	fd_child = open(argv[1], O_RDONLY);
 	if (fd_child == -1)
 		ft_error();
@@ -45,7 +56,7 @@ void	p_child(char **argv, char **envp, int *fd)
 void	p_parent(char **argv, char **envp, int *fd)
 {
 	int	fd_parent;
-	
+
 	fd_parent = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd_parent == -1)
 		ft_error();
