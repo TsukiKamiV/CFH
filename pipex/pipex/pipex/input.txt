@@ -1,4 +1,1 @@
--rw-r--r--   1 luyao  staff   484 Oct 11 14:15 Makefile
-drwxr-xr-x   3 luyao  staff    96 Oct 11 13:36 includes
-drwxr-xr-x@ 56 luyao  staff  1792 Oct 11 14:18 libft
-drwxr-xr-x   4 luyao  staff   128 Oct 11 14:33 srcs
+abcdefg
