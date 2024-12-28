@@ -119,31 +119,31 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BFC7DAB8-A76D-45FD-BEE0-31BA8FD894CF"
+            uuid = "C4D743A3-8F88-4C76-A8F8-C0F4B235AB82"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "srcs/push_swap/push_swap.c"
+            filePath = "srcs/push_swap/init_a_to_b.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "print_error()"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "cost_analysis_a(a, b)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8A7FE631-AD2C-4569-87DA-78B4315020D4"
-            shouldBeEnabled = "No"
+            uuid = "9E1B2888-D805-42E9-AF4B-AF65F8A57028"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "srcs/push_swap/push_swap.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>

@@ -6,8 +6,8 @@ MAIN	= srcs/main.c
 
 HEADER	= -Iincludes
 
-CC 		= gcc
-CFLAGS 	= -Wall -Wextra -Werror -g
+CC 		= cc
+CFLAGS 	= -Wall -Wextra -Werror
 
 .c.o:		%.o : %.c
 					@gcc ${CFLAGS} ${HEADER} -c $< -o $@

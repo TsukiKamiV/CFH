@@ -14,7 +14,7 @@
 
 void	ft_error(void)
 {
-	perror("\033[31mError");
+	perror("\033[33mError");
 	exit(EXIT_FAILURE);
 }
 
