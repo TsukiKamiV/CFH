@@ -51,7 +51,20 @@ struct sigaction	signal_launching(void)
 	return (sig_config);
 };
 
-int main(int argc, const char * argv[]) 
+int main(int argc, const char * argv[])
+{
+	char c;
+	
+	//disable_echo();  // 禁用回显
+	printf("请输入一个字符: ");
+	c = getchar();
+	enable_echo();   // 重新启用回显
+	
+	printf("\n你输入的字符是: %c\n", c);
+	return 0;
+}
+
+int main1(int argc, const char * argv[])
 {
 	t_shell_data *data = malloc(sizeof(t_shell_data));
 	if (!data)
