@@ -1,0 +1,62 @@
+NAME = minishell
+CC = cc
+FLAGS = -Wall -Wextra -Werror -g3
+READLINE_FLAGS = -lreadline -lhistory
+LIBFT_PATH = ./libft
+LIBFT_LIB = $(LIBFT_PATH)/libft.a
+SRCS = minishell.c \
+		builtins/env.c \
+		builtins/pwd.c \
+		builtins/export.c \
+		builtins/unset.c \
+		data_handling/data_struct_utils.c \
+		mainloop_handling/minishell_mainloop.c \
+		signal_handling/signal_utils.c \
+		exec_handling/builtins_exec.c \
+		token_handling/tokenize_input.c \
+		token_handling/parse_utils.c \
+		general_utils/error_exits.c \
+		general_utils/string_array_manips.c
+
+OBJS = $(SRCS:.c=.o)
+
+RED = \033[0;31m
+GREEN = \033[0;32m
+YELLOW = \033[0;33m
+MAGENTA = \033[0;35m
+RESET = \033[0m
+
+# Dégradé de YELLOW à rouge
+GRADATION1_YELLOW = \033[38;5;220m
+GRADATION2_YELLOW = \033[38;5;214m
+GRADATION3_YELLOW = \033[38;5;208m
+GRADATION4_YELLOW = \033[38;5;202m
+
+# $@ : nom de la cible
+# $< : nom de la première dépendance
+# $^ : liste des dépendances
+# $? : liste des dépendances plus récentes que la cible
+# $* : nom du fichier sans suffixe
+
+all : $(NAME)
+
+$(NAME) : $(OBJS)
+	@make -C $(LIBFT_PATH)
+	@$(CC) $(FLAGS) $(OBJS) $(LIBFT_LIB) $(READLINE_FLAGS) -o $(NAME) && echo "[$(GREEN)created$(RESET)] $(NAME) executable."
+
+%.o : %.c
+    #$< Target (.o) | $@ = all
+	@$(CC) $(FLAGS) -c $< -o $@ && echo "[$(GRADATION2_YELLOW)minishell$(RESET)] $@ created."
+
+valgrind :
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
+clean :
+	@rm -f $(OBJS) && echo "[$(GRADATION4_YELLOW)removed$(RESET)] minishell objects"
+
+fclean : clean
+	@rm -f $(NAME) && echo "[$(GRADATION4_YELLOW)removed$(RESET)] $(NAME) executable"
+	@make -C $(LIBFT_PATH) fclean
+
+re : fclean all
+
+.PHONY : all valgrind clean fclean re
