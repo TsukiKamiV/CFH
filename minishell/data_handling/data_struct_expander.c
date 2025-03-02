@@ -249,7 +249,7 @@ char *escape_dollar_signs(const char *str)
 //	}
 //}
 
-void expand_cmd_token(t_token *tokens, t_shell_data *data)
+int expand_cmd_token(t_token *tokens, t_shell_data *data)
 {
 	t_token *cur = tokens;
 	char	*tmp;
@@ -301,7 +301,7 @@ void expand_cmd_token(t_token *tokens, t_shell_data *data)
 						//ft_putstr_fd("> ", 1);
 						//fflush(stdout);
 						free(new_value);
-						return;
+						return (0);
 					}
 					else if (cur->value[i] == '\\' && cur->value[i + 1] == '$')
 					{
@@ -332,4 +332,5 @@ void expand_cmd_token(t_token *tokens, t_shell_data *data)
 		}
 		cur = cur->next;
 	}
+	return (0);
 }

@@ -90,6 +90,7 @@ bool is_incomplete_command(const char *line)
 int	minishell_mainloop(t_shell_data *shell_data)
 {
 	int status = 0;
+	int	parse_ret = 0;
 	// int i;
 	// t_token	*current;
 
@@ -165,7 +166,20 @@ int	minishell_mainloop(t_shell_data *shell_data)
 		else if (*shell_data->line)
 		{
 			add_history(shell_data->line);
-			parse_line(shell_data);
+			parse_ret = parse_line(shell_data);
+			if (parse_ret == 0)
+				shell_data->parse_state = 0;
+			if (parse_ret != 0)
+			{
+				free (shell_data->line);
+				free_token_list(shell_data->tokens);
+				free_command_table(&shell_data->command_table);
+				shell_data->line = NULL;
+				shell_data->tokens = NULL;
+				shell_data->command_table = NULL;
+				shell_data->parse_state = parse_ret;
+				continue;
+			}
 			//////// shell_data->tokens et pas shell_data->command_table->token_list ? ///////////////
 			if (!shell_data->tokens)
 				continue;//Pour gérer la ligne de commande avec que des whitespaces ------- On devrait free line ou quelque chose ici non ?

@@ -9,7 +9,10 @@ char    *handle_exit_status(char *res, t_shell_data *data)
     char    *exit_status;
     char    *tmp;
 
-    exit_status = ft_itoa(data->exit_status);
+	if (data->parse_state != 0)
+		exit_status = ft_itoa(data->parse_state);
+	else
+    	exit_status = ft_itoa(data->exit_status);
     tmp = append_str(res, exit_status);
     free (exit_status);
     return (tmp);

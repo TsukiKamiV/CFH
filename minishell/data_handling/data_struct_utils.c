@@ -29,6 +29,7 @@ t_shell_data	*init_shell_data(char **env)
 	shell_data->command_table = NULL;
 	shell_data->tokens = NULL;
 	shell_data->exit_status = 0;
+	shell_data->parse_state = 0;
 	get_shell_pid(shell_data);
 	return (shell_data);
 }

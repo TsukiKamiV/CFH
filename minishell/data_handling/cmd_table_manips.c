@@ -118,7 +118,7 @@ t_token *parse_tokens_into_command_table(t_command_table *cmd, t_token *current)
 /**
  *@brief séparée de parse_tokens_into_command_table pour des raisons des normes
  */
-t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t_shell_data *data)
+t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t_shell_data *data, int *ret)
 {
 	if (!current)
 		return (NULL);
@@ -128,6 +128,7 @@ t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t
 		if (!current->next || current->next->type == PIPE)
 		{
 			set_error(data, "Syntax error near unexpected token '|'\n", 2);
+			*ret = 2;
 			return (NULL);
 		}
 		cmd->check_pipe = true;
@@ -141,10 +142,14 @@ t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t
 			set_error(data, "Syntax error near unexpected token '", 2);
 			ft_putstr_fd(current->value, 2);
 			ft_putendl_fd("'", 2);
+			*ret = 2;
 			return (NULL);
 		}
 		if (handle_redirection(cmd, current) == -1)
+		{
+			*ret = 1;
 			return (NULL);
+		}
 		current = current->next;
 		if (current)
 			return (current->next);
@@ -158,6 +163,7 @@ t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t
 		if (!cmd->parsed_command[*i])
 		{
 			free_string_array(cmd->parsed_command);
+			*ret = 1;
 			return (NULL);
 		}
 		(*i)++;
@@ -174,7 +180,7 @@ t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t
  * @param current Le token courant dans la liste.
  * @return Le token à traiter pour la commande suivante (si PIPE) ou NULL.
  */
-t_token	*parse_tokens_into_command_table(t_command_table *cmd, t_token *current, t_shell_data *data)
+t_token	*parse_tokens_into_command_table(t_command_table *cmd, t_token *current, t_shell_data *data, int *ret)
 {
 	t_token	*start_of_cmd;
 	int		i;
@@ -183,12 +189,14 @@ t_token	*parse_tokens_into_command_table(t_command_table *cmd, t_token *current,
 	start_of_cmd = current;
 	cmd->parsed_command = calloc(256, sizeof(char *));
 	if (!cmd->parsed_command)
+	{
+		*ret = 1;
 		return (NULL);
-
+	}
 	while (current)
 	{
-		current = tokens_into_cmd_annex(cmd, current, &i, data);
-		if (!current)
+		current = tokens_into_cmd_annex(cmd, current, &i, data, ret);
+		if (*ret != 0)
 			break;
 		if (cmd->check_pipe)
 			break;
@@ -256,26 +264,29 @@ t_token	*parse_tokens_into_command_table(t_command_table *cmd, t_token *current,
  * @param un pointeur du tableau de cmd et un double pointeur pour naviguer dans les tokens
  * @return remplissage du structure, ne retourne rien
  */
-void	fill_command_table(t_shell_data *data)
+int	fill_command_table(t_shell_data *data)
 {
 	t_token	*current;
 	t_command_table	*new_cmd;
 	t_command_table	*last_cmd;
+	int				ret;
 
 	current = data->tokens;
 	last_cmd = NULL;
+	ret = 0;
 	while (current)
 	{
 		new_cmd = init_command_table();
 		if (!new_cmd)
 			error_exit(data, "Failed to create command table.", 1);//quel est le code d'erreur ici?
-		current = parse_tokens_into_command_table(new_cmd, current, data);
+		current = parse_tokens_into_command_table(new_cmd, current, data, &ret);
 		if (!data->command_table)
 			data->command_table = new_cmd;
 		else
 			last_cmd->next = new_cmd;
 		last_cmd = new_cmd;
 	}
+	return (ret);
 }
 
 /**

@@ -114,6 +114,7 @@ typedef struct	s_shell_data
 	char	*line;
 	char	**splitted_prev_command;
 	int		exit_status;
+	int		parse_state;
 	char	*shell_name;
 	struct sigaction	sig_config;
 	t_command_table	*command_table;
@@ -191,14 +192,14 @@ void			add_token(t_token **head, t_token *new_token); // DOUBLON_OK
 void 			free_token_list(t_token *head);
 void 			free_command_table(t_command_table **head);
 //int 			cmd_table_to_shell_data(t_shell_data *shell_data, char **parsed_command);
-void			fill_command_table(t_shell_data *data);//called by parse_line to communicate the tokens and command tables
+int				fill_command_table(t_shell_data *data);//called by parse_line to communicate the tokens and command tables
 //t_token			*parse_tokens_into_command_table(t_command_table *cmd, t_token *current, t_shell_data *data);
 //t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t_shell_data *data);
 
 //data_handling/data_struct_expander.c
 char	*remove_surrounding_quotes(char *str);
 void	expand_variables(char **str, t_shell_data *data);
-void	expand_cmd_token(t_token *tokens, t_shell_data *data);
+int		expand_cmd_token(t_token *tokens, t_shell_data *data);
 
 //data_handling/expander_utils.c
 char	*handle_exit_status(char *res, t_shell_data *data);
@@ -269,7 +270,7 @@ void	finalize_token(t_tokenizer *t);
 //token_handling/tokenize_input.c
 //char	**parse_commands(const char *input);
 //char	*prepare_input(const char *input);
-void	parse_line(t_shell_data *data);
+int		parse_line(t_shell_data *data);
 void	print_tab(char **tab); // A supprimer
 
 //token_handling/parse_bools_1.c

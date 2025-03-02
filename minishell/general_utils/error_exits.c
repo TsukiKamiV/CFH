@@ -6,7 +6,7 @@
 /*   By: lpantign <maildelulua42@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 19:29:47 by luxu              #+#    #+#             */
-/*   Updated: 2025/01/20 13:49:47 by lpantign         ###   ########.fr       */
+/*   Updated: 2025/03/02 21:28:51 by yourLogin        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ void	set_error(t_shell_data *data, const char *msg, int status)
 {
 	if (!data)
 		return ;
+	(void) status;
 	if (msg)
 	{
 		ft_putstr_fd("Error: ", 2);
 		ft_putstr_fd((char *)msg, 2);
 		//ft_putstr_fd("\n", 2);
 	}
-	data->exit_status = status;
+	//data->parse_state = status;
+	//free_shell_data(data);
 }

@@ -84,7 +84,10 @@ void	get_shell_pid(t_shell_data *data)
 char	*expand_variable(char *res, const char *str, size_t *i, t_shell_data *data)
 {
 	char	*var_name;
+	//size_t	var_start;
 	
+	if (!str[*i + 1])
+		return (res);
 	if (str[*i + 1] == '?')
 	{
 		(*i) += 2;

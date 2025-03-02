@@ -37,11 +37,11 @@ void	tokenize_line_new(t_shell_data *data)
 	tok.prev = NULL;
 	tok.data = data;
 	parse_loop(&tok);
-	if (tok.q_state != NO_QUOTE)
-	{
-		ft_putstr_fd("Warning: Unclosed quotes.\n", 2);
-		// Example: free_tokens(data->tokens); data->tokens = NULL
-	}
+	//if (tok.q_state != NO_QUOTE)
+	//{
+	//	ft_putstr_fd("Warning: Unclosed quotes.\n", 2);
+	//	// Example: free_tokens(data->tokens); data->tokens = NULL
+	//}
 }
 
 //fonction outil à supprimer
@@ -60,7 +60,7 @@ void print_tab(char **tab)
 *@param shell_data
 *@return void (tout est stocke ds le structure)
 */
-void parse_line(t_shell_data *data)
+int parse_line(t_shell_data *data)
 {
 	if (!validate_quotes(data->line))
 	{
@@ -70,10 +70,11 @@ void parse_line(t_shell_data *data)
 			free_token_list(data->tokens);
 			data->tokens = NULL;
 		}
-		return;
+		//return ;
+		return (2);
 	}
-	if (is_line_empty_or_whitespace(data->line))
-		return;
+	if (is_line_empty_or_whitespace(data->line))//free data->line?
+		return (0);
 	tokenize_line_new(data);
 	if (!data->tokens)
 	{
@@ -83,8 +84,14 @@ void parse_line(t_shell_data *data)
 			free_token_list(data->tokens);
 			data->tokens = NULL;
 		}
-		return;
+		//return ;
+		return (2);
 	}
 	expand_cmd_token(data->tokens, data);
-	fill_command_table(data);
+	//fill_command_table(data);
+	//new:
+	//if (fill_command_table(data) != 0)
+	//	return (2);
+	//return (0);
+	return (fill_command_table(data));
 }
