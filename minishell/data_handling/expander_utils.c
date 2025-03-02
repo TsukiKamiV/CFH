@@ -152,6 +152,7 @@ char	*perform_expansion(const char *str, t_shell_data *data)
 	char	*res;
 	char	*next_dollar;
 	size_t	start;
+	size_t	local_start;
 	
 	if (!str)
 		return (NULL);
@@ -178,8 +179,9 @@ char	*perform_expansion(const char *str, t_shell_data *data)
 		}
 		else
 		{
-			res = expand_variable(res, str, &start, data);
-			str += start;
+			local_start = 0;
+			res = expand_variable(res, str, &local_start, data);
+			str += local_start;
 		}
 	}
 	return (res);
