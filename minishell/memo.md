@@ -10,7 +10,7 @@
 
 -- 其他字符处理的错误：
 
-1. echo "home is: $HOME" 命令中的扩展内容不能正确显示；但echo "$HOME is home"可以；
+1. (已解决）echo "home is: $HOME" 命令中的扩展内容不能正确显示；但echo "$HOME is home"可以 
 
 2. 以下命令都应显示home：
 	echo 'ho'"me"
