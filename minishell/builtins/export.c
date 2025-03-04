@@ -129,7 +129,7 @@ int handle_export_no_arguments(t_shell_data *data)
 {
 	int env_size, export_size, total_size;
 	char **sorted_exports;
-	
+
 	count_env_and_exported_vars(data, &env_size, &export_size);
 	total_size = env_size + export_size;
 	sorted_exports = malloc(sizeof(char *) * (total_size + 1));
@@ -163,7 +163,7 @@ void process_export_variable(t_shell_data *data, t_token *token)
 	char *key;
 	int index;
 	int has_equal;
-	
+
 	while (token)
 	{
 		has_equal = (ft_strchr(token->value, '=') != NULL);
@@ -184,7 +184,7 @@ int export_builtin(t_shell_data *data)
 {
 	t_token *token;
 	char	*key;
-	
+
 	token = data->command_table->token_list->next;
 	if (!token || token->type == REDIR || token->type == PIPE)
 		return handle_export_no_arguments(data);

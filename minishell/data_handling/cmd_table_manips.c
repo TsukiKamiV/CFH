@@ -286,6 +286,7 @@ int	fill_command_table(t_shell_data *data)
 			last_cmd->next = new_cmd;
 		last_cmd = new_cmd;
 	}
+	//print_tab(data->command_table->parsed_command);
 	return (ret);
 }
 

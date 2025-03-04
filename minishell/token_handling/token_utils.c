@@ -13,7 +13,7 @@
 #include "../minishell.h"
 
 //initialiser le structure token et former la liste
-t_token	*create_token(const char *value, int type, t_quote_state q_state)
+t_token	*create_token(const char *value, int type)
 {
 	t_token	*new_token;
 	
@@ -22,7 +22,7 @@ t_token	*create_token(const char *value, int type, t_quote_state q_state)
 		return (NULL);
 	new_token->value = ft_strdup(value);
 	new_token->type = type;
-	new_token->quote_state = q_state;
+	new_token->quote_state = NO_QUOTE;
 	new_token->previous = NULL;
 	new_token->next = NULL;
 	return (new_token);
@@ -133,7 +133,7 @@ void	finalize_token(t_tokenizer *t)
 	if (t->buf_i > 0)
 	{
 		t->buffer[t->buf_i] = '\0';
-		add_token(&t->data->tokens, create_token(t->buffer, determine_token_type(t->buffer, t->prev), t->q_state));
+		add_token(&t->data->tokens, create_token(t->buffer, determine_token_type(t->buffer, t->prev)));
 		if (!t->prev)
 			t->prev = t->data->tokens;
 		else

@@ -133,6 +133,7 @@ typedef struct	s_tokenizer
 	int				buf_i;
 	t_token			*prev;
 	t_shell_data	*data;
+	bool			expanding;
 }				t_tokenizer;
 
 // builtins/*.c
@@ -160,17 +161,16 @@ void print_sorted_exports(char **sorted_exports, int fd_out);
 int		is_valid_identifier(const char *str);
 //builtins/exit.c
 int	exit_builtin(t_shell_data *shell_data);
-//builtins/cd.c
-int	cd_builtin(t_shell_data *data);
+
 //builtins/cd_utils.c
 char	*ft_strjoin_3(const char *s1, const char *s2, const char *s3);
 int	update_env_entry(char ***env, const char *var, const char *new_entry, size_t var_len);
 void	append_env_entry(char ***env, const char *new_entry, int i);
 void	set_env_value(char ***env, const char *var, const char *value);
 //builtins/cd.c
-int	cd_builtin(t_shell_data *data);
+int cd_builtin(t_command_table *cmd, t_shell_data *data);
 int	cd_change_dir(t_shell_data *data, char *dir);
-char	*get_cd_dir(t_shell_data *data);
+char	*get_cd_dir(t_command_table *cmd, t_shell_data *data);
 
 // data_handling/data_struct_utils.c
 t_shell_data	*init_shell_data(char **env);
@@ -231,7 +231,8 @@ void	ignore_signals_in_parent(struct sigaction *old_sigint, struct sigaction *ol
 void	heredoc_sig_handler(int sig);
 
 // exec_handling/builtins_exec.c
-int	execute_simple_builtin_command(t_shell_data *shell_data);
+// int	execute_simple_builtin_command(t_shell_data *shell_data);
+int	execute_builtin(t_command_table *cmd, t_shell_data *shell_data);
 
 //exec_handling/system_exec.c
 int	execute_system_command(t_command_table *cmd, t_shell_data *shell_data);
@@ -242,6 +243,7 @@ int	execute_piped_commands(t_command_table *cmd, t_shell_data *shell_data);
 // exec_handling/simple_command_handling.c
 char	*verify_simple_command(t_command_table *cmd, t_shell_data *shell_data);
 int	execute_simple_child(t_command_table *cmd, t_shell_data *shell_data, char *correct_cmd_path);
+void execute_external_command(t_command_table *cmd, t_shell_data *shell_data, char **paths);
 
 // exec_handling/command_exec.c
 int	exec_simple_command(t_command_table *cmd, t_shell_data *shell_data);
@@ -261,7 +263,7 @@ void	toggle_quote_state(t_quote_state *q_state, char c);
 bool	handle_quote_or_operator(t_tokenizer *t);
 
 //token_handling/token_utiles.c
-t_token	*create_token(const char *value, int type, t_quote_state q_state);
+t_token	*create_token(const char *value, int type);
 void	add_token(t_token **head, t_token *new_token);
 int		ft_strcmp(const char *s1, const char *s2);
 int		determine_token_type(const char *value, const t_token *previous_token);

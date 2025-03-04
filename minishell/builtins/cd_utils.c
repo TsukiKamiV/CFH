@@ -7,7 +7,7 @@ char	*ft_strjoin_3(const char *s1, const char *s2, const char *s3)
 	size_t	len1;
 	size_t	len2;
 	size_t	len3;
-	
+
 	if (!s1 || !s2 || !s3)
 		return (NULL);
 	len1 = ft_strlen(s1);
@@ -27,7 +27,7 @@ int	update_env_entry(char ***env, const char *var, const char *new_entry, size_t
 {
 	int	i;
 	char *dup_entry;
-	
+
 	i = 0;
 	while ((*env)[i])
 	{
@@ -49,18 +49,20 @@ void	append_env_entry(char ***env, const char *new_entry, int i)
 {
 	char	**new_env;
 	int		j;
-	
+
 	new_env = ft_calloc(i + 2, sizeof(char *));
 	if (!new_env)
-		return ;
+		return;
 	j = 0;
 	while ((*env)[j])
 	{
-		new_env[j] = (*env)[j];
+		new_env[j] = ft_strdup((*env)[j]);
+		free((*env)[j]);
 		j++;
 	}
-	new_env[j] = (char *)new_entry;
-	free (*env);
+	new_env[j] = ft_strdup(new_entry);
+	new_env[j + 1] = NULL;
+	free(*env);
 	*env = new_env;
 }
 
@@ -74,7 +76,7 @@ void	set_env_value(char ***env, const char *var, const char *value)
 	char	*new_entry;
 	size_t	var_len;
 	int		i;
-	
+
 	if (!env || !*env || !var || !value)
 		return ;
 	var_len = ft_strlen(var);

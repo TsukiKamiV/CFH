@@ -36,6 +36,7 @@ void	tokenize_line_new(t_shell_data *data)
 	tok.buf_i = 0;
 	tok.prev = NULL;
 	tok.data = data;
+	tok.expanding = false;
 	parse_loop(&tok);
 	//if (tok.q_state != NO_QUOTE)
 	//{
@@ -70,28 +71,13 @@ int parse_line(t_shell_data *data)
 			free_token_list(data->tokens);
 			data->tokens = NULL;
 		}
-		//return ;
 		return (2);
 	}
 	if (is_line_empty_or_whitespace(data->line))//free data->line?
 		return (0);
 	tokenize_line_new(data);
 	if (!data->tokens)
-	{
-		//fprintf(stderr, "Error: Tokenization failed.\n");
-		if (data->tokens)
-		{
-			free_token_list(data->tokens);
-			data->tokens = NULL;
-		}
-		//return ;
 		return (2);
-	}
 	expand_cmd_token(data->tokens, data);
-	//fill_command_table(data);
-	//new:
-	//if (fill_command_table(data) != 0)
-	//	return (2);
-	//return (0);
 	return (fill_command_table(data));
 }

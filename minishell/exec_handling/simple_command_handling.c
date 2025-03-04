@@ -6,27 +6,44 @@
  * @param shell_data La structure principale de minishell
  * @return le chemin correct vers l'exécutable si la commande est valide, NULL sinon
  */
-char *verify_simple_command(t_command_table *cmd, t_shell_data *shell_data)
-{
-	char **cmd_paths;
-	char *correct_cmd_path = NULL;
+// char *verify_simple_command(t_command_table *cmd, t_shell_data *shell_data)
+// {
+// 	char **cmd_paths;
+// 	char *correct_cmd_path = NULL;
 
-	if (!cmd->token_list || !shell_data || !cmd->parsed_command || !cmd->parsed_command[0])
-		return (NULL);
-	if (cmd->token_list->type == BUILTIN)
-		return (NULL);  // Les builtins seront traitées séparément
-	else if (cmd->token_list->type == COMMAND)
-	{
-		cmd_paths = extract_and_split_env_path(shell_data->env);
-		if (!cmd_paths)
-			return (NULL);
-		correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], cmd_paths);
-		free_string_array(cmd_paths);
-		// Ne pas libérer correct_cmd_path ici car utilisé par execve !
-		return (correct_cmd_path);
-	}
-	return (NULL);
-}
+// 	if (!cmd->token_list || !shell_data || !cmd->parsed_command || !cmd->parsed_command[0])
+// 		return (NULL);
+// 	if (cmd->token_list->type == BUILTIN)
+// 		return (NULL);  // Les builtins seront traitées séparément
+// 	else if (cmd->token_list->type == COMMAND)
+// 	{
+// 		cmd_paths = extract_and_split_env_path(shell_data->env);
+// 		if (!cmd_paths)
+// 			return (NULL);
+// 		correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], cmd_paths);
+// 		free_string_array(cmd_paths);
+// 		// Ne pas libérer correct_cmd_path ici car utilisé par execve !
+// 		return (correct_cmd_path);
+// 	}
+// 	return (NULL);
+// }
+
+// void execute_external_command(t_command_table *cmd, t_shell_data *shell_data, char **paths)
+// {
+// 	char *correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], paths);
+// 	if (!correct_cmd_path)
+// 	{
+// 		ft_putendl_fd("Command not found", 2);
+// 		free_string_array(paths);
+// 		error_exit(shell_data, NULL, 127);
+// 	}
+// 	execve(correct_cmd_path, cmd->parsed_command, shell_data->env);
+// 	perror("execve");
+// 	free_string_array(paths);
+// 	exit(EXIT_FAILURE);
+// }
+
+
 
 /**
  * @brief Exécute un processus enfant pour une commande système simple (sans pipe)

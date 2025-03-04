@@ -19,9 +19,73 @@ static int wait_piped_pids(pid_t *pids_tab, char **paths, int pid_count)
 	return status;
 }
 
+// static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
+// {
+// 	char *correct_cmd_path = NULL;
+
+// 	if (*fd_in != 0)
+// 	{
+// 		dup2(*fd_in, STDIN_FILENO);
+// 		close(*fd_in);
+// 	}
+// 	if (cmd->next)
+// 	{
+// 		dup2(pipefd[1], STDOUT_FILENO);
+// 		close(pipefd[0]);
+// 		close(pipefd[1]);
+// 	}
+// 	if (cmd->fd_in != 0)
+// 	{
+// 		dup2(cmd->fd_in, STDIN_FILENO);
+// 		close(cmd->fd_in);
+// 	}
+// 	if (cmd->fd_out != 1)
+// 	{
+// 		dup2(cmd->fd_out, STDOUT_FILENO);
+// 		close(cmd->fd_out);
+// 	}
+
+// 	correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], paths);
+// 	if (!correct_cmd_path)
+// 	{
+// 		if (ft_strcmp(cmd->token_list->value, ".") == 0)
+// 			ft_putendl_fd(".: filename argument required", 2);
+// 		else if (!cmd->next)
+// 			ft_putendl_fd("Command not found", 2);
+
+
+// 		// Libérer les ressources allouées dans le processus enfant avant exit
+// 		free_string_array(paths);
+// 		error_exit(shell_data, NULL, 127);
+// 	}
+
+// 	execve(correct_cmd_path, cmd->parsed_command, shell_data->env);
+// 	perror("execve");
+// 	exit(EXIT_FAILURE);
+// }
+
+static void piped_parent_routine(int *pipefd, int *fd_in, t_command_table *cmd)
+{
+	if (*fd_in != 0)
+		close(*fd_in);
+
+	// Por la prochaine commande, si elle existe, fd_in devient le descripteur de lecture du pipe
+	if (cmd->next)
+	{
+		close(pipefd[1]);
+		*fd_in = pipefd[0];
+	}
+}
+
 static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
 {
 	char *correct_cmd_path = NULL;
+
+	if (!shell_data || !cmd || !cmd->parsed_command || !cmd->parsed_command[0]) // Add your style of check
+	{
+		free_string_array(paths);
+		error_exit(shell_data, "Invalid command or shell data", 1);
+	}
 
 	if (*fd_in != 0)
 	{
@@ -45,36 +109,29 @@ static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t
 		close(cmd->fd_out);
 	}
 
+	if (is_builtin(cmd->parsed_command[0]))
+	{
+		int status = execute_builtin(cmd, shell_data);
+		free_string_array(paths);
+		exit(status);
+	}
+
+	// Handle external command
 	correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], paths);
 	if (!correct_cmd_path)
 	{
 		if (ft_strcmp(cmd->token_list->value, ".") == 0)
 			ft_putendl_fd(".: filename argument required", 2);
-		else if (!cmd->next)
+		else
 			ft_putendl_fd("Command not found", 2);
-
-
-		// Libérer les ressources allouées dans le processus enfant avant exit
 		free_string_array(paths);
 		error_exit(shell_data, NULL, 127);
 	}
 
 	execve(correct_cmd_path, cmd->parsed_command, shell_data->env);
 	perror("execve");
+	free_string_array(paths);
 	exit(EXIT_FAILURE);
-}
-
-static void piped_parent_routine(int *pipefd, int *fd_in, t_command_table *cmd)
-{
-	if (*fd_in != 0)
-		close(*fd_in);
-
-	// Por la prochaine commande, si elle existe, fd_in devient le descripteur de lecture du pipe
-	if (cmd->next)
-	{
-		close(pipefd[1]);
-		*fd_in = pipefd[0];
-	}
 }
 
 /**

@@ -1,70 +1,5 @@
 #include "../minishell.h"
 
-//char	*allocate_interpreted_string(const char *str)
-//{
-//	char	*res;
-//
-//	if (!str)
-//		return (NULL);
-//	res = malloc(ft_strlen(str) + 1);
-//	if (!res)
-//		return (NULL);
-//	return (res);
-//}
-
-//char	handle_escape_char(char c)
-//{
-//	if (c == 'n')
-//		return ('\n');
-//	else if (c == 't')
-//		return ('\t');
-//	else if (c == '\\')
-//		return ('\\');
-//	else if (c == '\'')
-//		return ('\'');
-//	else if (c == '\"')
-//		return ('\"');
-//	return ('\0');
-//}
-
-//void	process_backslashes(const char *str, char *res)
-//{
-//	int	i;
-//	int	j;
-//	char escaped;
-//
-//	i = 0;
-//	j = 0;
-//	while (str[i])
-//	{
-//		if (str[i] == '\\' && str[i + 1] != '\0')
-//		{
-//			i++;
-//			escaped = handle_escape_char(str[i]);
-//			if (escaped != '\0')
-//				res[j] = escaped;
-//			else
-//				res[j] = str[i];
-//		}
-//		else
-//			res[j] = str[i];
-//		i++;
-//		j++;
-//	}
-//	res[j] = '\0';
-//}
-
-//char	*backslash_interpret(const char *str)
-//{
-//	char	*res;
-//
-//	res = allocate_interpreted_string(str);
-//	if (!res)
-//		return (NULL);
-//	process_backslashes(str, res);
-//	return (res);
-//}
-
 char *escape_dollar_signs(const char *str)
 {
 	int 	i;
@@ -88,168 +23,7 @@ char *escape_dollar_signs(const char *str)
 	return (res);
 }
 
-//void expand_cmd_token(t_token *tokens, t_shell_data *data)
-//{
-//	t_token *cur = tokens;
-//	char	*tmp;
-//
-//	while (cur)
-//	{
-//		if (cur->quote_state != SINGLE_QUOTE)
-//		{
-//			tmp = perform_expansion(cur->value, data);
-//			if (tmp)
-//			{
-//				free (cur->value);
-//				cur->value = tmp;
-//			}
-//		}
-//		//if (cur->quote_state == DOUBLE_QUOTE)
-//		//{
-//		//	tmp = backslash_interpret(cur->value);
-//		//	if (tmp)
-//		//	{
-//		//		free (cur->value);
-//		//		cur->value = tmp;
-//		//	}
-//		//}
-//		//printf("the current token value is: %s\n", cur->value);
-//		cur = cur->next;
-//	}
-//}
-
-/*void expand_cmd_token(t_token *tokens, t_shell_data *data)
-{
-	t_token *cur = tokens;
-	char	*tmp;
-	bool	escaped_dollar;
-	
-	while (cur)
-	{
-		escaped_dollar = false;
-		if (cur->quote_state != SINGLE_QUOTE)
-		{
-			// Check for `\$` inside double quotes and prevent expansion
-			if (cur->quote_state == DOUBLE_QUOTE)
-			{
-				int i = 0;
-				while (cur->value[i])
-				{
-					// If we find `\$`, mark `escaped_dollar`
-					if (cur->value[i] == '\\' && cur->value[i + 1] == '$')
-					{
-						escaped_dollar = true;
-						break;
-					}
-					i++;
-				}
-			}
-			// Perform expansion only if there is no `\$`
-			if (!escaped_dollar)
-			{
-				tmp = perform_expansion(cur->value, data);
-				if (tmp)
-				{
-					free(cur->value);
-					cur->value = tmp;
-				}
-			}
-		}
-		cur = cur->next;
-	}
-}*/
-/*void expand_cmd_token(t_token *tokens, t_shell_data *data)
-{
-	t_token *cur = tokens;
-	char	*tmp;
-	bool	escaped_dollar;
-	
-	while (cur)
-	{
-		escaped_dollar = false;
-		
-		if (cur->quote_state != SINGLE_QUOTE)
-		{
-			if (cur->quote_state == DOUBLE_QUOTE)
-			{
-				int i = 0;
-				while (cur->value[i])
-				{
-					if (cur->value[i] == '\\' && cur->value[i + 1] == '$')
-					{
-						ft_memmove(&cur->value[i], &cur->value[i + 1], ft_strlen(cur->value) - i);
-						escaped_dollar = true;
-					}
-					i++;
-				}
-			}
-			if (!escaped_dollar)
-			{
-				tmp = perform_expansion(cur->value, data);
-				if (tmp)
-				{
-					free(cur->value);
-					cur->value = tmp;
-				}
-			}
-		}
-		cur = cur->next;
-	}
-}*/
-
-//void expand_cmd_token(t_token *tokens, t_shell_data *data)
-//{
-//	t_token *cur = tokens;
-//	char	*tmp;
-//	bool	escaped_dollar;
-//
-//	while (cur)
-//	{
-//		escaped_dollar = false;
-//
-//		if (cur->quote_state != SINGLE_QUOTE)
-//		{
-//			if (cur->quote_state == DOUBLE_QUOTE)
-//			{
-//				int i = 0, j = 0;
-//				char *new_value = malloc(ft_strlen(cur->value) + 1);
-//				if (!new_value)
-//					error_exit(data, "Memory allocation failed", 1);
-//
-//				while (cur->value[i])
-//				{
-//					// **处理 `\$`**
-//					if (cur->value[i] == '\\' && cur->value[i + 1] == '$')
-//					{
-//						ft_memmove(&cur->value[i], &cur->value[i + 1], ft_strlen(cur->value) - i);
-//						escaped_dollar = true;
-//					}
-//					// **处理 `\\`, `\'`, `\"`**
-//					if (cur->value[i] == '\\' && (cur->value[i + 1] == '\\' || cur->value[i + 1] //== '\"' || cur->value[i + 1] == '\''))
-//						i++;  // 跳过第一个 `\`
-//					new_value[j++] = cur->value[i++];
-//				}
-//				new_value[j] = '\0';
-//
-//				free(cur->value);
-//				cur->value = new_value;
-//			}
-//			// 仅当没有 `\$` 保护时才进行变量扩展
-//			if (!escaped_dollar)
-//			{
-//				tmp = perform_expansion(cur->value, data);
-//				if (tmp)
-//				{
-//					free(cur->value);
-//					cur->value = tmp;
-//				}
-//			}
-//		}
-//		cur = cur->next;
-//	}
-//}
-
-int expand_cmd_token(t_token *tokens, t_shell_data *data)
+/*int expand_cmd_token(t_token *tokens, t_shell_data *data)
 {
 	t_token *cur = tokens;
 	char	*tmp;
@@ -330,6 +104,201 @@ int expand_cmd_token(t_token *tokens, t_shell_data *data)
 				cur->value = tmp;
 			}
 		}
+		cur = cur->next;
+	}
+	return (0);
+}*/
+
+//int	expand_cmd_token(t_token* tokens, t_shell_data *data)
+//{
+//	t_token	*cur;
+//	char	*orig;
+//	char	*new_value;
+//	char	*expanded;
+//	size_t	orig_len;
+//	int		i;
+//	int		j;
+//	t_quote_state local_state;
+//
+//	cur = tokens;
+//	while (cur)
+//	{
+//		orig = cur->value;
+//		orig_len = ft_strlen(orig);
+//		expanded = ft_strdup("");
+//		new_value = (char *)malloc(orig_len * 2 + 1);
+//		if (!new_value)
+//			error_exit(data, "Memory allocation failed", 1);
+//		i = 0;
+//		j = 0;
+//		local_state = NO_QUOTE;
+//		while (orig[i])
+//		{
+//			if (orig[i] == '\'' || orig[i] == '\"')
+//			{
+//				if (local_state == NO_QUOTE)
+//				{
+//					if (orig[i] == '\'')
+//						local_state = SINGLE_QUOTE;
+//					else if (orig[i] == '\"')
+//						local_state = DOUBLE_QUOTE;
+//				}
+//				else if (local_state == SINGLE_QUOTE && orig[i] == '\'')
+//					local_state = NO_QUOTE;
+//				else if (local_state == DOUBLE_QUOTE && orig[i] == '\"')
+//					local_state = NO_QUOTE;
+//				new_value[j++] = orig[i++];
+//				//i++;
+//				continue;
+//			}
+//			if (orig[i] == '$' && local_state != SINGLE_QUOTE)
+//			{
+//				int var_start = i + 1;
+//				int var_len = 0;
+//				while (orig[var_start + var_len] &&
+//					   (ft_isalnum(orig[var_start + var_len]) || orig[var_start + //var_len] == '_'))
+//				{
+//					var_len++;
+//				}
+//				if (var_len > 0)
+//				{
+//					char *var_name = ft_substr(orig, var_start, var_len);
+//					char *env_value = get_env_value(var_name, data->env);
+//					free(var_name);
+//					if (env_value)
+//					{
+//						int k = 0;
+//						while (env_value[k])
+//							new_value[j++] = env_value[k++];
+//					}
+//					i = var_start + var_len;
+//					continue;
+//				}
+//				else
+//				{
+//					/* 如果 '$' 后面没有合法变量名，则将 '$' 原样复制 */
+//					new_value[j++] = orig[i++];
+//					continue;
+//				}
+//			}
+//			new_value[j++] = orig[i++];
+//		}
+//		new_value[j] = '\0';
+//		free(cur->value);
+//		cur->value = new_value;
+//		cur = cur->next;
+//	}
+//	return (0);
+//}
+
+int	expand_cmd_token(t_token *tokens, t_shell_data *data)
+{
+	t_token			*cur;
+	char			*orig;
+	char			*new_value;
+	size_t			orig_len;
+	int				i;
+	int				j;
+	t_quote_state	local_state;
+	
+	cur = tokens;
+	while (cur)
+	{
+		orig = cur->value;
+		orig_len = ft_strlen(orig);
+		new_value = malloc(orig_len * 2 + 1);
+		if (!new_value)
+			error_exit(data, "Memory allocation failed", 1);
+		i = 0;
+		j = 0;
+		local_state = NO_QUOTE;
+		while (orig[i])
+		{
+			if (orig[i] == '$' && (orig[i + 1] == '\'' || orig[i + 1] == '\"'))
+			{
+				i++;
+				continue;
+			}
+			if (orig[i] == '\'' || orig[i] == '\"')
+			{
+				if (local_state == NO_QUOTE)
+				{
+					if (orig[i] == '\'')
+						local_state = SINGLE_QUOTE;
+					else if (orig[i] == '\"')
+						local_state = DOUBLE_QUOTE;
+					i++;
+					continue;
+				}
+				else if ((local_state == SINGLE_QUOTE && orig[i] == '\'') ||
+						 (local_state == DOUBLE_QUOTE && orig[i] == '\"'))
+				{
+					local_state = NO_QUOTE;
+					i++;
+					continue;
+				}
+				else
+				{
+					new_value[j++] = orig[i++];
+					continue;
+				}
+			}
+			if (orig[i] == '$' && local_state != SINGLE_QUOTE)
+			{
+				if (orig[i + 1] == '?')
+				{
+					char *temp;
+					int k = 0;
+					temp = ft_strdup("");
+					temp = handle_exit_status(temp, data);
+					while (temp[k])
+					{
+						new_value[j++] = temp[k];
+						k++;
+					}
+					free(temp);
+					i += 2;
+					continue;
+				}
+				else
+				{
+					int var_start = i + 1;
+					int var_len = 0;
+					while (orig[var_start + var_len] &&
+						   (ft_isalnum(orig[var_start + var_len]) ||
+							orig[var_start + var_len] == '_'))
+						var_len++;
+					if (var_len > 0)
+					{
+						char *var_name;
+						char *env_value;
+						int k = 0;
+						var_name = ft_substr(orig, var_start, var_len);
+						env_value = get_env_value(var_name, data->env);
+						free(var_name);
+						if (env_value)
+						{
+							while (env_value[k])
+							{
+								new_value[j++] = env_value[k];
+								k++;
+							}
+						}
+						i = var_start + var_len;
+						continue;
+					}
+					else
+					{
+						new_value[j++] = orig[i++];
+						continue;
+					}
+				}
+			}
+			new_value[j++] = orig[i++];
+		}
+		new_value[j] = '\0';
+		free(cur->value);
+		cur->value = new_value;
 		cur = cur->next;
 	}
 	return (0);

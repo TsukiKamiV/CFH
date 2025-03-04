@@ -33,49 +33,49 @@
 //	return (dir);
 //}
 
-char	*get_cd_dir(t_shell_data *data)
-{
-	t_token	*arg;
-	char	*dir;
-	
-	arg = data->command_table->token_list;
-	if (arg)
-		arg = arg->next;
-	if (!arg || arg->type != ARGUMENT)
-	{
-		dir = get_env_value("HOME", data->env);
-		if (!dir)
-		{
-			write(STDERR, "cd: HOME not set\n", 17);
-			return (NULL);
-		}
-		return (dir);
-	}
-	if (!ft_strcmp(arg->value, "-"))
-	{
-		dir = get_env_value("OLDPWD", data->env);
-		if (!dir)
-		{
-			write(STDERR, "cd: OLDPWD not set\n", 19);
-			return (NULL);
-		}
-		write(data->command_table->fd_out, dir, ft_strlen(dir));
-		write(data->command_table->fd_out, "\n", 1);
-		return (dir);
-	}
-	return (arg->value);
-}
+// char	*get_cd_dir(t_shell_data *data)
+// {
+// 	t_token	*arg;
+// 	char	*dir;
+
+// 	arg = data->command_table->token_list;
+// 	if (arg)
+// 		arg = arg->next;
+// 	if (!arg || arg->type != ARGUMENT)
+// 	{
+// 		dir = get_env_value("HOME", data->env);
+// 		if (!dir)
+// 		{
+// 			write(STDERR_FILENO, "cd: HOME not set\n", 17);
+// 			return (NULL);
+// 		}
+// 		return (dir);
+// 	}
+// if (!ft_strcmp(arg->value, "-"))
+// {
+// 	dir = get_env_value("OLDPWD", data->env);
+// 	if (!dir)
+// 	{
+// 		write(STDERR_FILENO, "cd: OLDPWD not set\n", 19);
+// 		return (NULL);
+// 	}
+// 	write(data->command_table->fd_out, dir, ft_strlen(dir));  // Restaurer fd_out
+// 	write(data->command_table->fd_out, "\n", 1);
+// 	return (dir);
+// }
+// 	return (arg->value);
+// }
 
 int	cd_change_dir(t_shell_data *data, char *dir)
 {
 	char	*old;
 	char	*new;
-	
+
 	old = getcwd(NULL, 0);
 	if (chdir(dir) != 0)
 	{
 		free (old);
-		ft_putendl_fd("cd: No such file or directory", data->command_table->fd_out);
+		ft_putendl_fd("cd: No such file or directory", STDERR_FILENO);
 		data->exit_status = 1;
 		return (1);
 	}
@@ -90,13 +90,64 @@ int	cd_change_dir(t_shell_data *data, char *dir)
 	return (0);
 }
 
-int	cd_builtin(t_shell_data *data)
+// int	cd_builtin(t_shell_data *data)
+// {
+// 	char	*dir;
+
+// 	if (!data || !data->command_table)
+// 		return (1);
+// 	dir = get_cd_dir(data);
+// 	if (!dir)
+// 	{
+// 		data->exit_status = 1;
+// 		return (1);
+// 	}
+// 	return (cd_change_dir(data, dir));
+// }
+
+char *get_cd_dir(t_command_table *cmd, t_shell_data *data)
 {
-	char	*dir;
-	
-	if (!data || !data->command_table)
+	t_token *arg;
+	char *dir;
+
+	if (!cmd || !data)
+		return (NULL);
+
+	arg = cmd->token_list;
+	if (arg)
+		arg = arg->next;
+	if (!arg || arg->type != ARGUMENT)
+	{
+		dir = get_env_value("HOME", data->env);
+		if (!dir)
+		{
+			write(STDERR_FILENO, "cd: HOME not set\n", 17);
+			return (NULL);
+		}
+		return (dir);
+	}
+	if (!ft_strcmp(arg->value, "-"))
+	{
+		dir = get_env_value("OLDPWD", data->env);
+		if (!dir)
+		{
+			write(STDERR_FILENO, "cd: OLDPWD not set\n", 19);
+			return (NULL);
+		}
+		write(cmd->fd_out, dir, ft_strlen(dir));
+		write(cmd->fd_out, "\n", 1);
+		return (dir);
+	}
+	return (arg->value);
+}
+
+int cd_builtin(t_command_table *cmd, t_shell_data *data)
+{
+	char *dir;
+
+	if (!data || !cmd)
 		return (1);
-	dir = get_cd_dir(data);
+	dir = get_cd_dir(cmd, data);
 	if (!dir)
 	{
 		data->exit_status = 1;
@@ -104,3 +155,4 @@ int	cd_builtin(t_shell_data *data)
 	}
 	return (cd_change_dir(data, dir));
 }
+// AUTRES BUILTINS A UPDATE !

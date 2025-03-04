@@ -180,6 +180,26 @@ int	minishell_mainloop(t_shell_data *shell_data)
 				shell_data->parse_state = parse_ret;
 				continue;
 			}
+			//parse_line(shell_data);
+
+			// Partie pour gérer les futures retours d'erreurs de parse_line (condition à adapter)
+			// if (shell_data->exit_status != 0)
+			// {
+			// 	// Libération des élements crees jusqu'à trouver l'erreur
+			// 	if (shell_data->tokens)
+			// 	{
+			// 		free_token_list(shell_data->tokens);
+			// 		shell_data->tokens = NULL;
+			// 	}
+			// 	if (shell_data->command_table)
+			// 	{
+			// 		free_command_table(&shell_data->command_table);
+			// 	}
+			// 	shell_data->line = NULL;
+			// 	shell_data->exit_status = 0;
+			// 	continue;
+
+			// }
 			//////// shell_data->tokens et pas shell_data->command_table->token_list ? ///////////////
 			if (!shell_data->tokens)
 				continue;//Pour gérer la ligne de commande avec que des whitespaces ------- On devrait free line ou quelque chose ici non ?
@@ -190,7 +210,6 @@ int	minishell_mainloop(t_shell_data *shell_data)
 				status = exec_simple_command(shell_data->command_table, shell_data);
 			 else
 			 	status = execute_piped_commands(shell_data->command_table, shell_data);
-
 
 			if (shell_data->command_table->fd_in != STDIN_FILENO && shell_data->command_table->fd_in != -1)
 				close(shell_data->command_table->fd_in);

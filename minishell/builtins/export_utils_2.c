@@ -3,10 +3,10 @@
 int is_var_in_list(char **list, const char *key)
 {
 	int i = 0;
-	
+
 	if (!list || !key)
 		return (0);
-	
+
 	while (list[i])
 	{
 		if (ft_strcmp(list[i], key) == 0)
@@ -22,7 +22,7 @@ char **remove_var_from_list(char **list, const char *key)
 	int		j = 0;
 	int		len = 0;
 	char 	**new_list;
-	
+
 	if (!list || !key)
 		return (list);
 	while (list[len])
@@ -44,7 +44,7 @@ void count_env_and_exported_vars(t_shell_data *data, int *env_size, int *export_
 {
 	*env_size = 0;
 	*export_size = 0;
-	
+
 	while (data->env[*env_size])
 		(*env_size)++;
 	while (data->exported_vars && data->exported_vars[*export_size])
@@ -57,7 +57,7 @@ void fill_sorted_exports_env(char **sorted_exports, t_shell_data *data, int env_
 	char *equal_pos;
 	char *key;
 	char *value;
-	
+
 	while (i < env_size)
 	{
 		equal_pos = ft_strchr(data->env[i], '=');
@@ -80,7 +80,7 @@ void fill_sorted_exports_exported(char **sorted_exports, t_shell_data *data,
 								  int env_size, int export_size)
 {
 	int j = 0;
-	
+
 	while (j < export_size)
 	{
 		sorted_exports[env_size + j] =
