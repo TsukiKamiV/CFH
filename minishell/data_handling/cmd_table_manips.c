@@ -392,7 +392,7 @@ void free_token_list(t_token *head)
 		if (current->value != NULL)
 		{
 			free(current->value);
-			current->value = NULL;  // Prevent double free
+			current->value = NULL;
 		}
 		free(current);
 		current = next;
@@ -430,104 +430,3 @@ void	free_command_table(t_command_table **head)
 	}
 	*head = NULL;
 }
-
-
-/**
- * @brief Ajoute à shell_data->command_table une nouvelle commande (avec pipes, non parsés)
- * @param shell_data La structure shell_data
- * @param new_command La nouvelle commande à ajouter
- *
-
-*/
-// int cmd_table_to_shell_data(t_shell_data *shell_data, char **parsed_command)
-// {
-// 	t_command_table	*current;
-// 	t_command_table	*new_command;
-// 	t_token	*token_list;
-
-// 	current = shell_data->command_table;
-// 	new_command = init_command_table(parsed_command);
-// 	if (!new_command)
-// 		return (1);
-// 	token_list = init_token_list(parsed_command);
-
-
-
-// 	return (0);
-
-// }
-
-// int main(int argc, char **argv, char **env)
-// {
-// 	char	**parsed_command;
-// 	t_command_table	*command_table;
-// 	t_token	*token_list;
-// 	int	i;
-
-// 	parsed_command = ft_split("ls -lRa /home/ | cat", ' ');
-// 	if (!parsed_command)
-// 		return (1);
-// 	token_list = init_token_list(parsed_command); // Crée une liste de tokens, un par élément de la commande parsée
-// 	command_table = init_command_table(parsed_command); // Crée une table de commandes, une par commande séparée par un pipe (encore à faire)
-// 	if (!token_list)
-// 	{
-// 		free_string_array(parsed_command);
-// 		return (1);
-// 	}
-// 	t_token *tmp = token_list;
-
-// 	i = 0;
-// 	printf("Commande parsée dans une liste de tokens :\n");
-// 	while (tmp)
-// 	{
-// 		printf("token_list[%d] Value = %s\n", i, tmp->value);
-// 		printf("token_list[%d] Type = %d\n", i, tmp->type);
-// 		tmp = tmp->next;
-// 		i++;
-// 	}
-// 	printf("\n");
-// 	printf("Attributs tableau de commandes :\n");
-// 	printf("command_table - check_pipe = %d\n", command_table->check_pipe);
-// 	printf("command_table - check_redir = %d\n", command_table->check_redir);
-// 	printf("command_table - fd_in = %d\n", command_table->fd_in);
-// 	printf("command_table - fd_out = %d\n", command_table->fd_out);
-// 	printf("command_table - next = %p\n", command_table->next);
-
-// 	// t_shell_data	*shell_data;
-// 	// shell_data = init_shell_data(env);
-// 	// if (!shell_data)
-// 	// {
-// 	// 	free_string_array(parsed_command);
-// 	// 	free_token_list(token_list);
-// 	// 	free_command_table(command_table);
-// 	// 	return (1);
-// 	// }
-// 	// t_command_table	*new_command;
-// 	// new_command = init_command_table(parsed_command);
-// 	// if (!new_command)
-// 	// {
-// 	// 	free_string_array(parsed_command);
-// 	// 	free_token_list(token_list);
-// 	// 	free_command_table(command_table);
-// 	// 	free_shell_data(shell_data);
-// 	// 	return (1);
-// 	// }
-// 	// cmd_table_to_shell_data(shell_data, parsed_command);
-// 	// printf("Attributs shell_data->command_table :\n");
-// 	// printf("shell_data->command_table - check_pipe = %d\n", shell_data->command_table->check_pipe);
-// 	// printf("shell_data->command_table - check_redir = %d\n", shell_data->command_table->check_redir);
-// 	// printf("shell_data->command_table - fd_in = %d\n", shell_data->command_table->fd_in);
-// 	// printf("shell_data->command_table - fd_out = %d\n", shell_data->command_table->fd_out);
-// 	// printf("shell_data->command_table - next = %p\n", shell_data->command_table->next);
-
-
-// 	free_string_array(parsed_command);
-// 	free_command_table(command_table);
-// 	free_token_list(token_list);
-
-// 	(void)argc;
-// 	(void)argv;
-//	 (void)env;
-// 	return (0);
-// }
-

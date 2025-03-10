@@ -4,35 +4,92 @@
  * @brief Initialisation de la structure principale de minishell
  * @return La structure principale de minishell allouée et initialisée avec des valeurs par défaut
  */
-t_shell_data	*init_shell_data(char **env)
+// t_shell_data	*init_shell_data(char **env)
+// {
+// 	t_shell_data	*shell_data;
+
+// 	shell_data = malloc(sizeof(t_shell_data));
+// 	if (!shell_data)
+// 		return (NULL);
+// 	shell_data->env = copy_string_array(env);
+// 	shell_data->username = getenv("USER");
+// 	if (is_atty(STDIN_FILENO))
+// 		shell_data->is_interactive = 1;
+// 	else
+// 		shell_data->is_interactive = 0;
+
+// 	shell_data->hostname = NULL; // A voir si on peut récupérer le hostname du coup
+// 	shell_data->prompt = ft_strjoin(shell_data->username, "> ");
+// 	shell_data->line = NULL; // Sera actualisé à chaque nouvelle ligne
+// 	shell_data->sig_config = signal_launching();
+// 	if (sigaction(SIGINT, &shell_data->sig_config, NULL) == -1
+// 		|| sigaction(SIGQUIT, &shell_data->sig_config, NULL) == -1)
+// 	{
+// 		perror("sigaction");
+// 		// Autre gestion d'erreur ?
+// 	}
+// 	if (!shell_data->prompt)
+// 		return (NULL);
+// 	shell_data->command_table = NULL;
+// 	shell_data->tokens = NULL;
+// 	shell_data->exit_status = 0;
+// 	shell_data->parse_state = 0;
+// 	get_shell_pid(shell_data);
+// 	return (shell_data);
+// }
+
+
+t_shell_data *init_shell_data(char **env)
 {
-	t_shell_data	*shell_data;
+	t_shell_data *shell_data;
 
 	shell_data = malloc(sizeof(t_shell_data));
 	if (!shell_data)
 		return (NULL);
 	shell_data->env = copy_string_array(env);
 	shell_data->username = getenv("USER");
-	shell_data->is_interactive = 0;
-	shell_data->hostname = NULL; // A voir si on peut récupérer le hostname du coup
+	shell_data->hostname = NULL; // si tu veux récupérer autrement
 	shell_data->prompt = ft_strjoin(shell_data->username, "> ");
-	shell_data->line = NULL; // Sera actualisé à chaque nouvelle ligne
-	shell_data->sig_config = signal_launching();
-	if (sigaction(SIGINT, &shell_data->sig_config, NULL) == -1
-		|| sigaction(SIGQUIT, &shell_data->sig_config, NULL) == -1)
-	{
-		perror("sigaction");
-		// Autre gestion d'erreur ?
-	}
 	if (!shell_data->prompt)
 		return (NULL);
-	shell_data->command_table = NULL;
+	shell_data->line = NULL;
 	shell_data->tokens = NULL;
+	shell_data->command_table = NULL;
 	shell_data->exit_status = 0;
 	shell_data->parse_state = 0;
 	get_shell_pid(shell_data);
+	// shell_data->is_interactive = isatty(STDIN_FILENO) ? 1 : 0;
+	if (isatty(STDIN_FILENO))
+		shell_data->is_interactive = 1;
+	else
+		shell_data->is_interactive = 0;
+	// Init signaux si mode interactif sinon signaux par défaut
+	if (shell_data->is_interactive)
+	{
+		// Config custom
+		shell_data->sig_config = signal_launching();
+		if (sigaction(SIGINT, &shell_data->sig_config, NULL) == -1
+			|| sigaction(SIGQUIT, &shell_data->sig_config, NULL) == -1)
+		{
+			perror("sigaction");
+			// Créer fatal error ?
+		}
+	}
+	else
+	{
+		// SIG_DFL = par defaut
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+	}
 	return (shell_data);
 }
+
+
+
+
+
+
+
 
 /**
  * @brief Free la structure principale de minishell
@@ -55,10 +112,10 @@ void	free_shell_data(t_shell_data *shell_data)
 	free(shell_data);
 }
 
-char    *get_env_value(const char *var, char **envp)
+char	*get_env_value(const char *var, char **envp)
 {
 	size_t  var_len;
-	int     i;
+	int	 i;
 
 	if (!var || !*var || !envp)
 		return (NULL);

@@ -35,7 +35,6 @@ char	**extract_and_split_env_path(char **env)
 /**
 	@brief Tente d'acceder a chaque chemin present dans PATH et verifie si la commande entree est presente et executable
 	@return le chemin complet de la commande si elle est presente et executable, NULL sinon
-	@warning Ne gere pas les chemins absolus !!!
 */
 char	*cmd_is_accessible(char *cmd, char **path)
 {
@@ -85,10 +84,10 @@ int	check_env_var(char *var, char **env)
 	//return (0);
 	int	i;
 	size_t	var_len;
-	
+
 	if (!var || !env)
 		return (0);
-	
+
 	var_len = ft_strlen(var);
 	i = 0;
 	while (env[i])

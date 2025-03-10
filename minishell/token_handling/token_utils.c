@@ -12,7 +12,6 @@
 
 #include "../minishell.h"
 
-//initialiser le structure token et former la liste
 t_token	*create_token(const char *value, int type)
 {
 	t_token	*new_token;
@@ -28,7 +27,6 @@ t_token	*create_token(const char *value, int type)
 	return (new_token);
 }
 
-//remplir la liste avec des elements
 void	add_token(t_token **head, t_token *new_token)
 {
 	t_token	*tmp;
@@ -54,22 +52,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	return  ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
-
-//assigner une valeur enum selon type
-/*int	determine_token_type(const char *value, const t_token *previous_token)
-{
-	if (is_separator(value))
-		return (SEPARATOR);
-	if (is_operator(value))
-		return (OPERATOR);
-	if (ft_strlen(value) == 1 && (value[0] == ' ' || value[0] == '\t' || value[0] == '\n'))
-		return (WHITESPACE);
-	if (is_builtin(value))
-		return (BUILTIN);
-	if (!previous_token || previous_token->type == SEPARATOR || (previous_token->type == OPERATOR && (strcmp(previous_token->value, ">") && strcmp(previous_token->value, ">>") && strcmp(previous_token->value, "<") && strcmp(previous_token->value, "<<"))))
-		return (COMMAND);
-	return (ARGUMENT);
-}*/
 /*int determine_token_type(const char *value, const t_token *previous_token)
 {
 	if (is_separator(value))

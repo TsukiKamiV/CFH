@@ -12,24 +12,6 @@
 
 #include "../minishell.h"
 
-//bool	validate_quotes(const char *input)
-//{
-//	bool	single_quote;
-//	bool	double_quote;
-//
-//	single_quote = false;
-//	double_quote = false;
-//	while (*input)
-//	{
-//		if (*input == '\'' && !double_quote)
-//			single_quote = !single_quote;
-//		else if (*input == '\"' && !single_quote)
-//			double_quote = !double_quote;
-//		input++;
-//	}
-//	return !(single_quote || double_quote);
-//}
-
 bool validate_quotes(const char *cmd)
 {
 	int i = 0;
@@ -38,25 +20,17 @@ bool validate_quotes(const char *cmd)
 	
 	while (cmd[i])
 	{
-		if (cmd[i] == '\\' && cmd[i + 1]) // 处理转义字符
-		{
-			i += 2; // 跳过 `\` 和被转义的字符
-			continue;
-		}
-		
-		if (cmd[i] == '\'' && !in_double_quote) // 只有不在双引号内才切换单引号状态
-		{
+		//if (cmd[i] == '\\' && cmd[i + 1])
+		//{
+		//	i += 2;
+		//	continue;
+		//}
+		if (cmd[i] == '\'' && !in_double_quote)
 			in_single_quote = !in_single_quote;
-		}
-		else if (cmd[i] == '"' && !in_single_quote) // 只有不在单引号内才切换双引号状态
-		{
+		else if (cmd[i] == '"' && !in_single_quote)
 			in_double_quote = !in_double_quote;
-		}
-		
 		i++;
 	}
-	
-	// 如果有未关闭的引号，返回 `false`
 	return !(in_single_quote || in_double_quote);
 }
 

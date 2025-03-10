@@ -1,24 +1,5 @@
 #include "../minishell.h"
 
-// static int wait_piped_pids(pid_t *pids_tab, char **paths, int pid_count)
-// {
-// 	int	status;
-// 	int	j;
-
-// 	j = 0;
-// 	status = 0;
-
-// 	while (j < pid_count)
-// 		waitpid(pids_tab[j++], &status, 0);
-
-// 	free_string_array(paths);
-
-// 	// On peut renvoyer le code de retour de la dernière commande
-// 	if (WIFEXITED(status))
-// 		return WEXITSTATUS(status);
-// 	return status;
-// }
-
 void	wait_piped_pids(pid_t *pids_tab, int nb_cmd, t_shell_data *shell_data)
 {
 	int	status;
@@ -29,13 +10,18 @@ void	wait_piped_pids(pid_t *pids_tab, int nb_cmd, t_shell_data *shell_data)
 	{
 		waitpid(pids_tab[j], &status, 0);
 		if (WIFSIGNALED(status))
+		{
 			shell_data->exit_status = 128 + WTERMSIG(status); // Gestion correcte du signal reçu
+			if (WTERMSIG(status) == SIGQUIT)
+				ft_putendl_fd("SIGQUIT: (core dumped)", STDERR_FILENO);
+		}
 		else if (WIFEXITED(status))
 			shell_data->exit_status = WEXITSTATUS(status);
 		j++;
 	}
 }
 
+// Fonction permettant de gérer différentes combinaisons de redirections et de pipes
 static void	handle_redir_pipe_context(t_command_table *cmd, int *pipefd)
 {
 	// Si cmd suivante + pas de redir
@@ -65,52 +51,7 @@ static void	handle_redir_pipe_context(t_command_table *cmd, int *pipefd)
 
 }
 
-
-// static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
-// {
-// 	char *correct_cmd_path = NULL;
-
-// 	if (*fd_in != 0)
-// 	{
-// 		dup2(*fd_in, STDIN_FILENO);
-// 		close(*fd_in);
-// 	}
-// 	if (cmd->next)
-// 	{
-// 		dup2(pipefd[1], STDOUT_FILENO);
-// 		close(pipefd[0]);
-// 		close(pipefd[1]);
-// 	}
-// 	if (cmd->fd_in != 0)
-// 	{
-// 		dup2(cmd->fd_in, STDIN_FILENO);
-// 		close(cmd->fd_in);
-// 	}
-// 	if (cmd->fd_out != 1)
-// 	{
-// 		dup2(cmd->fd_out, STDOUT_FILENO);
-// 		close(cmd->fd_out);
-// 	}
-
-// 	correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], paths);
-// 	if (!correct_cmd_path)
-// 	{
-// 		if (ft_strcmp(cmd->token_list->value, ".") == 0)
-// 			ft_putendl_fd(".: filename argument required", 2);
-// 		else if (!cmd->next)
-// 			ft_putendl_fd("Command not found", 2);
-
-
-// 		// Libérer les ressources allouées dans le processus enfant avant exit
-// 		free_string_array(paths);
-// 		error_exit(shell_data, NULL, 127);
-// 	}
-
-// 	execve(correct_cmd_path, cmd->parsed_command, shell_data->env);
-// 	perror("execve");
-// 	exit(EXIT_FAILURE);
-// }
-
+// Appelé à chaque fois qu'on passe à la table de commandes suivante (pipe suivant)
 static void piped_parent_routine(int *pipefd, int *fd_in, t_command_table *cmd)
 {
 	if (*fd_in != 0)
@@ -124,10 +65,14 @@ static void piped_parent_routine(int *pipefd, int *fd_in, t_command_table *cmd)
 	}
 }
 
-
+// Appelé pour chaque commande séparée par un pipe comme pour le parent
 static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
 {
 	char *correct_cmd_path = NULL;
+
+	// Remise de SIGINT/SIGQUIT à leur comportement par défaut (desactivé au prealable puis remis une fois le waitpid fini)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 
 	if (!shell_data || !cmd || !cmd->parsed_command || !cmd->parsed_command[0])
 	{
@@ -178,7 +123,7 @@ static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t
 
 
 /**
- * @brief Fonction qui gère l'exécution des commandes pipées
+ * @brief Fonction centrale qui gère l'exécution des commandes pipées en fonction du processus enfant/parent
  * @param pids Tableau de pid_t qui contiendra les pid des processus enfants
  * @param paths Tableau de chaînes de caractères contenant les chemins d'accès aux commandes
  * @return Le nombre de processus enfants créés
@@ -224,19 +169,25 @@ static int pipes_loop(t_command_table *cmd, t_shell_data *shell_data, pid_t *pid
 	return (i);
 }
 
+// Fonction de départ pour l'exécution des commandes avec pipes
 int execute_piped_commands(t_command_table *cmd, t_shell_data *shell_data)
 {
-	pid_t	pids[256]; // ok ? buffer overflow si qlq peut réussir à créer 256 processus en même temps donc attention
-	char	**paths;
-	int		child_count;
+	pid_t pids[256];
+	char **paths;
+	int child_count;
+	// récupère les signaux SIGINT et SIGQUIT pour les ignorer (trouver pourquoi "incomplete type sigaction is not allowed")
+	struct sigaction old_int;
+	struct sigaction old_quit;
 
+	ignore_signals_in_parent(&old_int, &old_quit);
 	paths = extract_and_split_env_path(shell_data->env);
 	if (!paths)
+	{
+		restore_signals_in_parent(&old_int, &old_quit);
 		return (1);
-	// Appel de la boucle qui crée les processus enfants et les gère
+	}
 	child_count = pipes_loop(cmd, shell_data, pids, paths);
-	// Attendre tous les processus enfants et récupérer le code de retour de la dernière commande
 	wait_piped_pids(pids, child_count, shell_data);
-
+	restore_signals_in_parent(&old_int, &old_quit);
 	return (shell_data->exit_status);
 }

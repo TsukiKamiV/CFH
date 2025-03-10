@@ -12,76 +12,47 @@
 
 #include "../minishell.h"
 
-bool	check_double_pipe(char **parsed_command)
-{
-	int	i;
-
-	i = 0;
-	while (parsed_command[i])
-	{
-		if (ft_strcmp(parsed_command[i], "||") == 0)
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-//true: presence de commandes vides   false: pas de commandes vides
-bool	is_empty_cmd(char **parsed_command)
-{
-	int	i;
-
-	//si le tableau entier est vide, true or false??
-	if (parsed_command == NULL)
-		return (true);
-	i = 0;
-	while (parsed_command[i])
-	{
-		if (parsed_command[i][0] == '\0')
-			return (true);
-	}
-	return (false);
-}
-
-bool	cmd_got_pipe(char **parsed_command)
-{
-	int	i;
-
-	i = 0;
-	while (parsed_command[i])
-	{
-		if (ft_strcmp(parsed_command[i], "|") == 0)
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-/*
-bool	cmd_got_redir(char **parsed_command)
-{
-	int	i;
-
-	i = 0;
-	while (parsed_command[i])
-	{
-		if (ft_strcmp(parsed_command[i], "<") == 0 || ft_strcmp(parsed_command[i], ">") == 0)
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-bool	cmd_got_double_redir(char **parsed_command)
-{
-	int	i;
-
-	i = 0;
-	while (parsed_command[i])
-	{
-		if (ft_strcmp(parsed_command[i], "<<") == 0 || ft_strcmp(parsed_command[i], ">>") == 0)
-			return (true);
-		i++;
-	}
-	return (false);
-}*/
+//bool	check_double_pipe(char **parsed_command)
+//{
+//	int	i;
+//
+//	i = 0;
+//	while (parsed_command[i])
+//	{
+//		if (ft_strcmp(parsed_command[i], "||") == 0)
+//			return (true);
+//		i++;
+//	}
+//	return (false);
+//}
+//
+////true: presence de commandes vides   false: pas de commandes vides
+//bool	is_empty_cmd(char **parsed_command)
+//{
+//	int	i;
+//
+//	//si le tableau entier est vide, true or false??
+//	if (parsed_command == NULL)
+//		return (true);
+//	i = 0;
+//	while (parsed_command[i])
+//	{
+//		if (parsed_command[i][0] == '\0')
+//			return (true);
+//	}
+//	return (false);
+//}
+//
+//bool	cmd_got_pipe(char **parsed_command)
+//{
+//	int	i;
+//
+//	i = 0;
+//	while (parsed_command[i])
+//	{
+//		if (ft_strcmp(parsed_command[i], "|") == 0)
+//			return (true);
+//		i++;
+//	}
+//	return (false);
+//}

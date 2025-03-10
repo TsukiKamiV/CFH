@@ -229,10 +229,10 @@ char	**remove_string_from_array(char **array, int index);
 int	minishell_mainloop(t_shell_data *shell_data);
 
 // signal_handling/signal_utils.c
-void	sig_handling(int signal);
+//void	sig_handling(int signal);
 struct sigaction	signal_launching(void);
-void	restore_signals_in_parent(struct sigaction *old_sigint, struct sigaction *old_sigquit);
-void	ignore_signals_in_parent(struct sigaction *old_sigint, struct sigaction *old_sigquit);
+void	restore_signals_in_parent(const struct sigaction *old_sa_int, const struct sigaction *old_sa_quit);
+void	ignore_signals_in_parent(struct sigaction *old_sa_int, struct sigaction *old_sa_quit);
 void	heredoc_sig_handler(int sig);
 
 // exec_handling/builtins_exec.c
@@ -240,14 +240,14 @@ void	heredoc_sig_handler(int sig);
 int	execute_builtin(t_command_table *cmd, t_shell_data *shell_data);
 
 //exec_handling/system_exec.c
-int	execute_system_command(t_command_table *cmd, t_shell_data *shell_data);
+// int	execute_system_command(t_command_table *cmd, t_shell_data *shell_data);
 
 // exec_handling/piped_command_handling.c
 int	execute_piped_commands(t_command_table *cmd, t_shell_data *shell_data);
 
 // exec_handling/simple_command_handling.c
 char	*verify_simple_command(t_command_table *cmd, t_shell_data *shell_data);
-int	execute_simple_child(t_command_table *cmd, t_shell_data *shell_data, char *correct_cmd_path);
+// int	execute_simple_child(t_command_table *cmd, t_shell_data *shell_data, char *correct_cmd_path);
 void execute_external_command(t_command_table *cmd, t_shell_data *shell_data, char **paths);
 
 // exec_handling/command_exec.c
