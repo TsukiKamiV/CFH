@@ -137,10 +137,16 @@ t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t
 	else if (current->type == REDIR)
 	{
 		cmd->check_redir = true;
-		if (!current->next || (current->next && current->next->type == REDIR))
+		if (!current->next)//si rien n'est écrit après REDIR
+		{
+			set_error(data, "Syntax error near unexpected token `newline'\n", 2);
+			*ret = 2;
+			return (NULL);
+		}
+		if (current->next->type == REDIR)//si REDIR consécutif, l'erreur est sur le deuxième REDIR
 		{
 			set_error(data, "Syntax error near unexpected token '", 2);
-			ft_putstr_fd(current->value, 2);
+			ft_putstr_fd(current->next->value, 2);
 			ft_putendl_fd("'", 2);
 			*ret = 2;
 			return (NULL);

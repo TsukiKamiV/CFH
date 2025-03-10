@@ -54,7 +54,7 @@ void	parse_operator(t_tokenizer *t)
 		t->line++;
 	}
 	add_token(&t->data->tokens,
-			  create_token(t->buffer, determine_token_type(t->buffer, t->prev)));
+			  create_token(t->buffer, determine_token_type(t->buffer, t->prev, &t->command_found)));
 	if (!t->prev)
 		t->prev = t->data->tokens;
 	else

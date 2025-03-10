@@ -127,7 +127,9 @@
 
 int handle_export_no_arguments(t_shell_data *data)
 {
-	int env_size, export_size, total_size;
+	int env_size;
+	int	export_size;
+	int	total_size;
 	char **sorted_exports;
 
 	count_env_and_exported_vars(data, &env_size, &export_size);
@@ -167,7 +169,7 @@ void process_export_variable(t_shell_data *data, t_token *token)
 	while (token)
 	{
 		has_equal = (ft_strchr(token->value, '=') != NULL);
-		new_entry = ft_strdup(token->value);
+		new_entry = process_new_value(token->value);
 		key = extract_key(new_entry);
 		index = get_env_index(data->env, key);
 		if (has_equal)

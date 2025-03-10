@@ -98,34 +98,40 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (ARGUMENT);
 }*/
 
-int determine_token_type(const char *value, const t_token *previous_token)
+int determine_token_type(const char *value, const t_token *previous_token, bool *command_found)
 {
-	if (is_separator(value))
-		return SEPARATOR;
-	if (is_pipe(value))
-		return PIPE;
-	if (is_redirection(value))
-		return REDIR;
-	if (is_operator(value)) // Catch any remaining operators not covered above
-		return OPERATOR;
+	if (is_separator(value)) 
+	{
+		*command_found = false;
+		return (SEPARATOR);
+	}
+	if (is_pipe(value)) 
+	{
+		*command_found = false;
+		return (PIPE);
+	}
+	if (is_redirection(value)) 
+		return (REDIR);
+	if (is_operator(value))
+		return (OPERATOR);
+	if (previous_token)
+	{
+		if (previous_token->type == REDIR)
+			return (FILENAME);
+	}
 	if (is_builtin(value))
-		return BUILTIN;
-	if (ft_strlen(value) == 1 && (value[0] == ' ' || value[0] == '\t' || value[0] == '\n'))
-		return WHITESPACE;
-	if (!previous_token || previous_token->type == SEPARATOR || previous_token->type == PIPE)
-		return COMMAND;
-	if (previous_token->type == REDIR)
-		return ARGUMENT; // Filename after redirection is treated as COMMAND-type
-	if (previous_token->type == ARGUMENT && previous_token->previous &&
-		previous_token->previous->type == REDIR)
-		return COMMAND; // File after another redirection
-	if (previous_token->type == REDIR &&
-		previous_token->previous && previous_token->previous->type == PIPE)
-		return COMMAND;
-	if (previous_token->type == BUILTIN &&
-		(is_redirection(value) || is_pipe(value)))
-		return OPERATOR;
-	return ARGUMENT;
+	{
+		*command_found = true;
+		return (BUILTIN);
+	}
+	// Si pas de commande trouvée avant et
+	if (!*command_found && (!previous_token || previous_token->type == SEPARATOR ||
+							previous_token->type == PIPE || previous_token->type == FILENAME))
+	{
+		*command_found = true;
+		return (COMMAND);
+	}
+	return (ARGUMENT);
 }
 
 void	finalize_token(t_tokenizer *t)
@@ -133,7 +139,7 @@ void	finalize_token(t_tokenizer *t)
 	if (t->buf_i > 0)
 	{
 		t->buffer[t->buf_i] = '\0';
-		add_token(&t->data->tokens, create_token(t->buffer, determine_token_type(t->buffer, t->prev)));
+		add_token(&t->data->tokens, create_token(t->buffer, determine_token_type(t->buffer, t->prev, &t->command_found)));
 		if (!t->prev)
 			t->prev = t->data->tokens;
 		else

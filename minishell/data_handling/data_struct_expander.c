@@ -206,7 +206,8 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 	{
 		orig = cur->value;
 		orig_len = ft_strlen(orig);
-		new_value = malloc(orig_len * 2 + 1);
+		//ici faut re-malloc en bas pour dupliquer env_value
+		new_value = malloc(orig_len * 2 + 2048);//leak!!!!!!!!!!!!!!!
 		if (!new_value)
 			error_exit(data, "Memory allocation failed", 1);
 		i = 0;
@@ -214,7 +215,7 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 		local_state = NO_QUOTE;
 		while (orig[i])
 		{
-			if (orig[i] == '$' && (orig[i + 1] == '\'' || orig[i + 1] == '\"'))
+			if (orig[i] == '$' && local_state == NO_QUOTE && (orig[i + 1] == '\'' || orig[i + 1] == '\"'))
 			{
 				i++;
 				continue;
@@ -260,8 +261,14 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 					i += 2;
 					continue;
 				}
+				if (ft_isdigit(orig[i + 1]))
+				{
+					i += 2;
+					continue;
+				}
 				else
 				{
+					//printf("%s\n", orig);
 					int var_start = i + 1;
 					int var_len = 0;
 					while (orig[var_start + var_len] &&

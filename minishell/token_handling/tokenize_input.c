@@ -36,7 +36,8 @@ void	tokenize_line_new(t_shell_data *data)
 	tok.buf_i = 0;
 	tok.prev = NULL;
 	tok.data = data;
-	tok.expanding = false;
+	tok.command_found = false;
+	//tok.expanding = false;
 	parse_loop(&tok);
 	//if (tok.q_state != NO_QUOTE)
 	//{

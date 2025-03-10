@@ -6,7 +6,7 @@
 /*   By: lpantign <maildelulua42@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 14:24:41 by yourLogin         #+#    #+#             */
-/*   Updated: 2025/03/01 14:06:03 by lpantign         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:01:20 by lpantign         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,39 +101,78 @@ int	is_n_option(const char *arg)
 	return (0);
 }*/
 
-int	echo_builtin(t_shell_data *data)
+// int	echo_builtin(t_shell_data *data)
+// {
+// 	char	**args;
+// 	int		newline;
+// 	int		i;
+
+// 	args = data->command_table->parsed_command;
+// 	if (!args || !args[0])
+// 		return (1); // 安全检查，确保 parsed_command 存在
+
+// 	newline = 1;
+// 	i = 1; // 从 args[1] 开始（跳过 "echo" 本身）
+
+// 	// 处理 -n 选项
+// 	while (args[i] && is_n_option(args[i]))
+// 	{
+// 		newline = 0;
+// 		i++;
+// 	}
+
+// 	// 遍历并打印剩余的参数
+// 	while (args[i])
+// 	{
+// 		write(data->command_table->fd_out, args[i], ft_strlen(args[i]));
+// 		if (args[i][0] != '\0' && args[i + 1]) // 只有当后面还有参数时才打印空格
+// 			write(data->command_table->fd_out, " ", 1);
+// 		i++;
+// 	}
+
+// 	// 如果没有 -n 选项，则加换行
+// 	if (newline)
+// 		write(data->command_table->fd_out, "\n", 1);
+
+// 	data->exit_status = 0;
+// 	return (0);
+// }
+
+
+
+int echo_builtin(t_shell_data *data)
 {
-	char	**args;
-	int		newline;
-	int		i;
+	t_token *current = data->command_table->token_list;
+	int newline = 1;
+	int	has_arg_before;
 	
-	args = data->command_table->parsed_command;
-	if (!args || !args[0])
-		return (1); // 安全检查，确保 parsed_command 存在
-	
-	newline = 1;
-	i = 1; // 从 args[1] 开始（跳过 "echo" 本身）
-	
-	// 处理 -n 选项
-	while (args[i] && is_n_option(args[i]))
+	has_arg_before = 0;
+	// passer le nom de la comùmande
+	if (current)
+		current = current->next;
+
+	// Gestion de l'option -n (ne pas ajouter de fin de ligne)
+	while (current && is_n_option(current->value))
 	{
 		newline = 0;
-		i++;
+		current = current->next;
 	}
-	
-	// 遍历并打印剩余的参数
-	while (args[i])
+
+	// Parcours des arguments restants (ignore redir et filename etc)
+	while (current)
 	{
-		write(data->command_table->fd_out, args[i], ft_strlen(args[i]));
-		if (args[i + 1]) // 只有当后面还有参数时才打印空格
-			write(data->command_table->fd_out, " ", 1);
-		i++;
+		if (current->type == ARGUMENT)
+		{
+			if (has_arg_before)
+				write(data->command_table->fd_out, " ", 1);
+			write(data->command_table->fd_out, current->value, ft_strlen(current->value));
+			has_arg_before = 1;
+		}
+		current = current->next;
 	}
-	
-	// 如果没有 -n 选项，则加换行
+	// pas de newline
 	if (newline)
 		write(data->command_table->fd_out, "\n", 1);
-	
 	data->exit_status = 0;
-	return (0);
+	return 0;
 }

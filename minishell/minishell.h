@@ -77,7 +77,8 @@ enum e_token_type
 	OPERATOR,
 	PIPE,
 	REDIR,
-	WHITESPACE,
+	FILENAME,
+	//WHITESPACE,
 	DEFAULT
 };
 
@@ -133,7 +134,7 @@ typedef struct	s_tokenizer
 	int				buf_i;
 	t_token			*prev;
 	t_shell_data	*data;
-	bool			expanding;
+	bool			command_found;
 }				t_tokenizer;
 
 // builtins/*.c
@@ -159,6 +160,10 @@ void fill_sorted_exports_exported(char **sorted_exports, t_shell_data *data, \
 //builtins/export_utils_3.c
 void print_sorted_exports(char **sorted_exports, int fd_out);
 int		is_valid_identifier(const char *str);
+//static char	*remove_quotes(const char *str);
+//static char	*collapse_spaces(const char *str);
+//static char	*trim_whitespace(const char *str);
+char	*process_new_value(const char *str);
 //builtins/exit.c
 int	exit_builtin(t_shell_data *shell_data);
 
@@ -266,7 +271,7 @@ bool	handle_quote_or_operator(t_tokenizer *t);
 t_token	*create_token(const char *value, int type);
 void	add_token(t_token **head, t_token *new_token);
 int		ft_strcmp(const char *s1, const char *s2);
-int		determine_token_type(const char *value, const t_token *previous_token);
+int		determine_token_type(const char *value, const t_token *previous_token, bool *command_found);
 void	finalize_token(t_tokenizer *t);
 
 //token_handling/tokenize_input.c

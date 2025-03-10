@@ -99,7 +99,7 @@ int	exit_builtin(t_shell_data *shell_data)
 		// Si plus d'un argument est fourni, on affiche une erreur et on ne quitte pas
 		if (args[2])
 			return (ft_putendl_fd("exit: too many arguments", STDERR_FILENO), 1);
-		// Vérification que l'argument est bien numérique (on autorise un signe '+' ou '-')
+		// Vérification que l'argument est bien numérique (on autorise un signe '+' ou '-' ???)
 		i = 0;
 		if (args[1][i] == '-' || args[1][i] == '+')
 			i++;
@@ -119,7 +119,6 @@ int	exit_builtin(t_shell_data *shell_data)
 	}
 	rl_clear_history();
 	free_shell_data(shell_data);
-	rl_clear_history();
 	exit(status);
 	return (0);  // Jamais atteint
 }

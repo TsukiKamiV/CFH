@@ -91,9 +91,10 @@
 // }
 
 
-// exec_handling/builtins_exec.c
+
 int execute_builtin(t_command_table *cmd, t_shell_data *shell_data)
 {
+	shell_data->command_table = cmd;
 	char *cmd_name = cmd->parsed_command[0];
 	if (!ft_strcmp(cmd_name, "cd"))
 		return cd_builtin(cmd, shell_data);

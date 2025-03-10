@@ -6,7 +6,7 @@
 /*   By: lpantign <maildelulua42@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 19:53:55 by yourLogin         #+#    #+#             */
-/*   Updated: 2025/02/25 15:10:34 by lpantign         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:06:05 by lpantign         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	handle_heredoc(t_command_table *cmd, const char *delimiter)
 }
 
 
-
 int	handle_redirection(t_command_table *cmd, t_token *current)
 {
 	char	*err_msg;
@@ -120,7 +119,7 @@ int	handle_redirection(t_command_table *cmd, t_token *current)
 			err_msg = ft_strjoin(current->next->value, ": no such file or directory");
 			if (!err_msg)
 				return (-1);
-			ft_putendl_fd(err_msg, 2);
+			ft_putendl_fd(err_msg, STDERR_FILENO);
 			free(err_msg);
 			return (-1);
 		}
@@ -134,23 +133,42 @@ int	handle_redirection(t_command_table *cmd, t_token *current)
 			err_msg = ft_strjoin(current->next->value, ": no such file or directory");
 			if (!err_msg)
 				return (-1);
-			ft_putendl_fd(err_msg, 2);
+			ft_putendl_fd(err_msg, STDERR_FILENO);
 			free(err_msg);
 			return (-1);
 		}
 	}
+	// else if (!ft_strcmp(current->value, "<"))
+	// {
+	// 	cmd->fd_in = open(current->next->value, O_RDONLY);
+	// 	cmd->check_redir = true;
+	// 	if (cmd->fd_in == -1)
+	// 	{
+	// 		err_msg = ft_strjoin(current->next->value, ": no such file or directory");
+	// 		if (!err_msg)
+	// 			return (-1);
+	// 		ft_putendl_fd(err_msg, 2);
+	// 		free(err_msg);
+	// 		return (-1);
+	// 	}
+	// }
 	else if (!ft_strcmp(current->value, "<"))
 	{
+		// Au lieu de retourner -1 on affiche juste l'erreur
+		// et on remet fd_in à STDIN_FILENO pour la suite des cmds ( echo < nonexist | echo 42 par exemple)
 		cmd->fd_in = open(current->next->value, O_RDONLY);
 		cmd->check_redir = true;
 		if (cmd->fd_in == -1)
 		{
 			err_msg = ft_strjoin(current->next->value, ": no such file or directory");
-			if (!err_msg)
-				return (-1);
-			ft_putendl_fd(err_msg, 2);
-			free(err_msg);
-			return (-1);
+			if (err_msg)
+			{
+				ft_putendl_fd(err_msg, STDERR_FILENO);
+				free(err_msg);
+			}
+			// Pas sûr de ce choix
+			cmd->fd_in = STDIN_FILENO;
+			return (0);
 		}
 	}
 	else if (!ft_strcmp(current->value, "<<"))
@@ -159,4 +177,3 @@ int	handle_redirection(t_command_table *cmd, t_token *current)
 	}
 	return (0);
 }
-

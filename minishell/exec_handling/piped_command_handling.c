@@ -1,23 +1,70 @@
 #include "../minishell.h"
 
-static int wait_piped_pids(pid_t *pids_tab, char **paths, int pid_count)
+// static int wait_piped_pids(pid_t *pids_tab, char **paths, int pid_count)
+// {
+// 	int	status;
+// 	int	j;
+
+// 	j = 0;
+// 	status = 0;
+
+// 	while (j < pid_count)
+// 		waitpid(pids_tab[j++], &status, 0);
+
+// 	free_string_array(paths);
+
+// 	// On peut renvoyer le code de retour de la dernière commande
+// 	if (WIFEXITED(status))
+// 		return WEXITSTATUS(status);
+// 	return status;
+// }
+
+void	wait_piped_pids(pid_t *pids_tab, int nb_cmd, t_shell_data *shell_data)
 {
 	int	status;
 	int	j;
 
 	j = 0;
-	status = 0;
-
-	while (j < pid_count)
-		waitpid(pids_tab[j++], &status, 0);
-
-	free_string_array(paths);
-
-	// On peut renvoyer le code de retour de la dernière commande
-	if (WIFEXITED(status))
-		return WEXITSTATUS(status);
-	return status;
+	while (j < nb_cmd)
+	{
+		waitpid(pids_tab[j], &status, 0);
+		if (WIFSIGNALED(status))
+			shell_data->exit_status = 128 + WTERMSIG(status); // Gestion correcte du signal reçu
+		else if (WIFEXITED(status))
+			shell_data->exit_status = WEXITSTATUS(status);
+		j++;
+	}
 }
+
+static void	handle_redir_pipe_context(t_command_table *cmd, int *pipefd)
+{
+	// Si cmd suivante + pas de redir
+	if (cmd->next && cmd->fd_out == STDOUT_FILENO)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	// Si cmd suivante + redir de sortie, priorité à la redir
+	else if (cmd->next && cmd->fd_out != STDOUT_FILENO)
+	{
+		dup2(cmd->fd_out, STDOUT_FILENO);
+		close(cmd->fd_out);
+		// On met à jour le champ fd_out pour pouvoir utiliser echo ou autre ? (vraiment à bien tester ! ça risque de poser problème dans 'autres cas)
+		cmd->fd_out = STDOUT_FILENO;
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	// Si c'est la dernière commande + redir
+	else if (!cmd->next && cmd->fd_out != STDOUT_FILENO)
+	{
+		dup2(cmd->fd_out, STDOUT_FILENO);
+		close(cmd->fd_out);
+		cmd->fd_out = STDOUT_FILENO;
+	}
+
+}
+
 
 // static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
 // {
@@ -77,53 +124,46 @@ static void piped_parent_routine(int *pipefd, int *fd_in, t_command_table *cmd)
 	}
 }
 
+
 static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
 {
 	char *correct_cmd_path = NULL;
 
-	if (!shell_data || !cmd || !cmd->parsed_command || !cmd->parsed_command[0]) // Add your style of check
+	if (!shell_data || !cmd || !cmd->parsed_command || !cmd->parsed_command[0])
 	{
 		free_string_array(paths);
 		error_exit(shell_data, "Invalid command or shell data", 1);
 	}
 
-	if (*fd_in != 0)
+	// Gestion de l'entrée standard depuis le pipe précédent
+	if (*fd_in != STDIN_FILENO)
 	{
 		dup2(*fd_in, STDIN_FILENO);
 		close(*fd_in);
 	}
-	if (cmd->next)
-	{
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
-	if (cmd->fd_in != 0)
+
+	handle_redir_pipe_context(cmd, pipefd);
+
+	// Gestion d'un autre cas de redirection, à voir si nécessaire ? Doublon ??
+	if (cmd->fd_in != STDIN_FILENO)
 	{
 		dup2(cmd->fd_in, STDIN_FILENO);
 		close(cmd->fd_in);
 	}
-	if (cmd->fd_out != 1)
-	{
-		dup2(cmd->fd_out, STDOUT_FILENO);
-		close(cmd->fd_out);
-	}
 
+	// Exécution d'un builtin
 	if (is_builtin(cmd->parsed_command[0]))
 	{
-		int status = execute_builtin(cmd, shell_data);
+		shell_data->exit_status = execute_builtin(cmd, shell_data);
 		free_string_array(paths);
-		exit(status);
+		exit(shell_data->exit_status);
 	}
 
-	// Handle external command
+	// Traitement d'une commande externe
 	correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], paths);
 	if (!correct_cmd_path)
 	{
-		if (ft_strcmp(cmd->token_list->value, ".") == 0)
-			ft_putendl_fd(".: filename argument required", 2);
-		else
-			ft_putendl_fd("Command not found", 2);
+		ft_putendl_fd("Command not found", STDERR_FILENO);
 		free_string_array(paths);
 		error_exit(shell_data, NULL, 127);
 	}
@@ -133,6 +173,9 @@ static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t
 	free_string_array(paths);
 	exit(EXIT_FAILURE);
 }
+
+
+
 
 /**
  * @brief Fonction qui gère l'exécution des commandes pipées
@@ -183,18 +226,17 @@ static int pipes_loop(t_command_table *cmd, t_shell_data *shell_data, pid_t *pid
 
 int execute_piped_commands(t_command_table *cmd, t_shell_data *shell_data)
 {
-	int		status;
-	pid_t	pids[256]; // ok ?
+	pid_t	pids[256]; // ok ? buffer overflow si qlq peut réussir à créer 256 processus en même temps donc attention
 	char	**paths;
 	int		child_count;
 
-	status = 0;
 	paths = extract_and_split_env_path(shell_data->env);
 	if (!paths)
 		return (1);
 	// Appel de la boucle qui crée les processus enfants et les gère
 	child_count = pipes_loop(cmd, shell_data, pids, paths);
 	// Attendre tous les processus enfants et récupérer le code de retour de la dernière commande
-	status = wait_piped_pids(pids, paths, child_count);
-	return (status);
+	wait_piped_pids(pids, child_count, shell_data);
+
+	return (shell_data->exit_status);
 }

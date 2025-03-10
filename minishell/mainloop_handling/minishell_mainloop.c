@@ -11,7 +11,7 @@ const char *token_type_to_string(int type)
 	if (type == PIPE) return "PIPE";
 	if (type == REDIR) return "REDIR";
 	if (type == OPERATOR) return "OPERATOR";
-	if (type == WHITESPACE) return "WHITESPACE";
+	if (type == FILENAME) return "FILENAME";
 	return "DEFAULT";
 }
 
@@ -204,7 +204,6 @@ int	minishell_mainloop(t_shell_data *shell_data)
 			if (!shell_data->tokens)
 				continue;//Pour gérer la ligne de commande avec que des whitespaces ------- On devrait free line ou quelque chose ici non ?
 			//print_command_table(shell_data->command_table);
-
 			// On choisit quel protocole utiliser (pipe ou non)
 			if (!shell_data->command_table->check_pipe)
 				status = exec_simple_command(shell_data->command_table, shell_data);
