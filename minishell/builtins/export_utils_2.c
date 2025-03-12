@@ -65,13 +65,13 @@ void fill_sorted_exports_env(char **sorted_exports, t_shell_data *data, int env_
 		{
 			key = ft_strndup(data->env[i], equal_pos - data->env[i]);
 			value = ft_strdup(equal_pos + 1);
-			sorted_exports[i] = ft_strjoin_3("declare -x ", key,
+			sorted_exports[i] = ft_strjoin_3("export ", key,
 											 ft_strjoin("=\"", ft_strjoin(value, "\"")));
 			free(key);
 			free(value);
 		}
 		else
-			sorted_exports[i] = ft_strjoin("declare -x ", data->env[i]);
+			sorted_exports[i] = ft_strjoin("export ", data->env[i]);
 		i++;
 	}
 }
@@ -84,7 +84,7 @@ void fill_sorted_exports_exported(char **sorted_exports, t_shell_data *data,
 	while (j < export_size)
 	{
 		sorted_exports[env_size + j] =
-		ft_strjoin("declare -x ", data->exported_vars[j]);
+		ft_strjoin("export ", data->exported_vars[j]);
 		j++;
 	}
 	sorted_exports[env_size + export_size] = NULL;

@@ -215,6 +215,7 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 		local_state = NO_QUOTE;
 		while (orig[i])
 		{
+			//echo $'hello' doit afficher hello
 			if (orig[i] == '$' && local_state == NO_QUOTE && (orig[i + 1] == '\'' || orig[i + 1] == '\"'))
 			{
 				i++;
@@ -258,7 +259,7 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 						k++;
 					}
 					free(temp);
-					i += 2;
+					i += 2;//si command echo $?hello -> output est 0hello (0 ou autre exit_status)
 					continue;
 				}
 				if (ft_isdigit(orig[i + 1]))
@@ -268,7 +269,6 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 				}
 				else
 				{
-					//printf("%s\n", orig);
 					int var_start = i + 1;
 					int var_len = 0;
 					while (orig[var_start + var_len] &&

@@ -151,7 +151,7 @@ t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t
 			*ret = 2;
 			return (NULL);
 		}
-		if (handle_redirection(cmd, current) == -1)
+		if (handle_redirection(cmd, current, data) == -1)
 		{
 			*ret = 1;
 			return (NULL);

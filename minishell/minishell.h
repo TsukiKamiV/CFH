@@ -186,7 +186,7 @@ char			*get_env_value(const char *var, char **envp);
 
 //data_handling/redir_and_heredoc.c
 //void			handle_heredoc(const char *delim);
-int 			handle_redirection(t_command_table *cmd, t_token *current);
+int 			handle_redirection(t_command_table *cmd, t_token *current, t_shell_data *data);
 
 // data_handling/cmd_table_manips.c
 //t_command_table	*init_command_table(char **parsed_command);
