@@ -51,7 +51,7 @@ char	*cmd_is_accessible(char *cmd, char **path)
 		if (ft_strcmp(cmd, ".") == 0 || ft_strcmp(cmd, "..") == 0)
 			return (NULL);
 		if (access(cmd, F_OK | X_OK) == 0)
-			return (printf("Commande valide: %s\n", cmd), ft_strdup(cmd));
+			return (printf("Commande valide: %s\n", cmd), ft_strdup(cmd)); ///// !!!!
 		return (NULL);
 	}
 	while (path && path[i])
@@ -72,16 +72,6 @@ char	*cmd_is_accessible(char *cmd, char **path)
 //ATTENTION: s'il existe déjà une VAR qui s'appelle VAR_EXISTANT et je cherche VAR dans l'env, la fonction va retourner 1.
 int	check_env_var(char *var, char **env)
 {
-	//int	i;
-//
-	//i = 0;
-	//while (env[i])
-	//{
-	//	if (ft_strncmp(var, env[i], ft_strlen(var)) == 0)
-	//		return (1);
-	//	i++;
-	//}
-	//return (0);
 	int	i;
 	size_t	var_len;
 

@@ -58,6 +58,8 @@ static int	ft_atoll_checked(const char *str, long long *result)
 static void exit_error_numeric(long long status, t_shell_data *shell_data)
 {
 	(void)status;
+	if (isatty(STDIN_FILENO))
+		ft_putendl_fd("exit", shell_data->command_table->fd_out);
 	ft_putstr_fd("exit: ", STDERR_FILENO);
 	ft_putstr_fd(shell_data->command_table->parsed_command[1], STDERR_FILENO);
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
@@ -78,47 +80,100 @@ static void exit_error_numeric(long long status, t_shell_data *shell_data)
  * @param shell_data Structure contenant toutes les données du shell.
  * @return 0 si tout s'est bien passé, 1 si trop d'arguments.
  */
+//int	exit_builtin(t_shell_data *shell_data)
+//{
+//	int			status = 0;
+//	char		**args = shell_data->command_table->parsed_command;
+//	int			i;
+//	long long	conv;
+//
+//	// ft_putendl_fd("exit", STDERR_FILENO);
+//
+//	// Si un la commande est juste 'exit' sans argument, on quitte avec le status du dernier //processus
+//	if (!args[1])
+//	{
+//		//Si prev_parse_state n'est pas 0, ça veut dire la dernière commande avant exit //avait syntax error && non executée. Donc ça suffit d'exit avec ce code et non //shell_data->exit_status
+//		if (shell_data->prev_parse_state != 0)
+//			status = shell_data->prev_parse_state;
+//		else
+//			status = shell_data->exit_status;
+//		if (isatty(STDIN_FILENO))
+//			ft_putendl_fd("exit", STDOUT_FILENO);
+//		free_shell_data(shell_data);
+//		exit(status);
+//	}
+//	else if (args[1])
+//	{
+//		// Si plus d'un argument est fourni, on affiche une erreur et on ne quitte pas
+//		if (args[2])
+//		{
+//			if (isatty(STDIN_FILENO))
+//				ft_putendl_fd("exit", STDOUT_FILENO);
+//			return (ft_putendl_fd("exit: too many arguments", STDERR_FILENO), 1);
+//		}
+//		// Vérification que l'argument est bien numérique (on autorise un signe '+' ou '-' //???)
+//		i = 0;
+//		if (args[1][i] == '-' || args[1][i] == '+')
+//			i++;
+//		if (args[1][i] == '\0')
+//			exit_error_numeric(status, shell_data);
+//		while (args[1][i])
+//		{
+//			if (!ft_isdigit(args[1][i]))
+//				exit_error_numeric(status, shell_data);
+//			i++;
+//		}
+//		// Conversion avec vérification d'overflow / underflow
+//		if (!ft_atoll_checked(args[1], &conv))
+//			exit_error_numeric(status, shell_data);
+//		// exit 256 -> 0, -1 -> 255, 255 -> 255)
+//		status = (unsigned char)conv;
+//	}
+//	rl_clear_history();
+//	free_shell_data(shell_data);
+//	if (isatty(STDIN_FILENO))
+//		ft_putendl_fd("exit", STDOUT_FILENO);
+//	exit(status);
+//	return (0);  // Jamais atteint
+//}
+
 int	exit_builtin(t_shell_data *shell_data)
 {
 	int			status = 0;
 	char		**args = shell_data->command_table->parsed_command;
-	int			i;
 	long long	conv;
-
-	// ft_putendl_fd("exit", STDERR_FILENO);
-
-	// Si un la commande est juste 'exit' sans argument, on quitte avec le status du dernier processus
+	
+	// Si la commande est juste 'exit' sans argument, on quitte avec le status du dernier processus
 	if (!args[1])
 	{
-		status = shell_data->exit_status;
+		if (shell_data->prev_parse_state != 0)
+			status = shell_data->prev_parse_state;
+		else
+			status = shell_data->exit_status;
+		if (isatty(STDIN_FILENO))
+			ft_putendl_fd("exit", STDOUT_FILENO);
 		free_shell_data(shell_data);
 		exit(status);
 	}
-	else if (args[1])
+	
+	// Vérifier si args[1] est numérique
+	if (!ft_atoll_checked(args[1], &conv))
+		exit_error_numeric(status, shell_data);
+	
+	// Si args[1] est numérique mais il y a un deuxième argument, afficher une erreur et ne pas quitter
+	if (args[2])
 	{
-		// Si plus d'un argument est fourni, on affiche une erreur et on ne quitte pas
-		if (args[2])
-			return (ft_putendl_fd("exit: too many arguments", STDERR_FILENO), 1);
-		// Vérification que l'argument est bien numérique (on autorise un signe '+' ou '-' ???)
-		i = 0;
-		if (args[1][i] == '-' || args[1][i] == '+')
-			i++;
-		if (args[1][i] == '\0')
-			exit_error_numeric(status, shell_data);
-		while (args[1][i])
-		{
-			if (!ft_isdigit(args[1][i]))
-				exit_error_numeric(status, shell_data);
-			i++;
-		}
-		// Conversion avec vérification d'overflow / underflow
-		if (!ft_atoll_checked(args[1], &conv))
-			exit_error_numeric(status, shell_data);
-		// exit 256 -> 0, -1 -> 255, 255 -> 255)
-		status = (unsigned char)conv;
+		if (isatty(STDIN_FILENO))
+			ft_putendl_fd("exit", STDOUT_FILENO);
+		return (ft_putendl_fd("exit: too many arguments", STDERR_FILENO), 1);
 	}
+	
+	// Convertir et quitter avec le code correct
+	status = (unsigned char)conv;
 	rl_clear_history();
 	free_shell_data(shell_data);
+	if (isatty(STDIN_FILENO))
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	exit(status);
 	return (0);  // Jamais atteint
 }

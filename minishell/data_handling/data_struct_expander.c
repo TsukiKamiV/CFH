@@ -1,113 +1,27 @@
 #include "../minishell.h"
 
-char *escape_dollar_signs(const char *str)
-{
-	int 	i;
-	int		j;
-	char 	*res;
-	
-	if (!str)
-		return (NULL);
-	res = malloc(ft_strlen(str) + 1);
-	if (!res)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] == '\\' && str[i + 1] == '$')
-			i++;
-		res[j++] = str[i++];
-	}
-	res[j] = '\0';
-	return (res);
-}
-
-/*int expand_cmd_token(t_token *tokens, t_shell_data *data)
-{
-	t_token *cur = tokens;
-	char	*tmp;
-	bool	escaped_dollar;
-	
-	while (cur)
-	{
-		escaped_dollar = false;
-		if (cur->quote_state == SINGLE_QUOTE)
-		{
-			cur = cur->next;
-			continue;
-		}
-		// **处理 DOUBLE_QUOTE 和 NO_QUOTE**
-		if (cur->quote_state == DOUBLE_QUOTE || cur->quote_state == NO_QUOTE)
-		{
-			int i = 0, j = 0;
-			char *new_value = malloc(ft_strlen(cur->value) + 1);
-			if (!new_value)
-				error_exit(data, "Memory allocation failed", 1);
-			
-			while (cur->value[i])
-			{
-				// **处理 DOUBLE_QUOTE 内的 `\$`**
-				if (cur->quote_state == DOUBLE_QUOTE && cur->value[i] == '\\' && cur->value[i + 1] == '$')
-				{
-					ft_memmove(&cur->value[i], &cur->value[i + 1], ft_strlen(cur->value) - i);
-					escaped_dollar = true;
-					continue;
-				}
-				// **在 DOUBLE_QUOTE 内，处理 `\\`, `\'`, `\"`**
-				if (cur->quote_state == DOUBLE_QUOTE && cur->value[i] == '\\' &&
-					(cur->value[i + 1] == '\\' || cur->value[i + 1] == '\"' || cur->value[i + 1] == '\''))
-				{
-					i++;  // 跳过第一个 `\`
-				}
-				
-				// **在 NO_QUOTE 下，`\` 只影响 `\`, `"`, `'`**
-				if (cur->quote_state == NO_QUOTE && cur->value[i] == '\\')
-				{
-					if (cur->value[i + 1] == '\\' || cur->value[i + 1] == '\'' || cur->value[i + 1] == '\"')
-					{
-						ft_memmove(&cur->value[i], &cur->value[i + 1], ft_strlen(cur->value) - i);
-						//i++;  // 跳过 `\`
-					}
-					else if (cur->value[i + 1] == '\0')//to handle the command "echo \"
-					{
-						// **如果 `\` 在行尾，则进入等待输入模式**
-						//ft_putstr_fd("> ", 1);
-						//fflush(stdout);
-						free(new_value);
-						return (0);
-					}
-					else if (cur->value[i] == '\\' && cur->value[i + 1] == '$')
-					{
-						ft_memmove(&cur->value[i], &cur->value[i + 1], ft_strlen(cur->value) - i);
-						escaped_dollar = true;
-						continue;
-					}
-					else
-					{
-						i++;
-						continue;
-					}
-				}
-				new_value[j++] = cur->value[i++];
-			}
-			new_value[j] = '\0';
-			free(cur->value);
-			cur->value = new_value;
-		}
-		if (!escaped_dollar)
-		{
-			tmp = perform_expansion(cur->value, data);
-			if (tmp)
-			{
-				free(cur->value);
-				cur->value = tmp;
-			}
-		}
-		cur = cur->next;
-	}
-	return (0);
-}*/
+//char *escape_dollar_signs(const char *str)
+//{
+//	int 	i;
+//	int		j;
+//	char 	*res;
+//
+//	if (!str)
+//		return (NULL);
+//	res = malloc(ft_strlen(str) + 1);
+//	if (!res)
+//		return (NULL);
+//	i = 0;
+//	j = 0;
+//	while (str[i])
+//	{
+//		if (str[i] == '\\' && str[i + 1] == '$')
+//			i++;
+//		res[j++] = str[i++];
+//	}
+//	res[j] = '\0';
+//	return (res);
+//}
 
 //int	expand_cmd_token(t_token* tokens, t_shell_data *data)
 //{
@@ -191,17 +105,49 @@ char *escape_dollar_signs(const char *str)
 //	return (0);
 //}
 
-int	expand_cmd_token(t_token *tokens, t_shell_data *data)
+static bool is_token_fully_unquoted_expansion(const char *orig) 
+{
+	int i = 0;
+	while (orig[i]) 
+	{
+		if (orig[i] == '\'' || orig[i] == '\"')
+			return (false);
+		if (orig[i] == '$')
+		{
+			i++;
+			if (orig[i] == '?' || ft_isdigit(orig[i]))
+			{
+				i++;
+				continue;
+			}
+			else if (ft_isalpha(orig[i]) || orig[i] == '_')
+			{
+				i++;
+				while (ft_isalnum(orig[i]) || orig[i] == '_') i++;
+			} 
+			else
+				return (false);
+		}
+		else
+			i++;
+	}
+	return (true);
+}
+
+int	expand_cmd_token(t_token **tokens, t_shell_data *data)
 {
 	t_token			*cur;
+	t_token			*prev;
 	char			*orig;
 	char			*new_value;
 	size_t			orig_len;
 	int				i;
 	int				j;
 	t_quote_state	local_state;
+	bool			should_remove;
 	
-	cur = tokens;
+	cur = *tokens;
+	prev = NULL;
 	while (cur)
 	{
 		orig = cur->value;
@@ -221,6 +167,7 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 				i++;
 				continue;
 			}
+			//si on entre dans les quotes
 			if (orig[i] == '\'' || orig[i] == '\"')
 			{
 				if (local_state == NO_QUOTE)
@@ -296,17 +243,36 @@ int	expand_cmd_token(t_token *tokens, t_shell_data *data)
 					}
 					else
 					{
+						//echo "$"
 						new_value[j++] = orig[i++];
 						continue;
 					}
 				}
 			}
+			//copier tous les caractères non-expanded
 			new_value[j++] = orig[i++];
 		}
 		new_value[j] = '\0';
-		free(cur->value);
-		cur->value = new_value;
-		cur = cur->next;
+		//si un token est sans quotes et composé des var expanded sans value, le token ne doit pas être stocké dans la cmd table
+		should_remove = (new_value[0] == '\0') && is_token_fully_unquoted_expansion(orig);
+		if (should_remove)
+		{
+			t_token	*next = cur->next;
+			free (new_value);
+			if (prev)
+				prev->next = next;
+			else
+				*tokens = next;
+			free (cur);
+			cur = next;
+		}
+		else
+		{
+			free (cur->value);
+			cur->value = new_value;
+			prev = cur;
+			cur = cur->next;
+		}
 	}
 	return (0);
 }

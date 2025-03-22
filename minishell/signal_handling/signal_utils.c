@@ -9,8 +9,11 @@ void heredoc_sig_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		sig_interrupt_flag = 130; 
+		sig_interrupt_flag = 130;
 		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 	// pas beosin de gerer les autres ?
 }
@@ -120,12 +123,14 @@ static void sig_handling(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		sig_interrupt_flag = 130;
 		// Trouver comment gérer l'exit status !!
 	}
 	else if (sig == SIGQUIT)
 	{
 		// Aucune réaction en cas de CTRL+backslash
-		write(STDOUT_FILENO, "Signal SIGQUIT (CTRL+\\) detected.\n", 35);
+		// write(STDOUT_FILENO, "Signal SIGQUIT (CTRL+\\) detected.\n", 35);
+		return ;
 	}
 }
 

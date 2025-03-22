@@ -29,7 +29,3 @@ bool	is_redirection(const char *value)
 	return (!ft_strcmp(value, ">") || !ft_strcmp(value, ">>") ||\
 			!ft_strcmp(value, "<") || !ft_strcmp(value, "<<"));
 }
-//bool is_argument(const char *value)
-//{
-//	return (value[0] != '\0' && value[0] != '-' && !is_operator(value) && //!is_separator(value));
-//}

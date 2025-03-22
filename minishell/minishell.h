@@ -13,6 +13,7 @@
 # include <sys/wait.h> // waitpid, WIFEXITED
 # include <sys/stat.h>
 #include <sys/ioctl.h> //ioctl, FIONREAD
+# include <errno.h>
 
 # define RED "\033[1;31m"
 # define GREEN "\033[1;32m"
@@ -116,6 +117,7 @@ typedef struct	s_shell_data
 	char	**splitted_prev_command;
 	int		exit_status;
 	int		parse_state;
+	int		prev_parse_state;
 	char	*shell_name;
 	struct sigaction	sig_config;
 	t_command_table	*command_table;
@@ -150,6 +152,7 @@ char	*ft_strndup(const char *src, size_t n);
 void sort_char_array(char **array);
 char *extract_key(const char *env_entry);
 int get_env_index(char **env, const char *key);
+char	**append_string_in_array(char **env, char *key, char *new_value);
 //builtins/export_utils_2.c
 int is_var_in_list(char **list, const char *key);
 char **remove_var_from_list(char **list, const char *key);
@@ -204,7 +207,7 @@ int				fill_command_table(t_shell_data *data);//called by parse_line to communic
 //data_handling/data_struct_expander.c
 char	*remove_surrounding_quotes(char *str);
 void	expand_variables(char **str, t_shell_data *data);
-int		expand_cmd_token(t_token *tokens, t_shell_data *data);
+int		expand_cmd_token(t_token **tokens, t_shell_data *data);
 
 //data_handling/expander_utils.c
 char	*handle_exit_status(char *res, t_shell_data *data);

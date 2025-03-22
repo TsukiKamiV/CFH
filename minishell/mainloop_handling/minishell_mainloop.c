@@ -82,6 +82,41 @@ bool is_incomplete_command(const char *line)
 	return false;
 }
 
+/**
+ * @brief faire un premier parsing pour tous les cas d'erreur de pipes -- si line commence avec un pipe, ou s'il y a des pipes consécutifs sans rien au milieu, il faut changer le parse_status et output syntax error message
+ * @return 0 si commande complète, 1 s'il faut readline, 2 si syntax error
+ */
+int	is_incomplete_command_replace(const char *line)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+
+	if (!line || line[0] == '\0')
+		return (0);
+	if (line[0] == '|')
+		return (2);
+	len = ft_strlen(line);
+	i = 0;
+	while (i < len)
+	{
+		if (line[i] == '|')
+		{
+			j = i + 1;
+			while (j < len && (line[j] == ' ' || line[j] == '\t'))
+				j++;
+			if (j < len && line[j] == '|')//si pipes consecutifs
+				return (2);
+		}
+		i++;
+	}
+	while (len > 0 && (line[len - 1] == ' ' || line[len - 1] == '\t'))
+		len--;
+	if (len > 0 && line[len - 1] == '|')
+		return (1);
+	return (0);
+}
+
 
 /**
  * @brief Boucle principale de minishell
@@ -96,6 +131,7 @@ int	minishell_mainloop(t_shell_data *shell_data)
 
 	char *tmp;
 	char *old_line;
+	int incomplete_command_status;
 
 	old_line = NULL;
 	tmp = NULL;
@@ -124,6 +160,7 @@ int	minishell_mainloop(t_shell_data *shell_data)
 
 		if (shell_data->is_interactive)
 			shell_data-> line = readline(shell_data->prompt);
+		shell_data->prev_parse_state = shell_data->parse_state;
 		//printf("%s", RESET);
 		if (!shell_data->line) // EOF (Ctrl-D), évite de segfault
 		{
@@ -134,20 +171,47 @@ int	minishell_mainloop(t_shell_data *shell_data)
 
 
 		// Si la commande est incomplète (| à la fin), on continue de lire. ça nous évite de devoir modifier le fonctionnement des tables de commandes ou autre
-		while (is_incomplete_command(shell_data->line))
+		incomplete_command_status = is_incomplete_command_replace(shell_data->line);
+		if (incomplete_command_status == 2)
+		{
+			ft_putendl_fd("syntax error near unexpected token '|'", STDERR_FILENO);
+			free(shell_data->line);
+			shell_data->line = NULL;
+			shell_data->exit_status = 2;
+			continue;
+		}
+		// Tant que la commande se termine par un pipe (commande incomplète), on continue la lecture
+		while (incomplete_command_status == 1)
 		{
 			tmp = readline("> ");
-			if (!tmp) // En cas de Ctrl-D sur le prompt de continuation
+			if (!tmp) // Ctrl-D sur le prompt de continuation
 				break;
+			old_line = shell_data->line;
+			shell_data->line = ft_strjoin(old_line, tmp);
+			free(old_line);
+			free(tmp);
+			incomplete_command_status = is_incomplete_command_replace(shell_data->line);
+			if (incomplete_command_status == 2)
 			{
-				old_line = shell_data->line;
-				shell_data->line = ft_strjoin(old_line, tmp);
-				free(old_line);
-				free(tmp);
+				ft_putendl_fd("syntax error near unexpected token '|'", STDERR_FILENO);
+				free(shell_data->line);
+				shell_data->line = NULL;
+				shell_data->exit_status = 2;
+				break;
 			}
 		}
 		// Si la ligne est vide (uniquement des espaces), on passe à la prochaine itération
-		if (!(*shell_data->line))
+		// if (!(*shell_data->line))
+		// {
+		// 	free(shell_data->line);
+		// 	shell_data->line = NULL;
+		// 	continue;
+		// }
+
+		if (shell_data->line == NULL)
+			continue;
+		// Si la ligne est vide (uniquement des espaces), on passe à la prochaine itération
+		if (shell_data->line[0] == '\0')
 		{
 			free(shell_data->line);
 			shell_data->line = NULL;
@@ -156,19 +220,20 @@ int	minishell_mainloop(t_shell_data *shell_data)
 
 		// Vérifier si une des variables d'environnement vitale (PATH, HOME, etc.) a été supprimée
 		// Créer fonction séparée et ajouter autres checks de l'env si besoin
-		if (check_env_var("PATH", shell_data->env) == 0 || check_env_var("HOME", shell_data->env) == 0 ||
-			check_env_var("USER", shell_data->env) == 0 || /*check_env_var("HOST", shell_data->env) == 0 ||*/
-			check_env_var("PWD", shell_data->env) == 0)
-		{
-			ft_putendl_fd("Error: One or more vital environment variables have been removed.", STDERR);
-			return (1);
-		}
+		// if (check_env_var("PATH", shell_data->env) == 0 || check_env_var("HOME", shell_data->env) == 0 ||
+		// 	check_env_var("USER", shell_data->env) == 0 || /*check_env_var("HOST", shell_data->env) == 0 ||*/
+		// 	check_env_var("PWD", shell_data->env) == 0)
+		// {
+		// 	ft_putendl_fd("Error: One or more vital environment variables have been removed.", STDERR);
+		// 	return (1);
+		// }
 		else if (*shell_data->line)
 		{
 			add_history(shell_data->line);
 			parse_ret = parse_line(shell_data);
-			if (parse_ret == 0)
-				shell_data->parse_state = 0;
+
+			//if (parse_ret == 0)
+			shell_data->parse_state = parse_ret;
 			if (parse_ret != 0)
 			{
 				free (shell_data->line);

@@ -79,6 +79,9 @@ int parse_line(t_shell_data *data)
 	tokenize_line_new(data);
 	if (!data->tokens)
 		return (2);
-	expand_cmd_token(data->tokens, data);
+	//ici changement de parametre pour manipuler la liste chainee
+	expand_cmd_token(&data->tokens, data);
+	if (!data->tokens)
+		return (0);
 	return (fill_command_table(data));
 }

@@ -31,7 +31,7 @@ int main(int argc, const char * argv[])
 		philo[i].eaten = false;
 		philo[i].left_fork = &forks[i];
 		philo[i].right_fork = &forks[(i + 1) % num];
-		pthread_create(&philo[i].thread, NULL, routine, &philo[i]);
+		pthread_create(&philo[i].thread, NULL, routine, &philo[i]);//create thread for one philo
 		i++;
 	}
 	i = 0;

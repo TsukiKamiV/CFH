@@ -38,29 +38,59 @@ int		string_array_len(char **array)
  * @param array Le tableau a copier
  * @return Un pointeur vers le tableau copie
  */
-char	**copy_string_array(char **array)
-{
-	char	**new_array;
-	int		i;
+//char	**copy_string_array(char **array)
+//{
+//	char	**new_array;
+//	int		i;
+//
+//	i = 0;
+//	if (!array || !*array)
+//		return (NULL);
+//	new_array = malloc(sizeof(char *) * (string_array_len(array) + 1));
+//	if (!new_array)
+//		return (NULL);
+//	while (array[i])
+//	{
+//		new_array[i] = ft_strdup(array[i]);
+//		if (!new_array[i])
+//		{
+//			free_string_array(new_array);
+//			return (NULL);
+//		}
+//		i++;
+//	}
+//	new_array[i] = NULL;
+//	return (new_array);
+//}
 
+char	**copy_string_array(char ** array)
+{
+	int		i;
+	char	**dest;
+	
 	i = 0;
 	if (!array || !*array)
 		return (NULL);
-	new_array = malloc(sizeof(char *) * (string_array_len(array) + 1));
-	if (!new_array)
+	while (array[i])
+		i++;
+	dest = malloc(sizeof(char *) * (i + 1));
+	if (!dest)
 		return (NULL);
+	i = 0;
 	while (array[i])
 	{
-		new_array[i] = ft_strdup(array[i]);
-		if (!new_array[i])
+		dest[i] = ft_strdup(array[i]);
+		if (!dest[i])
 		{
-			free_string_array(new_array);
+			while (i > 0)
+				free (dest[--i]);
+			free (dest);
 			return (NULL);
 		}
 		i++;
 	}
-	new_array[i] = NULL;
-	return (new_array);
+	dest[i] = NULL;
+	return (dest);
 }
 
 /**
@@ -138,6 +168,7 @@ char	**remove_string_from_array(char **array, int index)
 		i++;
 	}
 	new_array[j] = NULL;
+	free_string_array(array);
 	return (new_array);
 }
 

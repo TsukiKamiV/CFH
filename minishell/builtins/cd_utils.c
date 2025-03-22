@@ -3,23 +3,22 @@
 char	*ft_strjoin_3(const char *s1, const char *s2, const char *s3)
 {
 	char	*ret;
-	size_t	total_len;
-	size_t	len1;
-	size_t	len2;
-	size_t	len3;
+	size_t	len1, len2, len3, total_len;
 
-	if (!s1 || !s2 || !s3)
-		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	len3 = ft_strlen(s3);
 	total_len = len1 + len2 + len3;
 	ret = malloc(total_len + 1);
-	if (!ret)
+	if (ret == NULL)
 		return (NULL);
-	ft_strlcpy(ret, s1, len1 + 1);
-	ft_strlcpy(ret + len1, s2, len2 + 1);
-	ft_strlcpy(ret + len1 + len2, s3, len3 + 1);
+	if (s1 != NULL)
+		ft_memcpy(ret, s1, len1);
+	if (s2 != NULL)
+		ft_memcpy(ret + len1, s2, len2);
+	if (s3 != NULL)
+		ft_memcpy(ret + len1 + len2, s3, len3);
+	ret[total_len] = '\0';
 	return (ret);
 }
 

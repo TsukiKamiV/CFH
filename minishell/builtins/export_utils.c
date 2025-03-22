@@ -6,6 +6,8 @@
  * @param index L'index de la chaine à modifier (commence à 0)
  * @param new_string La nouvelle chaine à insérer
  * @return Un pointeur vers le tableau modifié ou NULL en cas d'erreur
+ * @note le tableau d'origine est free
+ * @note char	**add_string_to_array(char **array, char *new_string) ->pour plus d'info cette fonction ne free pas le tableau d'origine
  */
 char **modify_string_in_array(char **array, char *new_string, int index)
 {
@@ -90,16 +92,21 @@ void sort_char_array(char **array)
 
 char *extract_key(const char *env_entry)
 {
-	char *equal_pos;
+	char	*equal_pos;
+	char	*plus_pos;
 	
 	if (!env_entry)
 		return (NULL);
 	
 	equal_pos = ft_strchr(env_entry, '=');
+	plus_pos = ft_strchr(env_entry, '+');
+	if (plus_pos && equal_pos && plus_pos + 1 == equal_pos)
+		return (ft_strndup(env_entry, plus_pos - env_entry));
+	if (plus_pos && (!equal_pos || plus_pos + 1 != equal_pos))
+		return (NULL);
 	if (!equal_pos)
-		return (ft_strdup(env_entry)); // 如果没有 `=`，直接返回整个字符串
-	
-	return (ft_strndup(env_entry, equal_pos - env_entry)); // 提取 `VAR`
+		return (ft_strdup(env_entry));
+	return (ft_strndup(env_entry, equal_pos - env_entry));
 }
 
 int get_env_index(char **env, const char *key)
@@ -119,4 +126,26 @@ int get_env_index(char **env, const char *key)
 		i++;
 	}
 	return (-1);
+}
+
+char	**append_string_in_array(char **env, char *key, char *new_value)
+{
+	int		index;
+	char	*old_value;
+	char	*updated_value;
+	char	**new_env;
+	char	*new_str;
+	
+	index = get_env_index(env, key);
+	if (index < 0)
+		return (env);
+	old_value = ft_strdup(ft_strchr(env[index], '=') + 1);
+	updated_value = ft_strjoin(old_value, new_value);
+	free (old_value);
+	new_str = ft_strjoin_3(key, "=", updated_value);
+	new_env = modify_string_in_array(env, new_str, index);
+	free(new_str);
+	env = new_env;
+	free (updated_value);
+	return (env);
 }

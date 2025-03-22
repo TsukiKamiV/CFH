@@ -48,7 +48,6 @@ static void	handle_redir_pipe_context(t_command_table *cmd, int *pipefd)
 		close(cmd->fd_out);
 		cmd->fd_out = STDOUT_FILENO;
 	}
-
 }
 
 // Appelé à chaque fois qu'on passe à la table de commandes suivante (pipe suivant)
@@ -65,37 +64,12 @@ static void piped_parent_routine(int *pipefd, int *fd_in, t_command_table *cmd)
 	}
 }
 
-// Appelé pour chaque commande séparée par un pipe comme pour le parent
-static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
+// Exécution finale de la commande pipée (enfant), builtin ou externe
+static void	piped_executor(t_command_table *cmd, t_shell_data *shell_data, char **paths)
 {
-	char *correct_cmd_path = NULL;
+	char	*correct_cmd_path;
 
-	// Remise de SIGINT/SIGQUIT à leur comportement par défaut (desactivé au prealable puis remis une fois le waitpid fini)
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-
-	if (!shell_data || !cmd || !cmd->parsed_command || !cmd->parsed_command[0])
-	{
-		free_string_array(paths);
-		error_exit(shell_data, "Invalid command or shell data", 1);
-	}
-
-	// Gestion de l'entrée standard depuis le pipe précédent
-	if (*fd_in != STDIN_FILENO)
-	{
-		dup2(*fd_in, STDIN_FILENO);
-		close(*fd_in);
-	}
-
-	handle_redir_pipe_context(cmd, pipefd);
-
-	// Gestion d'un autre cas de redirection, à voir si nécessaire ? Doublon ??
-	if (cmd->fd_in != STDIN_FILENO)
-	{
-		dup2(cmd->fd_in, STDIN_FILENO);
-		close(cmd->fd_in);
-	}
-
+	correct_cmd_path = NULL;
 	// Exécution d'un builtin
 	if (is_builtin(cmd->parsed_command[0]))
 	{
@@ -106,7 +80,7 @@ static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t
 
 	// Traitement d'une commande externe
 	correct_cmd_path = cmd_is_accessible(cmd->parsed_command[0], paths);
-	if (!correct_cmd_path)
+	if (!correct_cmd_path || !cmd->parsed_command[0][0])
 	{
 		ft_putendl_fd("Command not found", STDERR_FILENO);
 		free_string_array(paths);
@@ -119,7 +93,33 @@ static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t
 	exit(EXIT_FAILURE);
 }
 
+// Appelé pour chaque commande séparée par un pipe comme pour le parent
+static void piped_child_routine(int *pipefd, int *fd_in, t_command_table *cmd, t_shell_data *shell_data, char **paths)
+{
+	// Remise de SIGINT/SIGQUIT à leur comportement par défaut (desactivé au prealable puis remis une fois le waitpid fini)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (!shell_data || !cmd || !cmd->parsed_command || !cmd->parsed_command[0])
+	{
+		free_string_array(paths);
+		error_exit(shell_data, "Invalid command or shell data", 1);
+	}
 
+	// Gestion de l'entrée standard depuis le pipe précédent
+	if (*fd_in != STDIN_FILENO)
+	{
+		dup2(*fd_in, STDIN_FILENO);
+		close(*fd_in);
+	}
+	handle_redir_pipe_context(cmd, pipefd);
+	// Gestion d'un autre cas de redirection, à voir si nécessaire ? Doublon ??
+	if (cmd->fd_in != STDIN_FILENO)
+	{
+		dup2(cmd->fd_in, STDIN_FILENO);
+		close(cmd->fd_in);
+	}
+	piped_executor(cmd, shell_data, paths);
+}
 
 
 /**

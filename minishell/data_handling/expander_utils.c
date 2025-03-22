@@ -150,42 +150,107 @@ char    *handle_env_var(char *res, const char *var_name, t_shell_data *data)
 //	return (res);
 //}
 
+//char	*perform_expansion(const char *str, t_shell_data *data)
+//{
+//	char	*res;
+//	char	*next_dollar;
+//	size_t	start;
+//	size_t	local_start;
+//
+//	if (!str)
+//		return (NULL);
+//	res = ft_strdup("");
+//	while (*str)
+//	{
+//		next_dollar = ft_strchr(str, '$');
+//		if (!next_dollar)
+//		{
+//			res = append_str(res, str);
+//			break;
+//		}
+//		start = next_dollar - str;
+//		if (start > 0)
+//			res = append_substr(res, str, 0, start);
+//		str = next_dollar;
+//		if ((*(str + 1) && ft_strchr("=-!#^%&*()[]{}.,:", *(str + 1))) || !(*(str + 1)))
+//		{
+//			start = 1;
+//			while (str[start] && !is_whitespace(str[start]))
+//				start++;
+//			res = append_substr(res, str, 0, start);
+//			str += start;
+//		}
+//		else
+//		{
+//			local_start = 0;
+//			res = expand_variable(res, str, &local_start, data);
+//			str += local_start;
+//		}
+//	}
+//	return (res);
+//}
+
+static char	*append_remaining(char *res, const char *str)
+{
+	char	*tmp;
+	
+	tmp = append_str(res, str);
+	free(res);
+	return (tmp);
+}
+
+static int	is_special_case(const char *str)
+{
+	return (*str && (ft_strchr("=-!#^%&*()[]{}.,:", *str) || is_whitespace(*str)));
+}
+
+static size_t	get_special_len(const char *str)
+{
+	size_t	len;
+	
+	len = 1;
+	while (str[len] && !is_whitespace(str[len]))
+		len++;
+	return (len);
+}
+
+static const char	*handle_dollar_case(char **res, const char *str, t_shell_data *data)
+{
+	size_t	processed_len;
+	
+	processed_len = 0;
+	if (is_special_case(str + 1))
+	{
+		processed_len = get_special_len(str + 1) + 1;
+		*res = append_substr(*res, str, 0, processed_len);
+	}
+	else
+	{
+		*res = expand_variable(*res, str, &processed_len, data);
+	}
+	return (str + processed_len);
+}
+
 char	*perform_expansion(const char *str, t_shell_data *data)
 {
 	char	*res;
 	char	*next_dollar;
 	size_t	start;
-	size_t	local_start;
 	
-	if (!str)
+	if (!str || !(res = ft_strdup("")))
 		return (NULL);
-	res = ft_strdup("");
 	while (*str)
 	{
 		next_dollar = ft_strchr(str, '$');
 		if (!next_dollar)
 		{
-			res = append_str(res, str);
-			break;
+			res = append_remaining(res, str);
+			break ;
 		}
 		start = next_dollar - str;
 		if (start > 0)
 			res = append_substr(res, str, 0, start);
-		str = next_dollar;
-		if ((*(str + 1) && ft_strchr("=-!#^%&*()[]{}.,:", *(str + 1))) || !(*(str + 1)))
-		{
-			start = 1;
-			while (str[start] && !is_whitespace(str[start]))
-				start++;
-			res = append_substr(res, str, 0, start);
-			str += start;
-		}
-		else
-		{
-			local_start = 0;
-			res = expand_variable(res, str, &local_start, data);
-			str += local_start;
-		}
+		str = handle_dollar_case(&res, next_dollar, data);
 	}
 	return (res);
 }

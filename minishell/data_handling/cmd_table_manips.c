@@ -24,157 +24,129 @@ t_command_table	*init_command_table(void)
 }
 
 /**
- * e.g input "ls -l | grep .c | wc -l > output.txt", First command: ["ls", "-l"]; Second command: ["grep", ".c"]
- * @param (command table) (current token passed by the caller function fill_command_table)
- * @return - current->next -- if pipe in command line, return the next token to fill another command table
- * ++ATTENTOIN++ Eventuel segfault pour command complexe!!
- *		 - NULL -- if no pipe in command line
-
-t_token *parse_tokens_into_command_table(t_command_table *cmd, t_token *current)
-{
-	t_token *start_of_cmd;
-	int	 i = 0;
-
-	start_of_cmd = current;
-	cmd->parsed_command = malloc(sizeof(char *) * 256);
-	if (!cmd->parsed_command)
-		error_exit(NULL, "Failed to allocate parsed_command.", 1);
-	while (current)
-	{
-		if (current->type == OPERATOR && !ft_strcmp(current->value, "|"))
-		{
-			cmd->check_pipe = true;
-			break;
-		}
-		// handle redirection for exec
-		else if (current->type == OPERATOR && (!ft_strcmp(current->value, ">") || !ft_strcmp(current->value, ">>") || !ft_strcmp(current->value, "<") || !ft_strcmp(current->value, "<<")))
-		{
-			cmd->check_redir = true;
-			handle_redirection(cmd, current);
-		}
-		else
-			cmd->parsed_command[i++] = ft_strdup(current->value);
-		current = current->next;
-	}
-	cmd->parsed_command[i] = NULL;
-	// build the token list from start_of_cmd to (but not including) current
-	cmd->token_list = init_token_list(start_of_cmd, current);
-	// If pipe, skip it
-	if (cmd->check_pipe == true && current)
-		return current->next;  // move to the token after "|"
-	return (NULL);
-}*/
-
-// t_token *parse_tokens_into_command_table(t_command_table *cmd, t_token *current)
-// {
-// 	t_token *start_of_cmd;
-// 	int 	i;
-
-// 	start_of_cmd = current;
-// 	i = 0;
-// 	cmd->parsed_command = malloc(sizeof(char *) * 256);
-// 	if (!cmd->parsed_command)
-// 		error_exit(NULL, "Failed to allocate parsed_command.", 1);
-
-// 	while (current)
-// 	{
-// 		// If pipe, break and mark this command as piped
-// 		if (current->type == OPERATOR && !ft_strcmp(current->value, "|"))
-// 		{
-// 			cmd->check_pipe = true;
-// 			break;
-// 		}
-
-// 		// If redirection operator
-// 		else if (current->type == OPERATOR && (!ft_strcmp(current->value, ">")  ||
-// 											   !ft_strcmp(current->value, ">>") ||
-// 											   !ft_strcmp(current->value, "<")  ||
-// 											   !ft_strcmp(current->value, "<<")))
-// 		{
-// 			cmd->check_redir = true;
-
-// 			// 1) Handle opening the file and do dup2 if needed.
-// 			handle_redirection(cmd, current);
-
-// 			// 2) Move 'current' to skip the operator
-// 			current = current->next;
-// 			// 3) We also want to skip the next token (the filename),
-// 			//	provided it's not NULL or another operator.
-// 			if (current && current->type != OPERATOR)
-// 				current = current->next;
-// 			// 4) Continue to next iteration, so we don't add them to parsed_command.
-// 			continue;
-// 		}
-// 		cmd->parsed_command[i++] = ft_strdup(current->value);
-// 		current = current->next;
-// 	}
-// 	cmd->parsed_command[i] = NULL;
-// 	cmd->token_list = init_token_list(start_of_cmd, current);
-// 	if (cmd->check_pipe && current)
-// 		return current->next;
-// 	return NULL;
-// }
-
-/**
  *@brief séparée de parse_tokens_into_command_table pour des raisons des normes
  */
+//t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t_shell_data *data, int *ret)
+//{
+//	if (!current)
+//		return (NULL);
+//
+//	if (current->type == PIPE)
+//	{
+//		if (!current->next || current->next->type == PIPE)
+//		{
+//			set_error(data, "Syntax error near unexpected token '|'\n", 2);
+//			*ret = 2;
+//			return (NULL);
+//		}
+//		cmd->check_pipe = true;
+//		return (current);
+//	}
+//	else if (current->type == REDIR)
+//	{
+//		cmd->check_redir = true;
+//		if (!current->next)//si rien n'est écrit après REDIR
+//		{
+//			set_error(data, "Syntax error near unexpected token `newline'\n", 2);
+//			*ret = 2;
+//			return (NULL);
+//		}
+//		if (current->next->type == REDIR)//si REDIR consécutif, l'erreur est sur le deuxième REDIR
+//		{
+//			set_error(data, "Syntax error near unexpected token '", 2);
+//			ft_putstr_fd(current->next->value, 2);
+//			ft_putendl_fd("'", 2);
+//			*ret = 2;
+//			return (NULL);
+//		}
+//		if (handle_redirection(cmd, current, data) == -1)
+//		{
+//			*ret = 1;
+//			return (NULL);
+//		}
+//		current = current->next;
+//		if (current)
+//			return (current->next);
+//		else
+//			return (NULL);
+//	}
+//	else
+//	{
+//		// Tok = partie de commande ou argument
+//		cmd->parsed_command[*i] = ft_strdup(current->value);
+//		if (!cmd->parsed_command[*i])
+//		{
+//			free_string_array(cmd->parsed_command);
+//			*ret = 1;
+//			return (NULL);
+//		}
+//		(*i)++;
+//		return (current->next);
+//	}
+//}
+
+
+
+static t_token	*handle_pipe_case(t_command_table *cmd, t_token *current, t_shell_data *data, int *ret)
+{
+	if (!current->next || current->next->type == PIPE)
+	{
+		set_error(data, "Syntax error near unexpected token '|'\n", 2);
+		*ret = 2;
+		return (NULL);
+	}
+	cmd->check_pipe = true;
+	return (current);
+}
+
+static t_token	*handle_redir_case(t_command_table *cmd, t_token *current, t_shell_data *data, int *ret)
+{
+	cmd->check_redir = true;
+	if (!current->next)
+	{
+		set_error(data, "Syntax error near unexpected token `newline'\n", 2);
+		*ret = 2;
+		return (NULL);
+	}
+	if (current->next->type == REDIR)
+	{
+		set_error(data, "Syntax error near unexpected token '", 2);
+		ft_putstr_fd(current->next->value, 2);
+		ft_putendl_fd("'", 2);
+		*ret = 2;
+		return (NULL);
+	}
+	if (handle_redirection(cmd, current, data) == -1)
+	{
+		*ret = 1;
+		return (NULL);
+	}
+	return (current->next->next);
+}
+
+static t_token	*handle_regular_case(t_command_table *cmd, t_token *current, int *i, int *ret)
+{
+	cmd->parsed_command[*i] = ft_strdup(current->value);
+	if (!cmd->parsed_command[*i])
+	{
+		free_string_array(cmd->parsed_command);
+		*ret = 1;
+		return (NULL);
+	}
+	(*i)++;
+	return (current->next);
+}
+
 t_token	*tokens_into_cmd_annex(t_command_table *cmd, t_token *current, int *i, t_shell_data *data, int *ret)
 {
 	if (!current)
 		return (NULL);
-
 	if (current->type == PIPE)
-	{
-		if (!current->next || current->next->type == PIPE)
-		{
-			set_error(data, "Syntax error near unexpected token '|'\n", 2);
-			*ret = 2;
-			return (NULL);
-		}
-		cmd->check_pipe = true;
-		return (current);
-	}
+		return (handle_pipe_case(cmd, current, data, ret));
 	else if (current->type == REDIR)
-	{
-		cmd->check_redir = true;
-		if (!current->next)//si rien n'est écrit après REDIR
-		{
-			set_error(data, "Syntax error near unexpected token `newline'\n", 2);
-			*ret = 2;
-			return (NULL);
-		}
-		if (current->next->type == REDIR)//si REDIR consécutif, l'erreur est sur le deuxième REDIR
-		{
-			set_error(data, "Syntax error near unexpected token '", 2);
-			ft_putstr_fd(current->next->value, 2);
-			ft_putendl_fd("'", 2);
-			*ret = 2;
-			return (NULL);
-		}
-		if (handle_redirection(cmd, current, data) == -1)
-		{
-			*ret = 1;
-			return (NULL);
-		}
-		current = current->next;
-		if (current)
-			return (current->next);
-		else
-			return (NULL);
-	}
+		return (handle_redir_case(cmd, current, data, ret));
 	else
-	{
-		// Tok = partie de commande ou argument
-		cmd->parsed_command[*i] = ft_strdup(current->value);
-		if (!cmd->parsed_command[*i])
-		{
-			free_string_array(cmd->parsed_command);
-			*ret = 1;
-			return (NULL);
-		}
-		(*i)++;
-		return (current->next);
-	}
+		return (handle_regular_case(cmd, current, i, ret));
 }
 
 /**
@@ -213,57 +185,6 @@ t_token	*parse_tokens_into_command_table(t_command_table *cmd, t_token *current,
 		return (current->next);
 	return (NULL);
 }
-
-//t_token *parse_tokens_into_command_table(t_command_table *cmd, t_token *current)
-//{
-//	t_token *start_of_cmd;
-//	int i;
-//
-//	start_of_cmd = current;
-//	/* Utilisation de calloc pour initialiser tous les éléments à NULL */
-//	cmd->parsed_command = calloc(256, sizeof(char *));
-//	if (!cmd->parsed_command)
-//		return (NULL);
-//
-//	i = 0;
-//	while (current)
-//	{
-//		if (current->type == PIPE)
-//		{
-//			cmd->check_pipe = true;
-//			break;
-//		}
-//		else if (current->type == REDIR)
-//		{
-//			cmd->check_redir = true;
-//			handle_redirection(cmd, current);
-//			/*
-//			 * On avance d’un token (l’opérateur) et on saute le token associé (ex. //le nom du fichier).
-//			 */
-//			current = current->next;
-//			if (current && current->type != REDIR)
-//				current = current->next;
-//			continue; // On n’ajoute pas ces tokens dans parsed_command
-//		}
-//		else
-//		{
-//			cmd->parsed_command[i] = ft_strdup(current->value);
-//			if (!cmd->parsed_command[i])
-//			{
-//				free_string_array(cmd->parsed_command);
-//				return (NULL);
-//			}
-//			i++;
-//		}
-//		current = current->next;
-//	}
-//	cmd->parsed_command[i] = NULL;  /* Terminaison par NULL */
-//	cmd->token_list = init_token_list(start_of_cmd, current);
-//	///return (cmd->check_pipe && current) ? current->next : NULL;
-//	if (cmd->check_pipe && current)
-//		return (current->next);
-//	return (NULL);
-//}
 
 /**
  * remplir le tableau de commande avec les booleans et des commandes (commandes divisées par des pipes)
@@ -329,13 +250,16 @@ void	create_command_table(t_shell_data *data)
  */
 t_token *init_token_list(t_token *start, t_token *end)
 {
-	t_token *head = NULL;
-	t_token *tail = NULL;
-
+	t_token *head;
+	t_token *tail;
+	t_token	*new_token;
+	
+	head = NULL;
+	tail = NULL;
 	// Copy tokens from `start` up to `end` (not including `end`)
 	while (start && start != end)
 	{
-		t_token *new_token = malloc(sizeof(t_token));
+		new_token = malloc(sizeof(t_token));
 		if (!new_token)
 			return (NULL);
 		new_token->value = ft_strdup(start->value);
@@ -349,7 +273,7 @@ t_token *init_token_list(t_token *start, t_token *end)
 		tail = new_token;
 		start = start->next;
 	}
-	return head;
+	return (head);
 }
 
 /**

@@ -20,11 +20,6 @@ bool validate_quotes(const char *cmd)
 	
 	while (cmd[i])
 	{
-		//if (cmd[i] == '\\' && cmd[i + 1])
-		//{
-		//	i += 2;
-		//	continue;
-		//}
 		if (cmd[i] == '\'' && !in_double_quote)
 			in_single_quote = !in_single_quote;
 		else if (cmd[i] == '"' && !in_single_quote)

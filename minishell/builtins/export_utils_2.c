@@ -27,7 +27,9 @@ char **remove_var_from_list(char **list, const char *key)
 		return (list);
 	while (list[len])
 		len++;
-	if (!(new_list = malloc(sizeof(char *) * len)))
+	if (len == 0)
+		return (list);
+	if (!(new_list = malloc(sizeof(char *) * (len + 1))))//leak
 		return (list);
 	while (list[++i])
 	{
@@ -57,6 +59,7 @@ void fill_sorted_exports_env(char **sorted_exports, t_shell_data *data, int env_
 	char *equal_pos;
 	char *key;
 	char *value;
+	char	*tmp_str;
 
 	while (i < env_size)
 	{
@@ -65,10 +68,16 @@ void fill_sorted_exports_env(char **sorted_exports, t_shell_data *data, int env_
 		{
 			key = ft_strndup(data->env[i], equal_pos - data->env[i]);
 			value = ft_strdup(equal_pos + 1);
-			sorted_exports[i] = ft_strjoin_3("export ", key,
-											 ft_strjoin("=\"", ft_strjoin(value, "\"")));
-			free(key);
+			tmp_str = ft_strjoin("=\"", value);
+			free (value);
+			value = tmp_str;
+			tmp_str = ft_strjoin(value, "\"");
 			free(value);
+			value = tmp_str;
+			tmp_str = ft_strjoin_3("export ", key, value);
+			free (key);
+			free (value);
+			sorted_exports[i] = tmp_str;
 		}
 		else
 			sorted_exports[i] = ft_strjoin("export ", data->env[i]);
