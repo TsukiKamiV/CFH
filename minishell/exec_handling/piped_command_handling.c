@@ -188,6 +188,7 @@ int execute_piped_commands(t_command_table *cmd, t_shell_data *shell_data)
 	}
 	child_count = pipes_loop(cmd, shell_data, pids, paths);
 	wait_piped_pids(pids, child_count, shell_data);
+	free_string_array(paths);
 	restore_signals_in_parent(&old_int, &old_quit);
 	return (shell_data->exit_status);
 }
