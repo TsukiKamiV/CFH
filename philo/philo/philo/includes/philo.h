@@ -17,6 +17,12 @@
 #include <sys/time.h>
 #include <limits.h>
 
+#define SLEEP_SLICE 40
+#define	DEATH_MONITOR_SLICE 50
+
+typedef struct	s_philo	t_philo;
+typedef struct	s_simulation	t_simulation;
+
 enum e_state
 {
 	EATING,
@@ -33,7 +39,7 @@ typedef struct s_fork
 /**
  *全局模拟控制，包含整个程序的运行参数和共享状态*
  */
-typedef struct s_simulation
+struct s_simulation
 {
 	//输入参数
 	long			philo_num;//哲学家总数，决定叉子数量和线程数量
@@ -53,14 +59,16 @@ typedef struct s_simulation
 	
 	//资源
 	t_fork			*forks;//指向叉子数组的指针，每个叉子对应一个互斥锁（在叉子数组中声明）
-}	t_simulation;
+	pthread_t		monitor_thread;//统一的监控线程，用于检查哲学家是否饿死
+	t_philo			*philo_array;
+};
 
 /**
  *该结构体只负责管理每个哲学家个体
  *（不需要声明哲学家个数）
  */
 
-typedef struct s_philo
+struct s_philo
 {
 	//标识
 	long			philo_id;//从1开始
@@ -76,13 +84,13 @@ typedef struct s_philo
 	int				l_fork;
 	int				r_fork;
 	int				state;
-}		t_philo;
+};
 
 //init.c
-int			init_philo(t_simulation *sim, t_philo *philo, long start_time);
+int				init_philo(t_simulation *sim, t_philo *philo, long start_time);
 //int	init_forks_mutex(long num);
-int 		init_simulation(t_simulation *sim, const char **argv);
-int			init_forks_mutex(t_simulation *sim);
+int 			init_simulation(t_simulation *sim, const char **argv, t_philo *philo);
+int				init_forks_mutex(t_simulation *sim);
 
 //routine.c
 bool		everybody_is_full(t_philo *philo, t_simulation *sim);
@@ -90,21 +98,29 @@ void		*routine(void *arg);
 void 		*handle_single_philo(t_philo *philo, t_simulation *sim);
 void		*handle_multiple_philo(t_philo *philo, t_simulation *sim);
 
+//eat.c
+void		eat(t_philo *philo);
+
+//fork.c
+void		take_forks(t_philo *philo);
+void		drop_forks(t_philo *philo);
+
 //death.c
 int			kill_philo(t_philo *philo, t_simulation *sim, long cur_time);
-
+void		*monitor_death_routine(void *arg);
 
 //philo.c
 //main
 
 //utils.c
 void		free_structs(t_philo *philo, t_simulation *sim);
-long int	ft_atol(const char *str);
+long		ft_atol(const char *str);
 int			check_args(int argc, const char **args);
 void 		print_status(t_philo *philo, const char *status);
 
 //time.c
 long		get_current_time(void);
 long		get_relative_time(t_simulation *sim);//修正与系统的时间差
+void		ft_usleep(long	duration_ms, t_simulation *sim);
 
 #endif /* philo_h */

@@ -7,12 +7,12 @@
 
 #include "../includes/philo.h"
 
-long int	ft_atol(const char *str)
+long	ft_atol(const char *str)
 {
 	long result = 0;
 	int sign = 1;
 	
-	while (*str == ' ' || *str == '\t' || *str == '\n' ||
+	while (*str == ' ' || *str == '\t' || *str == '\n' || \
 		   *str == '\r' || *str == '\v' || *str == '\f')
 		str++;
 	if (*str == '-' || *str == '+') 
@@ -29,7 +29,7 @@ long int	ft_atol(const char *str)
 		result = result * 10 + digit;
 		str++;
 	}
-	return result * sign;
+	return (result * sign);
 }
 
 bool	str_is_num(const char *str)

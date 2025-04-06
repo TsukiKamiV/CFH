@@ -11,7 +11,7 @@
  *@return 1 if fail to create mutex or malloc
  *		  0 on succes
  */
-int init_simulation(t_simulation *sim, const char **argv)
+int init_simulation(t_simulation *sim, const char **argv, t_philo *philo)
 {
 	sim->time_to_die = ft_atol(argv[2]);
 	sim->time_to_eat = ft_atol(argv[3]);
@@ -23,6 +23,8 @@ int init_simulation(t_simulation *sim, const char **argv)
 	sim->sim_end = false;
 	sim->full_philos = 0;
 	sim->start_time = get_current_time();
+	sim->philo_array = philo;
+	
 	if (pthread_mutex_init(&sim->end_mutex, NULL) != 0)
 		return (1);
 	if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)

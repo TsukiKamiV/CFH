@@ -25,3 +25,29 @@ long	get_relative_time(t_simulation *sim)
 	//用于获取当前时间与模拟开始时间的相对时间差
 	return (get_current_time() - sim->start_time);
 }
+
+void	ft_usleep(long duration_ms, t_simulation *sim)
+{
+	long	start;
+	long	now;
+	
+	start = get_current_time();
+	while (1)
+	{
+		pthread_mutex_lock(&sim->end_mutex);
+		if (sim->sim_end == true)
+		{
+			pthread_mutex_unlock(&sim->end_mutex);
+			printf("DEBUG: ft_usleep exiting early due to sim_end\n");
+			break;
+		}
+		pthread_mutex_unlock(&sim->end_mutex);
+		now = get_current_time();
+		if ((now - start) >= duration_ms)
+		{
+			printf("DEBUG: ft_usleep completed full duration: %ld ms\n", now - start);
+			break;
+		}
+		usleep(SLEEP_SLICE);
+	}
+}

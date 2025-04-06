@@ -22,149 +22,104 @@ void	*handle_single_philo(t_philo *philo, t_simulation *sim)
 	return (NULL);
 }
 
-bool	everybody_is_full(t_philo *philo, t_simulation *sim)
-{
-	int	i;
-	int	count;
-	
-	i = 0;
-	count = 0;
-	while (i < sim->philo_num)
-	{
-		if (philo->eat_count >= sim->number_of_times_to_eat)
-			count++;
-		else
-			return (false);
-		i++;
-	}
-	pthread_mutex_lock(&sim->end_mutex);
-	if (!sim->sim_end)
-	{
-		//printf("%ld %li died\n", cur_time, philo->philo_id);
-		print_status(philo, "All philos have eaten enough");// 待定
-		sim->sim_end = true;
-	}
-	pthread_mutex_unlock(&sim->end_mutex);
-	return (true);
-}
-
-void	take_fork(t_philo *philo, t_simulation *sim)
-{
-	//if (philo->philo_id % 2 == 0)//偶数🆔
-	//{
-	//	if (pthread_mutex_lock(&sim->forks[philo->l_fork].mutex) != 0)
-	//
-	//}
-}
-
-void	change_status(t_philo *philo, t_simulation *sim)
-{
-	if (philo->state == THINKING)
-	{
-		pthread_mutex_lock(&philo->meal_mutex);
-		philo->eat_count++;
-		philo->state = EATING;
-		pthread_mutex_unlock(&philo->meal_mutex);
-		print_status(philo, "is eating");//里面有print_mutex保护
-	}
-	if (philo->state == EATING)
-	{
-		
-	}
-}
-
-void	*handle_multiple_philo(t_philo *philo, t_simulation *sim)
-{
-	long	cur_time;
-	int		i;
-	
-	while (!sim->sim_end)
-	{
-		cur_time = get_relative_time(sim);//cur_time应该在循环外设置还是在kill里面？？
-		//如果cur_time超过了当前哲学家的time_to_die，杀死该philo，返回
-		if (kill_philo(philo, sim, cur_time) == 1)
-			continue;//应该break还是continue?（kill函数已经将sim_end设置为true）
-		if (sim->number_of_times_to_eat > 0)//应该在外面遍历所有philo并检查是否都达到次数？
-		{
-			if (everybody_is_full(philo, sim))
-				continue;
-			else
-				break;
-		}
-		//没有人死掉， 或有且没达到最少进食次数，或没有最少进食次数
-		//拿叉子 （根据人数奇偶）
-		i = 0;
-		while (i < sim->philo_num)
-		{
-			//take_fork(&philo[i], sim);
-			philo[i].state = THINKING;
-			if (pthread_mutex_lock(&sim->forks[philo[i].l_fork].mutex) == 0)
-			{
-				print_status(&philo[i], "has taken a fork");
-				pthread_mutex_unlock(&sim->forks[philo[i].l_fork].mutex);
-			}
-			if (pthread_mutex_lock(&sim->forks[philo[i].r_fork].mutex) == 0)
-			{
-				print_status(&philo[i], "has taken a fork");
-				pthread_mutex_unlock(&sim->forks[philo[i].r_fork].mutex);
-			}
-			
-			}
-			
-		}
-		
-		
-	}
-	return (NULL);
-}
-
+//bool	everybody_is_full(t_philo *philo, t_simulation *sim)
+//{
+//	int	i;
+//	int	count;
+//
+//	i = 0;
+//	count = 0;
+//	while (i < sim->philo_num)
+//	{
+//		if (philo[i].eat_count >= sim->number_of_times_to_eat)
+//			count++;
+//		else
+//			return (false);
+//		i++;
+//	}
+//	pthread_mutex_lock(&sim->end_mutex);
+//	if (!sim->sim_end)
+//	{
+//		//printf("%ld %li died\n", cur_time, philo->philo_id);
+//		print_status(philo, "All philos have eaten enough");// 待定
+//		sim->sim_end = true;
+//	}
+//	pthread_mutex_unlock(&sim->end_mutex);
+//	return (true);
+//}
 
 void	*routine(void *arg)
 {
 	t_philo			*philo;
 	t_simulation 	*sim;
-	//long			cur_time;
 	
 	philo = (t_philo *)arg;
 	sim = philo->sim_data;
 	if (sim->philo_num == 1)
 		handle_single_philo(philo, sim);
 	else
-		handle_multiple_philo(philo, sim);
-	//while (!sim->sim_end)
-	//{
-	//	cur_time = get_relative_time(sim);
-	//	if (cur_time - philo->last_meal_time >= sim->time_to_die)//如果当前时间减去最后一次吃饭时间长于饿死时间
-	//	{
-	//		//触发死亡逻辑
-	//		pthread_mutex_lock(&sim->end_mutex);
-	//		if (!sim->sim_end)
-	//		{
-	//			printf("%ld %li died\n", cur_time, philo->philo_id);
-	//			sim->sim_end = true;
-	//		}
-	//		pthread_mutex_unlock(&sim->end_mutex);
-	//		return (NULL);
-	//	}
-	//
-	//	pthread_mutex_lock(&philo->sim_data->end_mutex);
-	//	if (philo->sim_data->sim_end)
-	//	{
-	//		pthread_mutex_unlock(&philo->sim_data->end_mutex);
-	//		break;
-	//	}
-	//	pthread_mutex_unlock(&philo->sim_data->end_mutex);
-	//
-	//	printf("Philosopher %li has eaten.\n", philo->philo_id);
-	//	usleep((unsigned int)philo->sim_data->time_to_eat);
-	//	printf("Philosopher %li has finished eating.\n", philo->philo_id);
-	//	printf("Philosopher %li is sleeping.\n", philo->philo_id);
-	//	usleep((unsigned int)philo->sim_data->time_to_sleep);
-	//	//usleep(1000000); // Simulate sleeping (1 second)
-	//
-	//	// Thinking
-	//	printf("Philosopher %li is thinking.\n", philo->philo_id);
-	//	usleep(100000); // Simulate thinking (1 second)
-	//}
+	{
+		while (1)
+		{
+			pthread_mutex_lock(&sim->end_mutex);
+			if (sim->sim_end)
+			{
+				pthread_mutex_unlock(&sim->end_mutex);
+				printf("DEBUG: philo[%ld] exiting loop at start due to sim_end\n", philo->philo_id);
+				break;
+			}
+			pthread_mutex_unlock(&sim->end_mutex);
+			//printf("DEBUG: philo[%ld] starting to eat at time %ld\n", philo->philo_id, get_current_time());
+			eat(philo);
+			printf("DEBUG: philo[%ld] finished eating at time %ld\n", philo->philo_id, get_current_time());
+			pthread_mutex_lock(&sim->end_mutex);
+			if (sim->sim_end)
+			{
+				pthread_mutex_unlock(&sim->end_mutex);
+				printf("DEBUG: philo[%ld] exiting loop after eating due to sim_end\n", philo->philo_id);
+				break;
+			}
+			pthread_mutex_unlock(&sim->end_mutex);
+			printf("DEBUG: philo[%ld] starting to sleep at time %ld\n", philo->philo_id, get_current_time());
+			print_status(philo, "is sleeping");
+			ft_usleep(sim->time_to_sleep, sim);
+			printf("DEBUG: philo[%ld] finished sleeping at time %ld\n", philo->philo_id, get_current_time());
+			pthread_mutex_lock(&sim->end_mutex);
+			if (sim->sim_end)
+			{
+				pthread_mutex_unlock(&sim->end_mutex);
+				printf("DEBUG: philo[%ld] exiting loop after sleeping due to sim_end\n", philo->philo_id);
+				break;
+			}
+			pthread_mutex_unlock(&sim->end_mutex);
+			printf("DEBUG: philo[%ld] starting to think at time %ld\n", philo->philo_id, get_current_time());
+			print_status(philo, "is thinking");
+		}
+		printf("DEBUG: philo[%ld] exiting routine at time %ld\n", philo->philo_id, get_current_time());
+	}
 	return (NULL);
 }
+/**
+ *[循环开始]
+ |
+ |--- 检查 sim_end，是否已有哲学家死亡
+ |
+ |--- 判断奇偶
+ |       |-- 奇数：拿左 -> 拿右
+ |       |-- 偶数：usleep(1ms) -> 拿右 -> 拿左
+ |
+ |--- 拿到两把叉子？
+ |       |-- 是：检查是否饿死//monitor_death
+ |       |       |-- 没死：更新last_meal_time，状态 eating
+ |       |       |-- 死了：打印死亡，结束线程
+ |
+ |--- usleep(time_to_eat)
+ |
+ |--- 按照顺序释放叉子
+ |
+ |--- 状态 sleeping -> usleep(time_to_sleep)
+ |
+ |--- 状态 thinking
+ |
+ [下一轮循环]
+ */

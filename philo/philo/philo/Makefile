@@ -5,9 +5,11 @@ FLAGS = -Wall -Wextra -Werror
 SRCS = srcs/philo.c\
 	   srcs/utils.c\
 	   srcs/routine.c\
+	   srcs/eat.c\
 	   srcs/time.c\
-	   srcs/init.c
-
+	   srcs/init.c\
+	   srcs/death.c\
+	   srcs/fork.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

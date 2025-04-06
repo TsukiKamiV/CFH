@@ -41,19 +41,22 @@ int main(int argc, const char **argv)
 	int				i;
 	long			n;
 	t_philo			*philo;
-	//t_fork			*forks;
 	t_simulation	*sim;
 	
-	//检查参数个数，以及输入是否合法（数字）
 	//TODO:检查输入的大小限制
 	if (check_args(argc, argv) == 0)
 		return (1);
-	//先初始化全局控制结构，录入全局共享参数
-	//分配sim的内存
+	printf("philo num: %s\n", argv[1]);
+	printf("time to die: %s\n", argv[2]);
+	printf("time to eat: %s\n", argv[3]);
+	printf("time to sleep: %s\n", argv[4]);
+	if (argc == 6)
+		printf("must eat time: %s\n", argv[5]);
+	printf("\n");
+	
 	sim = malloc(sizeof(t_simulation));
 	if (!sim)
 		return (1);
-	//在外部直接把第一个参数设置为哲学家人数（全局使用）
 	n = ft_atol(argv[1]);
 	if (n <= 0 || n > INT_MAX)
 	{
@@ -61,18 +64,16 @@ int main(int argc, const char **argv)
 		return (1);
 	}
 	sim->philo_num = (int)n;
-	//初始化simulation中其他的变量，如果初始化失败直接结束程序
-	if (init_simulation(sim, argv) == 1)
-	{
-		free (sim);
-		return (1);
-	}
-	
 	philo = malloc(sizeof(t_philo) * sim->philo_num);
-	//forks = malloc(sizeof(t_fork) * sim->philo_num);
 	if (!philo)
 	{
 		free_structs(philo, sim);
+		return (1);
+	}
+	//初始化simulation中其他的变量，如果初始化失败直接结束程序
+	if (init_simulation(sim, argv, philo) == 1)
+	{
+		free (sim);
 		return (1);
 	}
 	i = 0;
@@ -87,12 +88,22 @@ int main(int argc, const char **argv)
 		free_structs(philo, sim);
 		return (1);
 	}
+	/**
+	 *在执行阶段，多线程程序启动后，各个哲学家线程和监控线程都是并发运行的，但不能保证它们完全同步进入循环。也就是说，哲学家线程在调用 init_philo 时创建并启动，而 monitor
+	 *线程是在哲学家线程之后创建的，但由于操作系统线程调度的特性，它们实际上会接近并发执行，
+	 *不过各自的启动时机和进入循环的具体时间会有微小差异。这种差异通常不会影响程序逻辑。
+	 */
+	pthread_create(&sim->monitor_thread, NULL, monitor_death_routine, sim);
 	i = 0;
 	while (i < sim->philo_num)
 	{
+		printf("joining thread for philo[%ld]\n", philo[i].philo_id);
 		pthread_join(philo[i].thread, NULL);
+		printf("END JOINING for philo[%ld]\n", philo[i].philo_id);
 		i++;
 	}
+	pthread_join(sim->monitor_thread, NULL);//deak lock here
+	printf("Death monitor thread joint\n");
 	i = 0;
 	while (i < sim->philo_num)
 	{
