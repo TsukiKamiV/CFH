@@ -1,10 +1,3 @@
-//
-//  philo.h
-//  philo
-//
-//  Created by Luyao Xu on 18/12/2024.
-//
-
 #ifndef philo_h
 #define philo_h
 
@@ -17,8 +10,8 @@
 #include <sys/time.h>
 #include <limits.h>
 
-#define SLEEP_SLICE 40
-#define	DEATH_MONITOR_SLICE 50
+#define SLEEP_SLICE 500
+#define	DEATH_MONITOR_SLICE 1000
 
 typedef struct	s_philo	t_philo;
 typedef struct	s_simulation	t_simulation;
@@ -107,7 +100,7 @@ void		drop_forks(t_philo *philo);
 
 //death.c
 int			kill_philo(t_philo *philo, t_simulation *sim, long cur_time);
-void		*monitor_death_routine(void *arg);
+void		*monitor_sim_routine(void *arg);
 
 //philo.c
 //main
@@ -122,5 +115,6 @@ void 		print_status(t_philo *philo, const char *status);
 long		get_current_time(void);
 long		get_relative_time(t_simulation *sim);//修正与系统的时间差
 void		ft_usleep(long	duration_ms, t_simulation *sim);
+void	ft_think(t_philo *philo, int befor_begin);
 
-#endif /* philo_h */
+#endif

@@ -45,10 +45,10 @@ void	eat(t_philo *philo)
 	print_status(philo, "is eating");
 	ft_usleep(sim->time_to_eat, sim);
 	pthread_mutex_lock(&sim->end_mutex);
-	if (sim->sim_end == false)
-	{
-		drop_forks(philo);
-		printf("Debug: philo[%ld] dropped forks after eating\n", philo->philo_id);
-	}
+	//if (sim->sim_end == false)
+	//{
+	drop_forks(philo);
+	printf("Debug: philo[%ld] dropped forks eat_usleep\n", philo->philo_id);
+	//}
 	pthread_mutex_unlock(&sim->end_mutex);
 }

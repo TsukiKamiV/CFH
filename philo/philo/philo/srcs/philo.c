@@ -93,17 +93,19 @@ int main(int argc, const char **argv)
 	 *线程是在哲学家线程之后创建的，但由于操作系统线程调度的特性，它们实际上会接近并发执行，
 	 *不过各自的启动时机和进入循环的具体时间会有微小差异。这种差异通常不会影响程序逻辑。
 	 */
-	pthread_create(&sim->monitor_thread, NULL, monitor_death_routine, sim);
+	if (sim->philo_num > 1)
+		pthread_create(&sim->monitor_thread, NULL, monitor_sim_routine, sim);
 	i = 0;
 	while (i < sim->philo_num)
 	{
-		printf("joining thread for philo[%ld]\n", philo[i].philo_id);
+		//printf("joining thread for philo[%ld]\n", philo[i].philo_id);
 		pthread_join(philo[i].thread, NULL);
-		printf("END JOINING for philo[%ld]\n", philo[i].philo_id);
+		//printf("END JOINING for philo[%ld]\n", philo[i].philo_id);
 		i++;
 	}
-	pthread_join(sim->monitor_thread, NULL);//deak lock here
-	printf("Death monitor thread joint\n");
+	if (sim->philo_num > 1)
+		pthread_join(sim->monitor_thread, NULL);
+	//printf("Death monitor thread joint\n");
 	i = 0;
 	while (i < sim->philo_num)
 	{

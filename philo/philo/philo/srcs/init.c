@@ -53,13 +53,14 @@ int	init_philo(t_simulation *sim, t_philo *philo, long start_time)
 {
 	int	i;
 	
+	(void) start_time;	
 	if (!philo)
 		return (0);
 	i = 0;
 	while (i < sim->philo_num)
 	{
 		philo[i].philo_id = i + 1;
-		philo[i].last_meal_time = start_time;
+		philo[i].last_meal_time = 0;
 		philo[i].eat_count = 0;
 		philo[i].sim_data = sim;
 		philo[i].l_fork = i;//环形计算下一个index

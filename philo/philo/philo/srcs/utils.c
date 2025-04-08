@@ -100,9 +100,22 @@ int	check_args(int argc, const char **args)
 	return (1);
 }
 
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	int i;
+	
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
+		i++;
+	return (s1[i] - s2[i]);
+}
+
 void print_status(t_philo *philo, const char *status)
 {
 	pthread_mutex_lock(&philo->sim_data->print_mutex);
-	printf("%ld %li %s\n", get_relative_time(philo->sim_data), philo->philo_id, status);
+	if (ft_strcmp(status, "Everybody is full!") != 0)
+		printf("%ld %li %s\n", get_relative_time(philo->sim_data), philo->philo_id, status);
+	else
+		printf("%ld %s\n", get_relative_time(philo->sim_data), status);
 	pthread_mutex_unlock(&philo->sim_data->print_mutex);
 }

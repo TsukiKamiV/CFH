@@ -24,17 +24,15 @@ int	kill_philo(t_philo *philo, t_simulation *sim, long cur_time)
 	return (0);
 }
 
-void	*monitor_death_routine(void *arg)
+void	*monitor_sim_routine(void *arg)
 {
-	//每隔一小段时间（如0.5ms）循环一次
-	//遍历所有哲学家
 	int					i;
 	t_simulation	*sim;
 	t_philo			*philo;
 	long			cur_time;
-	
+
 	sim = (t_simulation *)arg;
-	while (1)
+	while (sim->philo_num > 1 && 1)
 	{
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
@@ -51,9 +49,37 @@ void	*monitor_death_routine(void *arg)
 			cur_time = get_relative_time(sim);
 			if (kill_philo(philo, sim, cur_time) != 0)
 				return (NULL);
+			if (sim->number_of_times_to_eat > 0 && everybody_is_full(sim->philo_array, sim))
+				return (NULL);
 			i++;
 		}
 		usleep(DEATH_MONITOR_SLICE);
 	}
 	return (NULL);
+}
+
+bool	everybody_is_full(t_philo *philo, t_simulation *sim)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (i < sim->philo_num)
+	{
+		if (philo[i].eat_count >= sim->number_of_times_to_eat)
+			count++;
+		else
+		{
+			(void)count;
+			return (false);
+		}
+		i++;
+	}
+	pthread_mutex_lock(&sim->end_mutex);
+	if (sim->sim_end == false)
+		sim->sim_end = true;
+	pthread_mutex_unlock(&sim->end_mutex);
+	print_status(philo, "Everybody is full!");
+	return (true);
 }

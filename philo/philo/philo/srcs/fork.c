@@ -15,20 +15,76 @@
 void	take_forks(t_philo *philo)
 {
 	t_simulation	*sim;
+	bool			right_first;
 
+	
 	sim = philo->sim_data;
-	if (philo->philo_id % 2 == 0)//偶数
+	if (sim->philo_num % 2 == 0)
 	{
+		if (philo->philo_id % 2 == 0)
+			right_first = true;
+		else
+			right_first = false;
+	}
+	else
+	{
+		if (philo->philo_id % 2 == philo->eat_count % 2)
+			right_first = true;
+		else
+			right_first = false;
+	}
+	if (right_first)
+	{
+		print_status(philo, "seeking right fork");
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
+		pthread_mutex_lock(&sim->end_mutex);
+		if (sim->sim_end == true)
+		{
+			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			pthread_mutex_unlock(&sim->end_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken right fork");
+		print_status(philo, "seeking left fork");
+
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
+		pthread_mutex_lock(&sim->end_mutex);
+		if (sim->sim_end == true)
+		{
+			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			pthread_mutex_unlock(&sim->end_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
 	}
-	else//奇数
+	else
 	{
+		print_status(philo, "seeking left fork");
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
+		pthread_mutex_lock(&sim->end_mutex);
+		if (sim->sim_end == true)
+		{
+			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			pthread_mutex_unlock(&sim->end_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
+		
+		print_status(philo, "seeking right fork");
+
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
+		pthread_mutex_lock(&sim->end_mutex);
+		if (sim->sim_end == true)
+		{
+			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			pthread_mutex_unlock(&sim->end_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(&sim->end_mutex);
+		
 		print_status(philo, "has taken right fork");
 	}
 }
@@ -38,14 +94,14 @@ void	drop_forks(t_philo *philo)
 	t_simulation	*sim;
 	
 	sim = philo->sim_data;
-	if (philo->philo_id % 2 == 0)//奇数
-	{
-		pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-		pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-	}
-	else
-	{
-		pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-		pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-	}
+	//if (philo->philo_id % 2 == 0)
+	//{
+	//	pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
+	//	pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
+	//}
+	//else
+	//{
+	pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
+	pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
+	//}
 }
