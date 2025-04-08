@@ -75,6 +75,7 @@ void	free_structs(t_philo *philo, t_simulation *sim)
 	}
 	//if (forks)
 		//free (forks);
+	free (sim);
 }
 
 int	check_args(int argc, const char **args)
