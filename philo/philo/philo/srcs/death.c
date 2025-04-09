@@ -6,9 +6,13 @@
 int	kill_philo(t_philo *philo, t_simulation *sim, long cur_time)
 {
 	int	need_print;//在开闭sim->end_mutex的时候，不调用print_status并同时开闭print_mutex，避免嵌套锁
+	long	last_meal_time;
 	
+	pthread_mutex_lock(&philo->meal_mutex);
+	last_meal_time = philo->last_meal_time;
+	pthread_mutex_unlock(&philo->meal_mutex);
 	need_print = 0;
-	if (cur_time - philo->last_meal_time > sim->time_to_die)
+	if (cur_time - last_meal_time > sim->time_to_die)
 	{
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == false)
