@@ -30,14 +30,14 @@ bool	take_forks(t_philo *philo, bool *has_left, bool *has_right)
 	{
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
 		*has_right = true;
-		
+
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-			*has_right = false;
-			return false;
+			//pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
+			//*has_right = false;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken right fork");
@@ -49,11 +49,11 @@ bool	take_forks(t_philo *philo, bool *has_left, bool *has_right)
 		if (sim->sim_end)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-			pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-			*has_right = false;
-			*has_left = false;
-			return false;
+			//pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
+			//pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
+			//*has_right = false;
+			//*has_left = false;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
@@ -67,9 +67,9 @@ bool	take_forks(t_philo *philo, bool *has_left, bool *has_right)
 		if (sim->sim_end)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-			*has_left = false;
-			return false;
+			//pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
+			//*has_left = false;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
@@ -81,11 +81,11 @@ bool	take_forks(t_philo *philo, bool *has_left, bool *has_right)
 		if (sim->sim_end)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-			pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-			*has_right = false;
-			*has_left = false;
-			return false;
+			//pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
+			//pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
+			//*has_right = false;
+			//*has_left = false;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken right fork");
