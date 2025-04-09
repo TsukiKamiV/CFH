@@ -65,7 +65,6 @@ int	init_philo(t_simulation *sim, t_philo *philo, long start_time)
 		philo[i].sim_data = sim;
 		philo[i].l_fork = i;//环形计算下一个index
 		philo[i].r_fork = (i + 1) % sim->philo_num;
-		//内存泄漏(已修复，待确认）
 		if (pthread_mutex_init(&philo[i].meal_mutex, NULL) != 0)//保护last_meal_time和eat_count
 			return (1);
 		if (pthread_create(&philo[i].thread, NULL, routine, &philo[i]) != 0)//这一步实际上同时完成了线程的创建和routine的执行，应该放到外面？？
