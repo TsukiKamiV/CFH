@@ -28,7 +28,7 @@ void	eat(t_philo *philo)
 		return ;
 	}
 	pthread_mutex_unlock(&sim->end_mutex);
-	take_forks(philo);
+	//take_forks(philo);
 	pthread_mutex_lock(&sim->end_mutex);
 	if (sim->sim_end == true)
 	{

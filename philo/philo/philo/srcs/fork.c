@@ -12,7 +12,7 @@
 //可以避免死锁并改善先发性
 //还可以在偶数🆔的routine开始之前加1毫秒延时，进一步减少争用
 
-void	take_forks(t_philo *philo)
+bool	take_forks(t_philo *philo)
 {
 	t_simulation	*sim;
 	bool			right_first;
@@ -42,7 +42,7 @@ void	take_forks(t_philo *philo)
 		{
 			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
-			return ;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken right fork");
@@ -54,7 +54,7 @@ void	take_forks(t_philo *philo)
 		{
 			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
-			return ;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
@@ -68,7 +68,7 @@ void	take_forks(t_philo *philo)
 		{
 			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
-			return ;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
@@ -81,12 +81,13 @@ void	take_forks(t_philo *philo)
 		{
 			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
-			return ;
+			return (false);
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		
 		print_status(philo, "has taken right fork");
 	}
+	return (true);
 }
 
 void	drop_forks(t_philo *philo)
