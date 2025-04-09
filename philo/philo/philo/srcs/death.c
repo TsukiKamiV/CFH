@@ -64,16 +64,15 @@ bool	everybody_is_full(t_philo *philo, t_simulation *sim)
 	int	count;
 
 	i = 0;
-	count = 0;
 	while (i < sim->philo_num)
 	{
-		if (philo[i].eat_count >= sim->number_of_times_to_eat)
-			count++;
-		else
+		pthread_mutex_lock(&philo[i].meal_mutex);
+		if (philo[i].eat_count < sim->number_of_times_to_eat)
 		{
-			(void)count;
+			pthread_mutex_unlock(&philo[i].meal_mutex);
 			return (false);
 		}
+		pthread_mutex_unlock(&philo[i].meal_mutex);
 		i++;
 	}
 	pthread_mutex_lock(&sim->end_mutex);
