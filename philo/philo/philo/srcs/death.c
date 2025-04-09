@@ -61,7 +61,6 @@ void	*monitor_sim_routine(void *arg)
 bool	everybody_is_full(t_philo *philo, t_simulation *sim)
 {
 	int	i;
-	int	count;
 
 	i = 0;
 	while (i < sim->philo_num)
