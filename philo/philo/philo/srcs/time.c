@@ -25,12 +25,18 @@ long	get_relative_time(t_simulation *sim)
 	return (get_current_time() - sim->start_time);
 }
 
-void	ft_usleep(long duration_ms, t_simulation *sim)
+void	ft_usleep(long duration_ms, t_simulation *sim, bool is_eating)
 {
 	long	start;
 	long	now;
 	
 	start = get_relative_time(sim);
+	
+	//delete this part later
+	if (is_eating)
+	{
+		printf("is eating\n");
+	}
 	while (1)
 	{
 		pthread_mutex_lock(&sim->end_mutex);
@@ -38,14 +44,14 @@ void	ft_usleep(long duration_ms, t_simulation *sim)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
 			//printf("DEBUG: ft_usleep exiting early due to sim_end\n");
-			break;
+			return ;
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		now = get_relative_time(sim);
 		if ((now - start) >= duration_ms)
 		{
 			//printf("DEBUG: ft_usleep completed full duration: %ld ms\n", now - start);
-			break;
+			return ;
 		}
 		usleep(SLEEP_SLICE);
 	}
@@ -65,6 +71,6 @@ void	ft_think(t_philo *philo, int befor_begin)
 		- philo->sim_data->time_to_sleep;
 		if (time_to_think < 0)
 			time_to_think = 0;
-		ft_usleep(time_to_think * 0.42, philo->sim_data);
+		ft_usleep(time_to_think * 0.42, philo->sim_data, false);
 	}
 }

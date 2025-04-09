@@ -11,7 +11,7 @@ void	*handle_single_philo(t_philo *philo, t_simulation *sim)
 {
 	pthread_mutex_lock(&sim->forks[0].mutex);
 	print_status(philo, "has taken a fork");
-	ft_usleep(sim->time_to_die + 1, sim);
+	ft_usleep(sim->time_to_die + 1, sim, false);
 	print_status(philo, "died");
 	pthread_mutex_unlock(&sim->forks[0].mutex);
 	return (NULL);
@@ -21,8 +21,6 @@ void	*routine(void *arg)
 {
 	t_philo			*philo;
 	t_simulation 	*sim;
-	bool			has_left;
-	bool			has_right;
 	
 	philo = (t_philo *)arg;
 	sim = philo->sim_data;
@@ -41,7 +39,7 @@ void	*routine(void *arg)
 				break;
 			}
 			pthread_mutex_unlock(&sim->end_mutex);
-			if (!take_forks(philo, &has_left, &has_right))
+			if (!take_forks(philo))
 				break;
 			eat(philo);
 			//printf("DEBUG: philo[%ld] exit eating (for x reason) at time %ld\n", philo->philo_id, get_relative_time(sim));
@@ -61,7 +59,7 @@ void	*routine(void *arg)
 				break;
 			}
 			print_status(philo, "is sleeping");
-			ft_usleep(sim->time_to_sleep, sim);
+			ft_usleep(sim->time_to_sleep, sim, false);
 			//printf("DEBUG: philo[%ld] finished (or stopped) sleeping at time %ld\n", philo->philo_id, get_relative_time(sim));
 			pthread_mutex_lock(&sim->end_mutex);
 			if (sim->sim_end)
@@ -77,10 +75,6 @@ void	*routine(void *arg)
 		}
 		//printf("DEBUG: philo[%ld] exiting routine at time %ld\n", philo->philo_id, get_relative_time(sim));
 	}
-	if (has_left)
-		pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-	if (has_right)
-		pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
 	return (NULL);
 }
 /**

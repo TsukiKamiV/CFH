@@ -94,7 +94,7 @@ void		*handle_multiple_philo(t_philo *philo, t_simulation *sim);
 void		eat(t_philo *philo);
 
 //fork.c
-bool		take_forks(t_philo *philo, bool *has_left, bool *has_right);
+bool		take_forks(t_philo *philo);
 void		drop_forks(t_philo *philo);
 
 //death.c
@@ -113,7 +113,7 @@ void 		print_status(t_philo *philo, const char *status);
 //time.c
 long		get_current_time(void);
 long		get_relative_time(t_simulation *sim);//修正与系统的时间差
-void		ft_usleep(long	duration_ms, t_simulation *sim);
+void	ft_usleep(long duration_ms, t_simulation *sim, bool is_eating);
 void	ft_think(t_philo *philo, int befor_begin);
 
 #endif
