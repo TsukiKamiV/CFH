@@ -94,7 +94,7 @@ void		*handle_multiple_philo(t_philo *philo, t_simulation *sim);
 void		eat(t_philo *philo);
 
 //fork.c
-bool		take_forks(t_philo *philo);
+bool		take_forks(t_philo *philo, bool *has_left, bool *has_right);
 void		drop_forks(t_philo *philo);
 
 //death.c

@@ -12,7 +12,7 @@
 //可以避免死锁并改善先发性
 //还可以在偶数🆔的routine开始之前加1毫秒延时，进一步减少争用
 
-bool	take_forks(t_philo *philo)
+bool	take_forks(t_philo *philo, bool *has_left, bool *has_right)
 {
 	t_simulation	*sim;
 	bool			right_first;
@@ -35,8 +35,8 @@ bool	take_forks(t_philo *philo)
 	}
 	if (right_first)
 	{
-		print_status(philo, "seeking right fork");
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
+		*has_right = true;
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
@@ -49,6 +49,7 @@ bool	take_forks(t_philo *philo)
 		//print_status(philo, "seeking left fork");
 
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
+		*has_left = true;
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
@@ -63,6 +64,7 @@ bool	take_forks(t_philo *philo)
 	{
 		//print_status(philo, "seeking left fork");
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
+		*has_left = true;
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
@@ -76,6 +78,7 @@ bool	take_forks(t_philo *philo)
 		//print_status(philo, "seeking right fork");
 
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
+		*has_right = true;
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{

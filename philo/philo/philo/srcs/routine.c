@@ -21,6 +21,8 @@ void	*routine(void *arg)
 {
 	t_philo			*philo;
 	t_simulation 	*sim;
+	bool			has_left;
+	bool			has_right;
 	
 	philo = (t_philo *)arg;
 	sim = philo->sim_data;
@@ -39,7 +41,7 @@ void	*routine(void *arg)
 				break;
 			}
 			pthread_mutex_unlock(&sim->end_mutex);
-			if (!take_forks(philo))
+			if (!take_forks(philo, &has_left, &has_right))
 				continue;
 			eat(philo);
 			//printf("DEBUG: philo[%ld] exit eating (for x reason) at time %ld\n", philo->philo_id, get_relative_time(sim));
@@ -75,6 +77,10 @@ void	*routine(void *arg)
 		}
 		//printf("DEBUG: philo[%ld] exiting routine at time %ld\n", philo->philo_id, get_relative_time(sim));
 	}
+	if (has_left)
+		pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
+	if (has_right)
+		pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
 	return (NULL);
 }
 /**
