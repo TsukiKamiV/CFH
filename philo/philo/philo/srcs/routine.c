@@ -9,15 +9,10 @@
 
 void	*handle_single_philo(t_philo *philo, t_simulation *sim)
 {
-	//尝试获取唯一的叉子
 	pthread_mutex_lock(&sim->forks[0].mutex);
-	//打印拿叉子的动作（此时桌上只有一把叉子，无法进食）
 	print_status(philo, "has taken a fork");
-	//等待饿死时间
-	ft_usleep(sim->time_to_die + 1, sim);//用ft_sleep函数替换？需确认输出要求秒还是毫秒
-	//打印死亡
+	ft_usleep(sim->time_to_die + 1, sim);
 	print_status(philo, "died");
-	//解除互斥锁
 	pthread_mutex_unlock(&sim->forks[0].mutex);
 	return (NULL);
 }
@@ -40,43 +35,43 @@ void	*routine(void *arg)
 			if (sim->sim_end)
 			{
 				pthread_mutex_unlock(&sim->end_mutex);
-				printf("DEBUG: philo[%ld] exiting loop at start due to sim_end\n", philo->philo_id);
+				//printf("DEBUG: philo[%ld] exiting loop at start due to sim_end\n", philo->philo_id);
 				break;
 			}
 			pthread_mutex_unlock(&sim->end_mutex);
 			eat(philo);
-			printf("DEBUG: philo[%ld] exit eating (for x reason) at time %ld\n", philo->philo_id, get_relative_time(sim));
+			//printf("DEBUG: philo[%ld] exit eating (for x reason) at time %ld\n", philo->philo_id, get_relative_time(sim));
 			pthread_mutex_lock(&sim->end_mutex);
 			if (sim->sim_end)
 			{
 				pthread_mutex_unlock(&sim->end_mutex);
-				printf("DEBUG: philo[%ld] exiting loop after eating due to sim_end\n", philo->philo_id);
+				//printf("DEBUG: philo[%ld] exiting loop after eating due to sim_end\n", philo->philo_id);
 				break;
 			}
 			pthread_mutex_unlock(&sim->end_mutex);
-			printf("DEBUG: philo[%ld] starting to sleep at time %ld\n", philo->philo_id, get_relative_time(sim));
+			//printf("DEBUG: philo[%ld] starting to sleep at time %ld\n", philo->philo_id, get_relative_time(sim));
 			if (sim->sim_end)
 			{
 				pthread_mutex_unlock(&sim->end_mutex);
-				printf("DEBUG: philo[%ld] didn't start sleeping due to sim_end\n", philo->philo_id);
+				//printf("DEBUG: philo[%ld] didn't start sleeping due to sim_end\n", philo->philo_id);
 				break;
 			}
 			print_status(philo, "is sleeping");
 			ft_usleep(sim->time_to_sleep, sim);
-			printf("DEBUG: philo[%ld] finished (or stopped) sleeping at time %ld\n", philo->philo_id, get_relative_time(sim));
+			//printf("DEBUG: philo[%ld] finished (or stopped) sleeping at time %ld\n", philo->philo_id, get_relative_time(sim));
 			pthread_mutex_lock(&sim->end_mutex);
 			if (sim->sim_end)
 			{
 				pthread_mutex_unlock(&sim->end_mutex);
-				printf("DEBUG: philo[%ld] exiting loop after sleeping due to sim_end\n", philo->philo_id);
+				//printf("DEBUG: philo[%ld] exiting loop after sleeping due to sim_end\n", philo->philo_id);
 				break;
 			}
 			pthread_mutex_unlock(&sim->end_mutex);
-			printf("DEBUG: philo[%ld] starting to think at time %ld\n", philo->philo_id, get_relative_time(sim));
+			//printf("DEBUG: philo[%ld] starting to think at time %ld\n", philo->philo_id, get_relative_time(sim));
 			//print_status(philo, "is thinking");
 			ft_think(philo, 0);
 		}
-		printf("DEBUG: philo[%ld] exiting routine at time %ld\n", philo->philo_id, get_relative_time(sim));
+		//printf("DEBUG: philo[%ld] exiting routine at time %ld\n", philo->philo_id, get_relative_time(sim));
 	}
 	return (NULL);
 }

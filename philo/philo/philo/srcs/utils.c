@@ -59,25 +59,27 @@ void	free_structs(t_philo *philo, t_simulation *sim)
 			pthread_mutex_destroy(&philo[i].meal_mutex);
 			i++;
 		}
-		free(philo);
+		free (philo);
 	}
 	if (sim)
 	{
 		if (sim->forks)
 		{
-			i = 0;
-			while (i < sim->philo_num)
+			i = 1;
+			while (i <= sim->philo_num)
 			{
 				printf("Destroying sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
 				pthread_mutex_destroy(&sim->forks[i].mutex);
 				i++;
 			}
-			free(sim->forks);
+			free (sim->forks);
 		}
-		printf("Destroying sim->print_mutex at %p\n", (void *)&sim->print_mutex);
-		pthread_mutex_destroy(&sim->print_mutex);
 	}
-	free(sim);
+	printf("Destroying sim->print_mutex at %p\n", (void *)&sim->print_mutex);
+	pthread_mutex_destroy(&sim->print_mutex);
+	printf("Destroying sim->end_mutex at %p\n", (void *)&sim->end_mutex);
+	pthread_mutex_destroy(&sim->end_mutex);
+	free (sim);
 }
 
 int	check_args(int argc, const char **args)

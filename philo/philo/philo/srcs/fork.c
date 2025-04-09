@@ -40,19 +40,19 @@ void	take_forks(t_philo *philo)
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
-			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
 			return ;
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken right fork");
-		print_status(philo, "seeking left fork");
+		//print_status(philo, "seeking left fork");
 
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
-			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
 			return ;
 		}
@@ -61,25 +61,25 @@ void	take_forks(t_philo *philo)
 	}
 	else
 	{
-		print_status(philo, "seeking left fork");
+		//print_status(philo, "seeking left fork");
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
-			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
 			return ;
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken left fork");
 		
-		print_status(philo, "seeking right fork");
+		//print_status(philo, "seeking right fork");
 
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
 		pthread_mutex_lock(&sim->end_mutex);
 		if (sim->sim_end == true)
 		{
-			printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+			//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 			pthread_mutex_unlock(&sim->end_mutex);
 			return ;
 		}

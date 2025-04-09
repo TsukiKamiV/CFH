@@ -37,14 +37,14 @@ void	ft_usleep(long duration_ms, t_simulation *sim)
 		if (sim->sim_end == true)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			printf("DEBUG: ft_usleep exiting early due to sim_end\n");
+			//printf("DEBUG: ft_usleep exiting early due to sim_end\n");
 			break;
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		now = get_relative_time(sim);
 		if ((now - start) >= duration_ms)
 		{
-			printf("DEBUG: ft_usleep completed full duration: %ld ms\n", now - start);
+			//printf("DEBUG: ft_usleep completed full duration: %ld ms\n", now - start);
 			break;
 		}
 		usleep(SLEEP_SLICE);

@@ -38,7 +38,7 @@ void	*monitor_sim_routine(void *arg)
 		if (sim->sim_end == true)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			printf("DEBUG: philo[%ld] exiting loop at start due to sim_end\n", philo->philo_id);
+			//printf("DEBUG: philo[%ld] exiting loop at start due to sim_end\n", philo->philo_id);
 			break;
 		}
 		pthread_mutex_unlock(&sim->end_mutex);

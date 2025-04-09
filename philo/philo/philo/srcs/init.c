@@ -25,8 +25,11 @@ int init_simulation(t_simulation *sim, const char **argv, t_philo *philo)
 	sim->start_time = get_current_time();
 	sim->philo_array = philo;
 	
+	printf("Initializing sim->end_mutex at %p\n", (void *)&sim->end_mutex);
 	if (pthread_mutex_init(&sim->end_mutex, NULL) != 0)
 		return (1);
+	
+	printf("Initializing sim->print_mutex at %p\n", (void *)&sim->print_mutex);
 	if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)
 	{
 		pthread_mutex_destroy(&sim->end_mutex);
@@ -65,6 +68,8 @@ int	init_philo(t_simulation *sim, t_philo *philo, long start_time)
 		philo[i].sim_data = sim;
 		philo[i].l_fork = i;//环形计算下一个index
 		philo[i].r_fork = (i + 1) % sim->philo_num;
+		
+		printf("Initializing philo[%d].meal_mutex at %p\n", i, (void *)&philo[i].meal_mutex);
 		if (pthread_mutex_init(&philo[i].meal_mutex, NULL) != 0)//保护last_meal_time和eat_count
 			return (1);
 		if (pthread_create(&philo[i].thread, NULL, routine, &philo[i]) != 0)//这一步实际上同时完成了线程的创建和routine的执行，应该放到外面？？
@@ -73,6 +78,7 @@ int	init_philo(t_simulation *sim, t_philo *philo, long start_time)
 			{
 				//如果任意线程创建失败，要回滚已创建的线程
 				//是否要destroy上面的锁🔒？=> yes
+				printf("Destroying philo[%d].meal_mutex during rollback at %p\n", i, (void *)&philo[i].meal_mutex);
 				pthread_join(philo[i].thread, NULL);
 				pthread_mutex_destroy(&philo[i].meal_mutex);
 			}
@@ -92,20 +98,25 @@ int	init_forks_mutex(t_simulation *sim)
 	int	i;
 	int	j;
 
-	i = 0;
-	while (i < sim->philo_num)
+	i = 1;
+	while (i <= sim->philo_num)
 	{
+		printf("Initializing sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
 		if (pthread_mutex_init(&sim->forks[i].mutex, NULL) != 0)
 		{
 			j = 0;
 			while (j < i)
 			{
 				//销毁已创建的🔒
+				printf("Destroying sim->forks[%d].mutex during rollback at %p\n", j, (void *)&sim->forks[j].mutex);
 				pthread_mutex_destroy(&sim->forks[j].mutex);
 				j++;
 			}
 			free (sim->forks);
+			
+			printf("Destroying sim->end_mutex during rollback at %p\n", (void *)&sim->end_mutex);
 			pthread_mutex_destroy(&sim->end_mutex);
+			printf("Destroying sim->print_mutex during rollback at %p\n", (void *)&sim->print_mutex);
 			pthread_mutex_destroy(&sim->print_mutex);
 			return (1);
 		}

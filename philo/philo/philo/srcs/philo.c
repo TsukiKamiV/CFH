@@ -107,11 +107,12 @@ int main(int argc, const char **argv)
 		pthread_join(sim->monitor_thread, NULL);
 	//printf("Death monitor thread joint\n");
 	i = 0;
-	while (i < sim->philo_num)
-	{
-		pthread_mutex_destroy(&sim->forks[i].mutex);
-		i++;
-	}
+	//while (i < sim->philo_num)
+	//{
+	//	printf("Destroying sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
+	//	pthread_mutex_destroy(&sim->forks[i].mutex);
+	//	i++;
+	//}
 	free_structs(philo, sim);
 	return (0);
 }

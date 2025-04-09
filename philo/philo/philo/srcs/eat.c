@@ -23,7 +23,7 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(&sim->end_mutex);
 	if (sim->sim_end == true)
 	{
-		printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
+		//printf("Debug: philo[%ld] sim ends before taking fork due to sim_end\n", philo->philo_id);
 		pthread_mutex_unlock(&sim->end_mutex);
 		return ;
 	}
@@ -34,7 +34,7 @@ void	eat(t_philo *philo)
 	{
 		pthread_mutex_unlock(&sim->end_mutex);
 		drop_forks(philo); // 必须释放叉子，否则会死锁
-		printf("Debug: philo[%ld] dropped forks due to sim_end before eating\n", philo->philo_id);
+		//printf("Debug: philo[%ld] dropped forks due to sim_end before eating\n", philo->philo_id);
 		return ;
 	}
 	pthread_mutex_unlock(&sim->end_mutex);
@@ -48,7 +48,7 @@ void	eat(t_philo *philo)
 	//if (sim->sim_end == false)
 	//{
 	drop_forks(philo);
-	printf("Debug: philo[%ld] dropped forks eat_usleep\n", philo->philo_id);
+	//printf("Debug: philo[%ld] dropped forks eat_usleep\n", philo->philo_id);
 	//}
 	pthread_mutex_unlock(&sim->end_mutex);
 }
