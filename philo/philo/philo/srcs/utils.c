@@ -65,8 +65,8 @@ void	free_structs(t_philo *philo, t_simulation *sim)
 	{
 		if (sim->forks)
 		{
-			i = 1;
-			while (i <= sim->philo_num)
+			i = 0;
+			while (i < sim->philo_num)
 			{
 				printf("Destroying sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
 				pthread_mutex_destroy(&sim->forks[i].mutex);

@@ -67,7 +67,7 @@ bool	everybody_is_full(t_philo *philo, t_simulation *sim)
 	count = 0;
 	while (i < sim->philo_num)
 	{
-		if (philo[i].eat_count >= sim->number_of_times_to_eat)
+		if (philo[i+1].eat_count >= sim->number_of_times_to_eat)
 			count++;
 		else
 		{

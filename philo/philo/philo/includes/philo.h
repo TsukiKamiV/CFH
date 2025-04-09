@@ -76,7 +76,6 @@ struct s_philo
 	//左右叉子的index(动态计算）
 	int				l_fork;
 	int				r_fork;
-	int				state;
 };
 
 //init.c

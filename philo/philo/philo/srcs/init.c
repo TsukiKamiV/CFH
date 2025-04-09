@@ -98,8 +98,8 @@ int	init_forks_mutex(t_simulation *sim)
 	int	i;
 	int	j;
 
-	i = 1;
-	while (i <= sim->philo_num)
+	i = 0;
+	while (i < sim->philo_num)
 	{
 		printf("Initializing sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
 		if (pthread_mutex_init(&sim->forks[i].mutex, NULL) != 0)
