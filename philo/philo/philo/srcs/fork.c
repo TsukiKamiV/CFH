@@ -90,7 +90,7 @@ bool	take_forks(t_philo *philo, bool *has_left, bool *has_right)
 		pthread_mutex_unlock(&sim->end_mutex);
 		print_status(philo, "has taken right fork");
 	}
-	return true;
+	return (true);
 }
 
 void	drop_forks(t_philo *philo)

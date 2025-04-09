@@ -42,7 +42,7 @@ void	*routine(void *arg)
 			}
 			pthread_mutex_unlock(&sim->end_mutex);
 			if (!take_forks(philo, &has_left, &has_right))
-				continue;
+				break;
 			eat(philo);
 			//printf("DEBUG: philo[%ld] exit eating (for x reason) at time %ld\n", philo->philo_id, get_relative_time(sim));
 			pthread_mutex_lock(&sim->end_mutex);
