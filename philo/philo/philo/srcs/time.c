@@ -1,9 +1,3 @@
-//
-//  time.c
-//  philo
-//
-//  Created by Luyao Xu on 17/03/2025.
-
 #include "../includes/philo.h"
 
 /**
@@ -25,18 +19,12 @@ long	get_relative_time(t_simulation *sim)
 	return (get_current_time() - sim->start_time);
 }
 
-void	ft_usleep(long duration_ms, t_simulation *sim, bool is_eating)
+void	ft_usleep(long duration_ms, t_simulation *sim)
 {
 	long	start;
 	long	now;
-	
+
 	start = get_relative_time(sim);
-	
-	//delete this part later
-	if (is_eating)
-	{
-		printf("is eating\n");
-	}
 	while (1)
 	{
 		pthread_mutex_lock(&sim->end_mutex);
@@ -57,20 +45,28 @@ void	ft_usleep(long duration_ms, t_simulation *sim, bool is_eating)
 	}
 }
 
+/*
+ ** Multiplié par 2 : cela sert à indiquer la fenêtre de concurrence lorsque
+ ** deux philosophes adjacents envisagent de manger en même temps.
+ ** Soustraire le temps de sommeil : puisque le sommeil occupe une partie
+ ** de cette fenêtre, il faut la retirer.
+ ** Facteur de réglage : il permet d'éviter un délai excessif, de s'assurer
+ ** que le processus global ne soit pas perturbé et contribue à désynchroniser
+ ** les actions.
+ */
 void	ft_think(t_philo *philo, int befor_begin)
 {
 	long	time_to_think;
-	
+
 	time_to_think = 0;
 	if (!befor_begin)
 		print_status(philo, "is thinking");
-	//仅在哲学家总人数为奇数时，人为打乱节奏，从而减少资源争抢的冲突
 	if (philo->sim_data->philo_num % 2 != 0)
 	{
 		time_to_think = (philo->sim_data->time_to_eat * 2)
 		- philo->sim_data->time_to_sleep;
 		if (time_to_think < 0)
 			time_to_think = 0;
-		ft_usleep(time_to_think * 0.42, philo->sim_data, false);
+		ft_usleep(time_to_think * 0.42, philo->sim_data);
 	}
 }

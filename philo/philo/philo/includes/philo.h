@@ -12,6 +12,10 @@
 
 #define SLEEP_SLICE 500
 #define	DEATH_MONITOR_SLICE 1000
+#define CLEAN_FORKS	0x01
+#define CLEAN_END_MUTEX	0x02
+#define CLEAN_PRINT_MUTEX	0x04
+
 
 typedef struct	s_philo	t_philo;
 typedef struct	s_simulation	t_simulation;
@@ -100,6 +104,7 @@ void		drop_forks(t_philo *philo);
 //death.c
 int			kill_philo(t_philo *philo, t_simulation *sim, long cur_time);
 void		*monitor_sim_routine(void *arg);
+bool	check_sim_end(t_simulation *sim);
 
 //philo.c
 //main
@@ -107,13 +112,16 @@ void		*monitor_sim_routine(void *arg);
 //utils.c
 void		free_structs(t_philo *philo, t_simulation *sim);
 long		ft_atol(const char *str);
-int			check_args(int argc, const char **args);
+int			check_args(int argc, const char **args, long *n);
 void 		print_status(t_philo *philo, const char *status);
 
 //time.c
 long		get_current_time(void);
 long		get_relative_time(t_simulation *sim);//修正与系统的时间差
-void	ft_usleep(long duration_ms, t_simulation *sim, bool is_eating);
+void	ft_usleep(long duration_ms, t_simulation *sim);
 void	ft_think(t_philo *philo, int befor_begin);
+
+//clean.c
+void	cleanup_simulation(t_simulation *sim, int flags);
 
 #endif

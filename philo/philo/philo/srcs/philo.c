@@ -43,26 +43,11 @@ int main(int argc, const char **argv)
 	t_philo			*philo;
 	t_simulation	*sim;
 	
-	//TODO:检查输入的大小限制
-	if (check_args(argc, argv) == 0)
+	if (check_args(argc, argv, &n) == 0)
 		return (1);
-	printf("philo num: %s\n", argv[1]);
-	printf("time to die: %s\n", argv[2]);
-	printf("time to eat: %s\n", argv[3]);
-	printf("time to sleep: %s\n", argv[4]);
-	if (argc == 6)
-		printf("must eat time: %s\n", argv[5]);
-	printf("\n");
-	
 	sim = malloc(sizeof(t_simulation));
 	if (!sim)
 		return (1);
-	n = ft_atol(argv[1]);
-	if (n <= 0 || n > INT_MAX)
-	{
-		printf("Invalid philosopher number\n");
-		return (1);
-	}
 	sim->philo_num = (int)n;
 	philo = malloc(sizeof(t_philo) * sim->philo_num);
 	if (!philo)
@@ -70,10 +55,9 @@ int main(int argc, const char **argv)
 		free_structs(philo, sim);
 		return (1);
 	}
-	//初始化simulation中其他的变量，如果初始化失败直接结束程序
 	if (init_simulation(sim, argv, philo) == 1)
 	{
-		free (sim);
+		free_structs(philo, sim);
 		return (1);
 	}
 	i = 0;
@@ -82,7 +66,6 @@ int main(int argc, const char **argv)
 		philo[i].sim_data = sim;
 		i++;
 	}
-	//routine的调用在init_philo里面，易读性太差，需要拿出来。但要确保内存释放
 	if (init_philo(sim, philo, sim->start_time) != 0)
 	{
 		free_structs(philo, sim);

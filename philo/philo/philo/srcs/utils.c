@@ -55,7 +55,7 @@ void	free_structs(t_philo *philo, t_simulation *sim)
 		i = 0;
 		while (i < sim->philo_num)
 		{
-			printf("Destroying philo[%d].meal_mutex at %p\n", i, (void *)&philo[i].meal_mutex);
+			//printf("Destroying philo[%d].meal_mutex at %p\n", i, (void *)&philo[i].meal_mutex);
 			pthread_mutex_destroy(&philo[i].meal_mutex);
 			i++;
 		}
@@ -68,21 +68,21 @@ void	free_structs(t_philo *philo, t_simulation *sim)
 			i = 0;
 			while (i < sim->philo_num)
 			{
-				printf("Destroying sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
+				//printf("Destroying sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
 				pthread_mutex_destroy(&sim->forks[i].mutex);
 				i++;
 			}
 			free (sim->forks);
 		}
 	}
-	printf("Destroying sim->print_mutex at %p\n", (void *)&sim->print_mutex);
+	//printf("Destroying sim->print_mutex at %p\n", (void *)&sim->print_mutex);
 	pthread_mutex_destroy(&sim->print_mutex);
-	printf("Destroying sim->end_mutex at %p\n", (void *)&sim->end_mutex);
-	pthread_mutex_destroy(&sim->end_mutex);
+	//printf("Destroying sim->end_mutex at %p\n", (void *)&sim->end_mutex);
+	//pthread_mutex_destroy(&sim->end_mutex);
 	free (sim);
 }
 
-int	check_args(int argc, const char **args)
+int	check_args(int argc, const char **args, long *n)
 {
 	int		i;
 	
@@ -90,6 +90,12 @@ int	check_args(int argc, const char **args)
 	if (argc < 5 || argc > 6)
 	{
 		printf("Wrong number of arguments\n");
+		return (0);
+	}
+	*n = ft_atol(args[1]);
+	if (*n <= 0 || *n > INT_MAX)
+	{
+		printf("Invalid philosopher number\n");
 		return (0);
 	}
 	while (i < argc)

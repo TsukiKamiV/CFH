@@ -5,7 +5,7 @@
 
 int	kill_philo(t_philo *philo, t_simulation *sim, long cur_time)
 {
-	int	need_print;//在开闭sim->end_mutex的时候，不调用print_status并同时开闭print_mutex，避免嵌套锁
+	int	need_print;
 	long	last_meal_time;
 	
 	pthread_mutex_lock(&philo->meal_mutex);
@@ -82,6 +82,16 @@ bool	everybody_is_full(t_philo *philo, t_simulation *sim)
 	if (sim->sim_end == false)
 		sim->sim_end = true;
 	pthread_mutex_unlock(&sim->end_mutex);
-	print_status(philo, "Everybody is full!");
+	print_status(philo, "Everybody is full!😄");
 	return (true);
+}
+
+bool	check_sim_end(t_simulation *sim)
+{
+	bool	end;
+	
+	pthread_mutex_lock(&sim->end_mutex);
+	end = sim->sim_end;
+	pthread_mutex_unlock(&sim->end_mutex);
+	return (end);
 }

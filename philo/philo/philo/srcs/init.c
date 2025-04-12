@@ -1,11 +1,35 @@
-//
-//  init.c
-//  philo
-//
-//  Created by Luyao Xu on 17/03/2025.
-//
-
 #include "../includes/philo.h"
+
+int	init_mutexes(t_simulation *sim)
+{
+	int	flags;
+	
+	flags = 0;
+	//printf("Initializing sim->end_mutex at %p\n", (void *)&sim->end_mutex);
+	if (pthread_mutex_init(&sim->end_mutex, NULL) != 0)
+		return (1);
+	flags |= CLEAN_END_MUTEX;
+	//printf("Initializing sim->print_mutex at %p\n", (void *)&sim->print_mutex);
+	if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&sim->end_mutex);
+		return (1);
+	}
+	flags |= CLEAN_PRINT_MUTEX;
+	sim->forks = malloc(sizeof(t_fork) * sim->philo_num);
+	if (!sim->forks)
+	{
+		cleanup_simulation(sim, flags);
+		return (1);
+	}
+	flags |= CLEAN_FORKS;
+	if (init_forks_mutex(sim) == 1)
+	{
+		cleanup_simulation(sim, flags);
+		return (1);
+	}
+	return (0);
+}
 
 /**
  *@return 1 if fail to create mutex or malloc
@@ -24,26 +48,35 @@ int init_simulation(t_simulation *sim, const char **argv, t_philo *philo)
 	sim->full_philos = 0;
 	sim->start_time = get_current_time();
 	sim->philo_array = philo;
-	
-	printf("Initializing sim->end_mutex at %p\n", (void *)&sim->end_mutex);
-	if (pthread_mutex_init(&sim->end_mutex, NULL) != 0)
+	if (init_mutexes(sim) != 0)
 		return (1);
-	
-	printf("Initializing sim->print_mutex at %p\n", (void *)&sim->print_mutex);
-	if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)
-	{
-		pthread_mutex_destroy(&sim->end_mutex);
-		return (1);
-	}
-	sim->forks = malloc(sizeof(t_fork) * sim->philo_num);
-	if (!sim->forks)
-	{
-		pthread_mutex_destroy(&sim->end_mutex);
-		pthread_mutex_destroy(&sim->print_mutex);
-		return (1);
-	}
-	if (init_forks_mutex(sim) == 1)
-		return (1);
+	///* 初始化 end_mutex */
+	////printf("Initializing sim->end_mutex at %p\n", (void *)&sim->end_mutex);
+	//if (pthread_mutex_init(&sim->end_mutex, NULL) != 0)
+	//	return (1);
+	//flags |= CLEAN_END_MUTEX;
+	///* 初始化 print_mutex */
+	////printf("Initializing sim->print_mutex at %p\n", (void *)&sim->print_mutex);
+	//if (pthread_mutex_init(&sim->print_mutex, NULL) != 0)
+	//{
+	//	pthread_mutex_destroy(&sim->end_mutex);
+	//	return (1);
+	//}
+	//flags |= CLEAN_PRINT_MUTEX;
+	///* 分配 forks 数组 */
+	//sim->forks = malloc(sizeof(t_fork) * sim->philo_num);
+	//if (!sim->forks)
+	//{
+	//	cleanup_simulation(sim, flags);
+	//	return (1);
+	//}
+	//flags |= CLEAN_FORKS;
+	///* 初始化 forks 内部的 mutex */
+	//if (init_forks_mutex(sim) == 1)
+	//{
+	//	cleanup_simulation(sim, flags);
+	//	return (1);
+	//}
 	return (0);
 }
 
@@ -69,7 +102,7 @@ int	init_philo(t_simulation *sim, t_philo *philo, long start_time)
 		philo[i].l_fork = i;//环形计算下一个index
 		philo[i].r_fork = (i + 1) % sim->philo_num;
 		
-		printf("Initializing philo[%d].meal_mutex at %p\n", i, (void *)&philo[i].meal_mutex);
+		//printf("Initializing philo[%d].meal_mutex at %p\n", i, (void *)&philo[i].meal_mutex);
 		if (pthread_mutex_init(&philo[i].meal_mutex, NULL) != 0)//保护last_meal_time和eat_count
 			return (1);
 		if (pthread_create(&philo[i].thread, NULL, routine, &philo[i]) != 0)//这一步实际上同时完成了线程的创建和routine的执行，应该放到外面？？
@@ -78,7 +111,7 @@ int	init_philo(t_simulation *sim, t_philo *philo, long start_time)
 			{
 				//如果任意线程创建失败，要回滚已创建的线程
 				//是否要destroy上面的锁🔒？=> yes
-				printf("Destroying philo[%d].meal_mutex during rollback at %p\n", i, (void *)&philo[i].meal_mutex);
+				//printf("Destroying philo[%d].meal_mutex during rollback at %p\n", i, (void *)&philo[i].meal_mutex);
 				pthread_join(philo[i].thread, NULL);
 				pthread_mutex_destroy(&philo[i].meal_mutex);
 			}
@@ -101,7 +134,7 @@ int	init_forks_mutex(t_simulation *sim)
 	i = 0;
 	while (i < sim->philo_num)
 	{
-		printf("Initializing sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
+		//printf("Initializing sim->forks[%d].mutex at %p\n", i, (void *)&sim->forks[i].mutex);
 		if (pthread_mutex_init(&sim->forks[i].mutex, NULL) != 0)
 		{
 			j = 0;
