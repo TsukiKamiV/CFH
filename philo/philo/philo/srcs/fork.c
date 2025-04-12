@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fork.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 13:09:56 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 13:11:21 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 /**
@@ -153,7 +165,7 @@
 static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
 {
 	t_simulation	*sim;
-	
+
 	sim = philo->sim_data;
 	if (sim->philo_num % 2 == 0)
 	{
@@ -183,7 +195,8 @@ static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
 	}
 }
 
-static void	set_fork_order_by_right(t_philo *philo, bool right_first, int *first_fork, int *second_fork)
+static void	set_fork_order_by_right(t_philo *philo, \
+		bool right_first, int *first_fork, int *second_fork)
 {
 	if (right_first)
 	{
@@ -232,7 +245,7 @@ bool	take_forks(t_philo *philo)
 	int				second_fork;
 	int				first_mode;
 	bool			right_first;
-	
+
 	sim = philo->sim_data;
 	calc_first_mode(philo, &first_mode, &right_first);
 	set_fork_order_by_right(philo, right_first, &first_fork, &second_fork);
@@ -250,7 +263,7 @@ bool	take_forks(t_philo *philo)
 void	drop_forks(t_philo *philo)
 {
 	t_simulation	*sim;
-	
+
 	sim = philo->sim_data;
 	pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
 	pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);

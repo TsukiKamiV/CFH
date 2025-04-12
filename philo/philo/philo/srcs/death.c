@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   death.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 12:53:24 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 13:06:59 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 /**
  *@return 0->not dead; 1 -> dead
@@ -5,9 +17,9 @@
 
 int	kill_philo(t_philo *philo, t_simulation *sim, long cur_time)
 {
-	int	need_print;
+	int		need_print;
 	long	last_meal_time;
-	
+
 	pthread_mutex_lock(&philo->meal_mutex);
 	last_meal_time = philo->last_meal_time;
 	pthread_mutex_unlock(&philo->meal_mutex);
@@ -30,7 +42,7 @@ int	kill_philo(t_philo *philo, t_simulation *sim, long cur_time)
 
 void	*monitor_sim_routine(void *arg)
 {
-	int					i;
+	int				i;
 	t_simulation	*sim;
 	t_philo			*philo;
 	long			cur_time;
@@ -42,8 +54,7 @@ void	*monitor_sim_routine(void *arg)
 		if (sim->sim_end == true)
 		{
 			pthread_mutex_unlock(&sim->end_mutex);
-			//printf("DEBUG: philo[%ld] exiting loop at start due to sim_end\n", philo->philo_id);
-			break;
+			break ;
 		}
 		pthread_mutex_unlock(&sim->end_mutex);
 		i = 0;
@@ -53,7 +64,8 @@ void	*monitor_sim_routine(void *arg)
 			cur_time = get_relative_time(sim);
 			if (kill_philo(philo, sim, cur_time) != 0)
 				return (NULL);
-			if (sim->number_of_times_to_eat > 0 && everybody_is_full(sim->philo_array, sim))
+			if (sim->number_of_times_to_eat > 0 \
+					&& everybody_is_full(sim->philo_array, sim))
 				return (NULL);
 			i++;
 		}
@@ -89,7 +101,7 @@ bool	everybody_is_full(t_philo *philo, t_simulation *sim)
 bool	check_sim_end(t_simulation *sim)
 {
 	bool	end;
-	
+
 	pthread_mutex_lock(&sim->end_mutex);
 	end = sim->sim_end;
 	pthread_mutex_unlock(&sim->end_mutex);

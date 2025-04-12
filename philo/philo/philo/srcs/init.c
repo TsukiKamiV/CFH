@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 13:13:50 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 13:14:38 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 int	init_mutexes(t_simulation *sim)
 {
 	int	flags;
-	
+
 	flags = 0;
 	//printf("Initializing sim->end_mutex at %p\n", (void *)&sim->end_mutex);
 	if (pthread_mutex_init(&sim->end_mutex, NULL) != 0)
