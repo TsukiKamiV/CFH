@@ -50,12 +50,8 @@ void	*monitor_sim_routine(void *arg)
 	sim = (t_simulation *)arg;
 	while (sim->philo_num > 1 && 1)
 	{
-		pthread_mutex_lock(&sim->end_mutex);
-		if (sim->sim_end == true)
-		{
-			pthread_mutex_unlock(&sim->end_mutex);
-			break ;
-		}
+		if (check_sim_end(sim))
+			break;
 		pthread_mutex_unlock(&sim->end_mutex);
 		i = 0;
 		while (i < sim->philo_num)

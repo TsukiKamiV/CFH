@@ -12,128 +12,21 @@
 
 #include "../includes/philo.h"
 
-/**
- *哲学家根据编号（奇偶）决定拿叉子的顺序
- *加锁对应的叉子
- *打印拿叉子
- *吃完后按顺序解锁两把叉子
- */
-//奇数/偶数id的philo拿起叉子的顺序不同；
-//奇数🆔先拿左🍴
-//偶数🆔先拿右🍴
-//可以避免死锁并改善先发性
-//还可以在偶数🆔的routine开始之前加1毫秒延时，进一步减少争用
-//bool	take_forks(t_philo *philo)
+//static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
 //{
 //	t_simulation	*sim;
-//	bool				right_first;
-//
-//	sim = philo->sim_data;
-//	if (sim->philo_num % 2 == 0)
-//		right_first = (philo->philo_id % 2 == 0);
-//	else
-//		right_first = (philo->philo_id % 2 == philo->eat_count % 2);
-//	if (right_first)
-//	{
-//		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
-//		pthread_mutex_lock(&sim->end_mutex);
-//		if (sim->sim_end)
-//		{
-//			pthread_mutex_unlock(&sim->end_mutex);
-//			pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-//			return (false);
-//		}
-//		pthread_mutex_unlock(&sim->end_mutex);
-//		print_status(philo, "has taken a fork");
-//		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
-//		pthread_mutex_lock(&sim->end_mutex);
-//		if (sim->sim_end)
-//		{
-//			pthread_mutex_unlock(&sim->end_mutex);
-//			pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-//			pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-//			return (false);
-//		}
-//		pthread_mutex_unlock(&sim->end_mutex);
-//		print_status(philo, "has taken a fork");
-//	}
-//	else
-//	{
-//		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
-//		pthread_mutex_lock(&sim->end_mutex);
-//		if (sim->sim_end)
-//		{
-//			pthread_mutex_unlock(&sim->end_mutex);
-//			pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-//			return (false);
-//		}
-//		pthread_mutex_unlock(&sim->end_mutex);
-//		print_status(philo, "has taken a fork");
-//		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
-//		pthread_mutex_lock(&sim->end_mutex);
-//		if (sim->sim_end)
-//		{
-//			pthread_mutex_unlock(&sim->end_mutex);
-//			pthread_mutex_unlock(&sim->forks[philo->l_fork].mutex);
-//			pthread_mutex_unlock(&sim->forks[philo->r_fork].mutex);
-//			return (false);
-//		}
-//		pthread_mutex_unlock(&sim->end_mutex);
-//		print_status(philo, "has taken a fork");
-//	}
-//	return (true);
-//}
-//bool	take_forks(t_philo *philo)
-//{
-//	t_simulation		*sim;
-//	bool				right_first;
-//
-//	sim = philo->sim_data;
-//	if (sim->philo_num % 2 == 0)
-//		right_first = (philo->philo_id % 2 == 0);
-//	else
-//		right_first = (philo->philo_id % 2 == philo->eat_count % 2);
-//	if (right_first)
-//	{
-//		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
-//		if (!check_end_unlock(sim, philo, 1))
-//			return (false);
-//		print_status(philo, "has taken a fork");
-//		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
-//		if (!check_end_unlock(sim, philo, 3))
-//			return (false);
-//		print_status(philo, "has taken a fork");
-//	}
-//	else
-//	{
-//		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
-//		if (!check_end_unlock(sim, philo, 2))
-//			return (false);
-//		print_status(philo, "has taken a fork");
-//		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
-//		if (!check_end_unlock(sim, philo, 3))
-//			return (false);
-//		print_status(philo, "has taken a fork");
-//	}
-//	return (true);
-//}
-
-//static void	set_fork_order(t_philo *philo, int *first_fork, int *second_fork, int //*first_mode)
-//{
-//	t_simulation	*sim;
-//	bool			right_first;
 //
 //	sim = philo->sim_data;
 //	if (sim->philo_num % 2 == 0)
 //	{
 //		if (philo->philo_id % 2 == 0)
 //		{
-//			right_first = true;
+//			*right_first = true;
 //			*first_mode = 1;
 //		}
 //		else
 //		{
-//			right_first = false;
+//			*right_first = false;
 //			*first_mode = 2;
 //		}
 //	}
@@ -141,57 +34,34 @@
 //	{
 //		if (philo->philo_id % 2 == philo->eat_count % 2)
 //		{
-//			right_first = true;
+//			*right_first = true;
 //			*first_mode = 1;
 //		}
 //		else
 //		{
-//			right_first = false;
+//			*right_first = false;
 //			*first_mode = 2;
 //		}
-//	}
-//	if (right_first)
-//	{
-//		*first_fork = philo->r_fork;
-//		*second_fork = philo->l_fork;
-//	}
-//	else
-//	{
-//		*first_fork = philo->l_fork;
-//		*second_fork = philo->r_fork;
 //	}
 //}
 
 static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
 {
 	t_simulation	*sim;
-
+	
 	sim = philo->sim_data;
-	if (sim->philo_num % 2 == 0)
+	if ((sim->philo_num % 2 == 0 \
+		 && philo->philo_id % 2 == 0) \
+		|| (sim->philo_num % 2 != 0 \
+			&& philo->philo_id % 2 == philo->eat_count % 2))
 	{
-		if (philo->philo_id % 2 == 0)
-		{
-			*right_first = true;
-			*first_mode = 1;
-		}
-		else
-		{
-			*right_first = false;
-			*first_mode = 2;
-		}
+		*right_first = true;
+		*first_mode = 1;
 	}
 	else
 	{
-		if (philo->philo_id % 2 == philo->eat_count % 2)
-		{
-			*right_first = true;
-			*first_mode = 1;
-		}
-		else
-		{
-			*right_first = false;
-			*first_mode = 2;
-		}
+		*right_first = false;
+		*first_mode = 2;
 	}
 }
 
