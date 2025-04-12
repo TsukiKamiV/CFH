@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 14:31:20 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 14:32:48 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 static int	ft_isspace(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\n' ||
-		c == '\r' || c == '\v' || c == '\f')
+	if (c == ' ' || c == '\t' || c == '\n' \
+			|| c == '\r' || c == '\v' || c == '\f')
 		return (1);
 	return (0);
 }
@@ -15,7 +27,8 @@ long	ft_atol(const char *str)
 
 	result = 0;
 	sign = 1;
-	while (ft_isspace(*str)) str++;
+	while (ft_isspace(*str))
+		str++;
 	if (*str == '-' || *str == '+')
 	{
 		if (*str == '-')
@@ -26,7 +39,8 @@ long	ft_atol(const char *str)
 	{
 		if (result > (LONG_MAX - (*str - '0')) / 10)
 		{
-			if (sign == 1) return (LONG_MAX);
+			if (sign == 1)
+				return (LONG_MAX);
 			return (LONG_MIN);
 		}
 		result = result * 10 + (*str - '0');
@@ -67,7 +81,6 @@ int	check_args(int argc, const char **args, long *n)
 	}
 	while (i < argc)
 	{
-		//printf("%s\n", args[i]);
 		if (args[i][0] == '\0' || str_is_num(args[i]) == false)
 		{
 			printf("Invalid argument\n");

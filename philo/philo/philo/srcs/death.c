@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 12:53:24 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 13:06:59 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/12 14:20:33 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*monitor_sim_routine(void *arg)
 	while (sim->philo_num > 1 && 1)
 	{
 		if (check_sim_end(sim))
-			break;
+			break ;
 		pthread_mutex_unlock(&sim->end_mutex);
 		i = 0;
 		while (i < sim->philo_num)

@@ -6,52 +6,19 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:09:56 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 13:11:21 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/12 14:23:01 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-//static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
-//{
-//	t_simulation	*sim;
-//
-//	sim = philo->sim_data;
-//	if (sim->philo_num % 2 == 0)
-//	{
-//		if (philo->philo_id % 2 == 0)
-//		{
-//			*right_first = true;
-//			*first_mode = 1;
-//		}
-//		else
-//		{
-//			*right_first = false;
-//			*first_mode = 2;
-//		}
-//	}
-//	else
-//	{
-//		if (philo->philo_id % 2 == philo->eat_count % 2)
-//		{
-//			*right_first = true;
-//			*first_mode = 1;
-//		}
-//		else
-//		{
-//			*right_first = false;
-//			*first_mode = 2;
-//		}
-//	}
-//}
-
 static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
 {
 	t_simulation	*sim;
-	
+
 	sim = philo->sim_data;
 	if ((sim->philo_num % 2 == 0 \
-		 && philo->philo_id % 2 == 0) \
+				&& philo->philo_id % 2 == 0) \
 		|| (sim->philo_num % 2 != 0 \
 			&& philo->philo_id % 2 == philo->eat_count % 2))
 	{

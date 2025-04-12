@@ -1,13 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 14:25:38 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 14:26:14 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int main(int argc, const char **argv)
+int	main(int argc, const char **argv)
 {
 	int				i;
 	long			n;
 	t_philo			*philo;
 	t_simulation	*sim;
-	
+
 	if (check_args(argc, argv, &n) == 0)
 		return (1);
 	sim = malloc(sizeof(t_simulation));

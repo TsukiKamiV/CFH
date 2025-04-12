@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:13:50 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 13:14:38 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/12 14:23:28 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	init_mutexes(t_simulation *sim)
 	return (0);
 }
 
-int init_simulation(t_simulation *sim, const char **argv, t_philo *philo)
+int	init_simulation(t_simulation *sim, const char **argv, t_philo *philo)
 {
 	sim->time_to_die = ft_atol(argv[2]);
 	sim->time_to_eat = ft_atol(argv[3]);

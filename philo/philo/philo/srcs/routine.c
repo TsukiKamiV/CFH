@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 14:26:47 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 14:27:26 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 void	*handle_single_philo(t_philo *philo, t_simulation *sim)
@@ -13,7 +25,7 @@ void	*handle_single_philo(t_philo *philo, t_simulation *sim)
 void	*routine(void *arg)
 {
 	t_philo			*philo;
-	t_simulation 	*sim;
+	t_simulation	*sim;
 
 	philo = (t_philo *)arg;
 	sim = philo->sim_data;
@@ -24,16 +36,16 @@ void	*routine(void *arg)
 		while (1)
 		{
 			if (check_sim_end(sim) == true)
-				break;
+				break ;
 			if (!take_forks(philo))
-				break;
+				break ;
 			eat(philo);
 			if (check_sim_end(sim) == true)
-				break;
+				break ;
 			print_status(philo, "is sleeping");
 			ft_usleep(sim->time_to_sleep, sim);
 			if (check_sim_end(sim) == true)
-				break;
+				break ;
 			ft_think(philo, 0);
 		}
 	}

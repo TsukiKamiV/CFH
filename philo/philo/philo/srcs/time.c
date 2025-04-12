@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/12 14:28:18 by luxu              #+#    #+#             */
+/*   Updated: 2025/04/12 14:29:31 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 long	get_current_time(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
+
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
@@ -52,8 +65,8 @@ void	ft_think(t_philo *philo, int befor_begin)
 		print_status(philo, "is thinking");
 	if (philo->sim_data->philo_num % 2 != 0)
 	{
-		time_to_think = (philo->sim_data->time_to_eat * 2)
-		- philo->sim_data->time_to_sleep;
+		time_to_think = (philo->sim_data->time_to_eat * 2) \
+				- philo->sim_data->time_to_sleep;
 		if (time_to_think < 0)
 			time_to_think = 0;
 		ft_usleep(time_to_think * 0.42, philo->sim_data);
