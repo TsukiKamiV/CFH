@@ -27,7 +27,7 @@
 # define CLEAN_FORKS	0x01
 # define CLEAN_END_MUTEX	0x02
 # define CLEAN_PRINT_MUTEX	0x04
-# define CHECK_END if (check_sim_end(sim)) break;
+//# define CHECK_END if (check_sim_end(sim)) break;
 
 typedef struct s_philo		t_philo;
 typedef struct s_simulation	t_simulation;
