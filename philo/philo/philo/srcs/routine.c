@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:26:47 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/13 12:37:06 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/13 14:17:30 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@ static void	run_philo_actions(t_philo *philo)
 	while (1)
 	{
 		if (check_sim_end(sim))
-			break;
+			break ;
 		if (!take_forks(philo))
-			break;
+			break ;
 		eat(philo);
 		if (check_sim_end(sim))
-			break;
+			break ;
 		print_status(philo, "is sleeping");
 		ft_usleep(sim->time_to_sleep, sim);
 		if (check_sim_end(sim))
-			break;
+			break ;
 		ft_think(philo, 0);
 	}
 }
