@@ -6,13 +6,14 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:25:38 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 14:26:14 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/13 12:35:50 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-static int	alloc_all(int argc, const char **argv, t_simulation **sim, t_philo **philo)
+static int	alloc_all(int argc, const char **argv, \
+		t_simulation **sim, t_philo **philo)
 {
 	long	n;
 
@@ -54,7 +55,8 @@ static int	setup_all(t_simulation *sim, t_philo *philo, const char **argv)
 	return (0);
 }
 
-static int	init_all(int argc, const char **argv, t_simulation **sim, t_philo **philo)
+static int	init_all(int argc, const char **argv, \
+		t_simulation **sim, t_philo **philo)
 {
 	if (alloc_all(argc, argv, sim, philo))
 		return (1);
@@ -66,7 +68,7 @@ static int	init_all(int argc, const char **argv, t_simulation **sim, t_philo **p
 static void	join_threads(t_simulation *sim, t_philo *philo)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < sim->philo_num)
 	{

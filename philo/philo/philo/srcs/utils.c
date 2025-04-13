@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:29:54 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 14:31:03 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/13 12:34:56 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	free_philo_struct(t_philo *philo, long philo_num)
 {
 	int	i;
-	
+
 	if (philo)
 	{
 		i = 0;
