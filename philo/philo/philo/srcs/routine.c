@@ -35,17 +35,14 @@ void	*routine(void *arg)
 	{
 		while (1)
 		{
-			if (check_sim_end(sim) == true)
-				break ;
+			CHECK_END
 			if (!take_forks(philo))
 				break ;
 			eat(philo);
-			if (check_sim_end(sim) == true)
-				break ;
+			CHECK_END
 			print_status(philo, "is sleeping");
 			ft_usleep(sim->time_to_sleep, sim);
-			if (check_sim_end(sim) == true)
-				break ;
+			CHECK_END
 			ft_think(philo, 0);
 		}
 	}

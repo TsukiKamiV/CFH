@@ -52,7 +52,6 @@ void	*monitor_sim_routine(void *arg)
 	{
 		if (check_sim_end(sim))
 			break ;
-		pthread_mutex_unlock(&sim->end_mutex);
 		i = 0;
 		while (i < sim->philo_num)
 		{

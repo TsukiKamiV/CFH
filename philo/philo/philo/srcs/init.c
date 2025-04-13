@@ -59,6 +59,16 @@ int	init_simulation(t_simulation *sim, const char **argv, t_philo *philo)
 	return (0);
 }
 
+static void	init_one_philo(t_simulation *sim, t_philo *p, int i)
+{
+	p->philo_id = i + 1;
+	p->last_meal_time = 0;
+	p->eat_count = 0;
+	p->sim_data = sim;
+	p->l_fork = i;
+	p->r_fork = (i + 1) % sim->philo_num;
+}
+
 int	init_philo(t_simulation *sim, t_philo *philo)
 {
 	int	i;
@@ -68,12 +78,7 @@ int	init_philo(t_simulation *sim, t_philo *philo)
 	i = 0;
 	while (i < sim->philo_num)
 	{
-		philo[i].philo_id = i + 1;
-		philo[i].last_meal_time = 0;
-		philo[i].eat_count = 0;
-		philo[i].sim_data = sim;
-		philo[i].l_fork = i;
-		philo[i].r_fork = (i + 1) % sim->philo_num;
+		init_one_philo(sim, &philo[i], i);
 		if (pthread_mutex_init(&philo[i].meal_mutex, NULL) != 0)
 			return (1);
 		if (pthread_create(&philo[i].thread, NULL, routine, &philo[i]) != 0)

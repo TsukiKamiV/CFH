@@ -12,20 +12,27 @@
 
 #include "../includes/philo.h"
 
-void	free_structs(t_philo *philo, t_simulation *sim)
+static void	free_philo_struct(t_philo *philo, long philo_num)
 {
 	int	i;
-
+	
 	if (philo)
 	{
 		i = 0;
-		while (i < sim->philo_num)
+		while (i < philo_num)
 		{
 			pthread_mutex_destroy(&philo[i].meal_mutex);
 			i++;
 		}
 		free (philo);
 	}
+}
+
+void	free_structs(t_philo *philo, t_simulation *sim)
+{
+	int	i;
+
+	free_philo_struct(philo, sim->philo_num);
 	if (sim)
 	{
 		if (sim->forks)
