@@ -22,6 +22,41 @@ void	*handle_single_philo(t_philo *philo, t_simulation *sim)
 	return (NULL);
 }
 
+static void	run_philo_actions(t_philo *philo)
+{
+	t_simulation	*sim;
+
+	sim = philo->sim_data;
+	while (1)
+	{
+		if (check_sim_end(sim))
+			break;
+		if (!take_forks(philo))
+			break;
+		eat(philo);
+		if (check_sim_end(sim))
+			break;
+		print_status(philo, "is sleeping");
+		ft_usleep(sim->time_to_sleep, sim);
+		if (check_sim_end(sim))
+			break;
+		ft_think(philo, 0);
+	}
+}
+
+void	*routine(void *arg)
+{
+	t_philo			*philo;
+	t_simulation	*sim;
+
+	philo = (t_philo *)arg;
+	sim = philo->sim_data;
+	if (sim->philo_num == 1)
+		handle_single_philo(philo, sim);
+	else
+		run_philo_actions(philo);
+	return (NULL);
+}
 //void	*routine(void *arg)
 //{
 //	t_philo			*philo;
@@ -35,46 +70,20 @@ void	*handle_single_philo(t_philo *philo, t_simulation *sim)
 //	{
 //		while (1)
 //		{
-//			CHECK_END
+//			if (check_sim_end(sim) == true)
+//				break ;
 //			if (!take_forks(philo))
 //				break ;
 //			eat(philo);
-//			CHECK_END
+//			if (check_sim_end(sim) == true)
+//				break ;
 //			print_status(philo, "is sleeping");
 //			ft_usleep(sim->time_to_sleep, sim);
-//			CHECK_END
+//			if (check_sim_end(sim) == true)
+//				break ;
 //			ft_think(philo, 0);
 //		}
 //	}
 //	return (NULL);
 //}
 //
-void	*routine(void *arg)
-{
-	t_philo			*philo;
-	t_simulation	*sim;
-	
-	philo = (t_philo *)arg;
-	sim = philo->sim_data;
-	if (sim->philo_num == 1)
-		handle_single_philo(philo, sim);
-	else
-	{
-		while (1)
-		{
-			if (check_sim_end(sim) == true)
-				break ;
-			if (!take_forks(philo))
-				break ;
-			eat(philo);
-			if (check_sim_end(sim) == true)
-				break ;
-			print_status(philo, "is sleeping");
-			ft_usleep(sim->time_to_sleep, sim);
-			if (check_sim_end(sim) == true)
-				break ;
-			ft_think(philo, 0);
-		}
-	}
-	return (NULL);
-}
