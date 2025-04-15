@@ -12,7 +12,7 @@
 
 #include "../includes/philo.h"
 
-static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
+/*static void	calc_first_mode(t_philo *philo, int *first_mode, bool *right_first)
 {
 	t_simulation	*sim;
 
@@ -45,7 +45,7 @@ static void	set_fork_order_by_right(t_philo *philo, \
 		*first_fork = philo->l_fork;
 		*second_fork = philo->r_fork;
 	}
-}
+}*/
 
 static bool	check_end_unlock(t_simulation *sim, t_philo *philo, int mode)
 {
@@ -116,7 +116,7 @@ bool	take_forks(t_philo *philo)
 	else
 	{
 		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
-		if (!check_end_unlock(sim, philo, 1))
+		if (!check_end_unlock(sim, philo, 2))
 			return (false);
 		print_status(philo, "has taken a fork");
 		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
