@@ -75,25 +75,55 @@ static bool	check_end_unlock(t_simulation *sim, t_philo *philo, int mode)
 	return (true);
 }
 
+//bool	take_forks(t_philo *philo)
+//{
+//	t_simulation	*sim;
+//	int				first_fork;
+//	int				second_fork;
+//	int				first_mode;
+//	bool			right_first;
+//
+//	sim = philo->sim_data;
+//	calc_first_mode(philo, &first_mode, &right_first);
+//	set_fork_order_by_right(philo, right_first, &first_fork, &second_fork);
+//	pthread_mutex_lock(&sim->forks[first_fork].mutex);
+//	if (!check_end_unlock(sim, philo, first_mode))
+//		return (false);
+//	print_status(philo, "has taken a fork");
+//	pthread_mutex_lock(&sim->forks[second_fork].mutex);
+//	if (!check_end_unlock(sim, philo, 3))
+//		return (false);
+//	print_status(philo, "has taken a fork");
+//	return (true);
+//}
+
 bool	take_forks(t_philo *philo)
 {
 	t_simulation	*sim;
-	int				first_fork;
-	int				second_fork;
-	int				first_mode;
-	bool			right_first;
-
+	
 	sim = philo->sim_data;
-	calc_first_mode(philo, &first_mode, &right_first);
-	set_fork_order_by_right(philo, right_first, &first_fork, &second_fork);
-	pthread_mutex_lock(&sim->forks[first_fork].mutex);
-	if (!check_end_unlock(sim, philo, first_mode))
-		return (false);
-	print_status(philo, "has taken a fork");
-	pthread_mutex_lock(&sim->forks[second_fork].mutex);
-	if (!check_end_unlock(sim, philo, 3))
-		return (false);
-	print_status(philo, "has taken a fork");
+	if (philo->philo_id % 2 == 0)
+	{
+		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
+		if (!check_end_unlock(sim, philo, 1))
+			return (false);
+		print_status(philo, "has taken a fork");
+		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
+		if (!check_end_unlock(sim, philo, 3))
+			return (false);
+		print_status(philo, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(&sim->forks[philo->l_fork].mutex);
+		if (!check_end_unlock(sim, philo, 1))
+			return (false);
+		print_status(philo, "has taken a fork");
+		pthread_mutex_lock(&sim->forks[philo->r_fork].mutex);
+		if (!check_end_unlock(sim, philo, 3))
+			return (false);
+		print_status(philo, "has taken a fork");
+	}
 	return (true);
 }
 
