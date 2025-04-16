@@ -102,9 +102,14 @@ bool	check_sim_end(t_simulation *sim);
 void	free_structs(t_philo *philo, t_simulation *sim);
 void	print_status(t_philo *philo, const char *status);
 
-//utils_2.c
-long	ft_atol(const char *str);
+//args.c
 int		check_args(int argc, const char **args, long *n);
+bool	check_time_params(const char **args);
+
+//fts.c
+int		ft_strcmp(const char *s1, const char *s2);
+long	ft_atol(const char *str);
+
 
 //time.c
 long	get_current_time(void);

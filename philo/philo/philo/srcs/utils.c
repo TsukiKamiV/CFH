@@ -50,16 +50,6 @@ void	free_structs(t_philo *philo, t_simulation *sim)
 	free (sim);
 }
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-		i++;
-	return (s1[i] - s2[i]);
-}
-
 void	print_status(t_philo *philo, const char *status)
 {
 	pthread_mutex_lock(&philo->sim_data->print_mutex);

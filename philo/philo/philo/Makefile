@@ -4,7 +4,8 @@ FLAGS = -Wall -Wextra -Werror
 
 SRCS = srcs/philo.c\
 	   srcs/utils.c\
-	   srcs/utils_2.c\
+	   srcs/fts.c\
+	   srcs/args.c\
 	   srcs/routine.c\
 	   srcs/clean.c\
 	   srcs/eat.c\

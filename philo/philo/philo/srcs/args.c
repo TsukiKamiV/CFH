@@ -12,43 +12,6 @@
 
 #include "../includes/philo.h"
 
-static int	ft_isspace(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\n' \
-			|| c == '\r' || c == '\v' || c == '\f')
-		return (1);
-	return (0);
-}
-
-long	ft_atol(const char *str)
-{
-	long	result;
-	int		sign;
-
-	result = 0;
-	sign = 1;
-	while (ft_isspace(*str))
-		str++;
-	if (*str == '-' || *str == '+')
-	{
-		if (*str == '-')
-			sign = -1;
-		str++;
-	}
-	while (*str >= '0' && *str <= '9')
-	{
-		if (result > (LONG_MAX - (*str - '0')) / 10)
-		{
-			if (sign == 1)
-				return (LONG_MAX);
-			return (LONG_MIN);
-		}
-		result = result * 10 + (*str - '0');
-		str++;
-	}
-	return (result * sign);
-}
-
 bool	str_is_num(const char *str)
 {
 	int	i;
@@ -58,6 +21,56 @@ bool	str_is_num(const char *str)
 	{
 		if (str[i] > '9' || str[i] < '0')
 			return (false);
+		i++;
+	}
+	return (true);
+}
+
+bool	check_time_params(const char **args)
+{
+	long	tmp;
+	int		i;
+	
+	i = 2;
+	while (i <= 4)
+	{
+		tmp = ft_atol(args[i]);
+		if (tmp == LONG_MAX && ft_strcmp(args[i], "9223372036854775807") != 0)
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+static bool	number_limits(int argc, const char **args)
+{
+	long	a;
+	
+	a = 0;
+	if (argc == 6)
+	{
+		a = ft_atol(args[5]);
+		if (a <= 0 || a >= INT_MAX)
+		{
+			printf("Wrong must-eat time param\n");
+			return (false);
+		}
+	}
+	return (true);
+}
+
+static bool	validate_args_format(int argc, const char **args)
+{
+	int	i;
+	
+	i = 1;
+	while (i < argc)
+	{
+		if (args[i][0] == '\0' || str_is_num(args[i]) == false)
+		{
+			printf("Invalid argument\n");
+			return (false);
+		}
 		i++;
 	}
 	return (true);
@@ -79,14 +92,9 @@ int	check_args(int argc, const char **args, long *n)
 		printf("Invalid philosopher number\n");
 		return (0);
 	}
-	while (i < argc)
-	{
-		if (args[i][0] == '\0' || str_is_num(args[i]) == false)
-		{
-			printf("Invalid argument\n");
-			return (0);
-		}
-		i++;
-	}
+	if (number_limits(argc, args) == false)
+		return (0);
+	if (validate_args_format(argc, args) == false)
+		return (0);
 	return (1);
 }
