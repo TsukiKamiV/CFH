@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_2.c                                          :+:      :+:    :+:   */
+/*   args.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:31:20 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 14:32:48 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/16 13:45:20 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool	check_time_params(const char **args)
 {
 	long	tmp;
 	int		i;
-	
+
 	i = 2;
 	while (i <= 4)
 	{
@@ -45,7 +45,7 @@ bool	check_time_params(const char **args)
 static bool	number_limits(int argc, const char **args)
 {
 	long	a;
-	
+
 	a = 0;
 	if (argc == 6)
 	{
@@ -62,7 +62,7 @@ static bool	number_limits(int argc, const char **args)
 static bool	validate_args_format(int argc, const char **args)
 {
 	int	i;
-	
+
 	i = 1;
 	while (i < argc)
 	{

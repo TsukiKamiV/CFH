@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:09:56 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 14:23:01 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/16 13:44:50 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ static bool	check_end_unlock(t_simulation *sim, t_philo *philo, int mode)
 //	}
 //	return (true);
 //}
-static void	choose_fork_order(t_philo *philo, int *first_fork, int *second_fork, int *mode)
+static void	choose_fork_order(t_philo *philo, \
+		int *first_fork, int *second_fork, int *mode)
 {
 	if (philo->philo_id % 2 != 0)
 	{
@@ -87,11 +88,11 @@ static void	choose_fork_order(t_philo *philo, int *first_fork, int *second_fork,
 
 bool	take_forks(t_philo *philo)
 {
-	int	first_fork;
-	int	second_fork;
-	t_simulation *sim;
-	int	mode;
-	
+	int				first_fork;
+	int				second_fork;
+	t_simulation	*sim;
+	int				mode;
+
 	sim = philo->sim_data;
 	choose_fork_order(philo, &first_fork, &second_fork, &mode);
 	pthread_mutex_lock(&sim->forks[first_fork].mutex);

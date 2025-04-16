@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:33:22 by luxu              #+#    #+#             */
-/*   Updated: 2025/04/12 14:38:42 by luxu             ###   ########.fr       */
+/*   Updated: 2025/04/16 13:43:13 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ bool	check_time_params(const char **args);
 //fts.c
 int		ft_strcmp(const char *s1, const char *s2);
 long	ft_atol(const char *str);
-
 
 //time.c
 long	get_current_time(void);
