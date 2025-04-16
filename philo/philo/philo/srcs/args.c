@@ -78,9 +78,6 @@ static bool	validate_args_format(int argc, const char **args)
 
 int	check_args(int argc, const char **args, long *n)
 {
-	int		i;
-
-	i = 1;
 	if (argc < 5 || argc > 6)
 	{
 		printf("Wrong number of arguments\n");
