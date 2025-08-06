@@ -4,16 +4,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
+
+#include "vec3.h"
 
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
 
-typedef struct s_vec3
+typedef struct	s_point2
 {
-	double	x;
-	double	y;
-	double	z;
-}	t_vec3;
+	int	x;
+	int	y;
+}				t_point2;
+
+typedef struct s_ray
+{
+	t_vec3 origin;
+	t_vec3 direction;
+}	t_ray;
+
+typedef struct	s_viewport
+{
+	double	width;
+	double	height;
+	double	aspect_ratio;
+	double	focal_length;
+}				t_viewport;
+
+typedef struct	s_basis//代表摄像机坐标系的三个正交基向量
+{
+	t_vec3	u;
+	t_vec3	v;
+	t_vec3	w;
+}				t_basis;
 
 typedef struct s_color
 {
@@ -69,7 +92,7 @@ typedef struct	s_cylinder
 	t_vec3	axis;
 	double	radius;
 	double	height;
-	t_vec3	color;
+	t_color	color;
 }		t_cylinder;
 
 typedef struct	s_object
@@ -100,8 +123,17 @@ typedef struct	s_scene
 	t_ambient	*amb;
 	t_light		*light;
 	t_camera	*cam;
-	t_list	*objs;
+	t_object	*objs;
 }	t_scene;
+
+typedef struct	s_hit
+{
+	double	t;
+	t_vec3	point;
+	t_vec3 	normal;
+	t_color	color;
+	t_object	*obj;
+}				t_hit;
 
 //init
 //read_file.c
@@ -138,5 +170,26 @@ int		create_color(int r, int g, int b);
 //render
 //render_scene.c
 void	render_scene(t_scene *scene);
+
+//render_objs.c
+void	render_object(t_image *img, t_object *obj);
+void	render_plane(t_image *img, t_plane *pl);
+
+//ray.c
+t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img);
+int		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是为了debug
+
+//ray_hit.c
+int	hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
+int	hit_sphere(t_ray ray, t_sphere *sphere, t_hit *hit);
+int	hit_cylinder_body(t_ray ray, t_cylinder *cy, t_hit *hit);
+int	hit_cylinder_cap(t_ray ray, t_cylinder *cy, t_hit *hit);
+int	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
+
+//ray_utils.c
+t_vec3	ray_at(t_ray ray, double t);
+
+//ambient.c
+t_color	compute_ambient(t_color obj_color, t_scene *scene);
 
 #endif /* miniRT_h */

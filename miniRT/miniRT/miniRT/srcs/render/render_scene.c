@@ -3,22 +3,26 @@
 void	render_scene(t_scene *scene)
 {
 	t_image	*img;
-	int		x;
-	int		y;
+	//t_object	*obj;
+	t_point2	pixel;
+	t_ray		ray;
+	int			color;
 	
 	img = create_image(scene);
 	if (!img)
 		return ;
-	y = 0;
-	while (y < img->height)
+	pixel.y = 0;
+	while (pixel.y < img->height)
 	{
-		x = 0;
-		while (x < img->width)
+		pixel.x = 0;
+		while (pixel.x < img->width)
 		{
-			put_pixel(img, x, y, create_color(0, 0, 255));
-			x++;
+			ray = generate_ray(scene->cam, pixel, *img);
+			color = trace_ray(ray, scene, pixel);
+			put_pixel(img, pixel.x, pixel.y, color);
+			pixel.x++;
 		}
-		y++;
+		pixel.y++;
 	}
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, img->img_ptr, 0, 0);
 }
