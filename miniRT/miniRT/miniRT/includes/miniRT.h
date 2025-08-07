@@ -157,6 +157,9 @@ void	free_tab(char **tab);
 t_color	parse_color(char *str);
 void	add_object(t_scene *scene, t_object *new);
 
+//hook.c
+int	ft_key_hook(int keycode, t_scene *scene);
+
 
 //utils
 //utils.c
@@ -201,5 +204,16 @@ t_color	compute_lighting(t_scene *scene, t_hit *hit);
 //diffuse.c
 t_color	compute_diffuse(t_scene *scene, t_hit *hit);
 bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 dir);
+
+//free
+//exit_free.c
+void	free_objects(t_object *obj);
+void	free_scene(t_scene *scene);
+int		my_mlx_hook_callback(int keycode, t_scene *scene);
+
+//exit
+//close_window.c
+void	free_all_allocated_memory(t_scene *scene);
+int		close_window(t_scene *scene);
 
 #endif /* miniRT_h */
