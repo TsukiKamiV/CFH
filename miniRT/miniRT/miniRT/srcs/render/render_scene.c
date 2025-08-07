@@ -6,7 +6,7 @@ void	render_scene(t_scene *scene)
 	//t_object	*obj;
 	t_point2	pixel;
 	t_ray		ray;
-	int			color;
+	t_color		color;
 	
 	img = create_image(scene);
 	if (!img)
@@ -19,7 +19,7 @@ void	render_scene(t_scene *scene)
 		{
 			ray = generate_ray(scene->cam, pixel, *img);
 			color = trace_ray(ray, scene, pixel);
-			put_pixel(img, pixel.x, pixel.y, color);
+			put_pixel(img, pixel.x, img->height - 1 - pixel.y, color);
 			pixel.x++;
 		}
 		pixel.y++;

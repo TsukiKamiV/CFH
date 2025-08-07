@@ -5,11 +5,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include "vec3.h"
 
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
+	
+ #define	EPSILON 1e-4
 
 typedef struct	s_point2
 {
@@ -61,7 +64,7 @@ typedef struct s_camera
 typedef struct s_light
 {
 	t_vec3	pos;
-	int		ratio;
+	double		ratio;
 	t_color	color;
 }		t_light;
 
@@ -164,8 +167,8 @@ int	ft_count_size(char **tokens);
 //image
 //img_utils
 t_image	*create_image(t_scene *scene);
-void	put_pixel(t_image *img, int x, int y, int color);
-int		create_color(int r, int g, int b);
+void	put_pixel(t_image *img, int x, int y, t_color color);
+t_color		create_color(int r, int g, int b);
 
 //render
 //render_scene.c
@@ -177,7 +180,7 @@ void	render_plane(t_image *img, t_plane *pl);
 
 //ray.c
 t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img);
-int		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是为了debug
+t_color		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是为了debug
 
 //ray_hit.c
 int	hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
@@ -191,5 +194,12 @@ t_vec3	ray_at(t_ray ray, double t);
 
 //ambient.c
 t_color	compute_ambient(t_color obj_color, t_scene *scene);
+
+//lighting.c
+t_color	compute_lighting(t_scene *scene, t_hit *hit);
+
+//diffuse.c
+t_color	compute_diffuse(t_scene *scene, t_hit *hit);
+bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 dir);
 
 #endif /* miniRT_h */

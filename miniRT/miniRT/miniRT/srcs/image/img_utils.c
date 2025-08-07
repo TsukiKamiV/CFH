@@ -29,18 +29,30 @@ t_image	*create_image(t_scene *scene)
 	return (img);
 }
 
-void	put_pixel(t_image *img, int x, int y, int color)
+void	put_pixel(t_image *img, int x, int y, t_color color)
 {
 	char	*dst;
+	unsigned int	packed_color;
 	
 	if (x < 0 || x >= img->width || y < 0 || y >= img->height)
 		return ;
+	packed_color = (color.r << 16) | (color.g << 8) | color.b;
 	//在第y行->第x个像素->写入4字节的颜色值
 	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
+	*(unsigned int *)dst = packed_color;
 }
 
-int	create_color(int r, int g, int b)
+//int	create_color(int r, int g, int b)
+//{
+//	return ((r << 16) | (g << 8) | b);
+//}
+
+t_color	create_color(int r, int g, int b)
 {
-	return ((r << 16) | (g << 8) | b);
+	t_color	res;
+	
+	res.r = r;
+	res.g = g;
+	res.b = b;
+	return (res);
 }

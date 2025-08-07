@@ -65,16 +65,18 @@ t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
 /**
  *@brief 接收一条光线 ray 和一个完整的场景 scene，判断这条光线是否与任何物体（目前仅支持平面）相交，并返回交点处的颜色（或背景色）。
  */
-int	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
+t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 {
 	t_object	*obj;
 	t_hit		closest_hit;
 	t_hit		tmp_hit;
+	bool		hit_something;
 	
 	ft_memset(&closest_hit, 0, sizeof(t_hit));
 	ft_memset(&tmp_hit, 0, sizeof(t_hit));
 	closest_hit.t = INFINITY;
 	obj = scene->objs;
+	hit_something = false;
 	while (obj)
 	{
 		if (obj->type == PLANE)
@@ -82,7 +84,10 @@ int	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 			if (hit_plane(ray, (t_plane *)obj->element, &tmp_hit))
 			{
 				if (tmp_hit.t < closest_hit.t)
+				{
 					closest_hit = tmp_hit;
+					hit_something = true;
+				}
 			}
 		}
 		else if (obj->type == SPHERE)
@@ -90,7 +95,10 @@ int	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 			if (hit_sphere(ray, (t_sphere *) obj->element, &tmp_hit))
 			{
 				if (tmp_hit.t < closest_hit.t)
+				{
 					closest_hit = tmp_hit;
+					hit_something = true;
+				}
 			}
 		}
 		else if (obj->type == CYLINDER)
@@ -98,11 +106,21 @@ int	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 			if (hit_cylinder(ray, (t_cylinder *) obj->element, &tmp_hit))
 			{
 				if (tmp_hit.t < closest_hit.t)
+				{
 					closest_hit = tmp_hit;
+					hit_something = true;
+				}
 			}
 		}
 		obj = obj->next;
 	}
-	return (create_color(closest_hit.color.r, closest_hit.color.g, closest_hit.color.b));
+	if (hit_something)
+	{
+		t_color	lit_color = compute_lighting(scene, &closest_hit);
+		return (create_color(lit_color.r, lit_color.g, lit_color.b));
+	}
+		//return (create_color(closest_hit.color.r, closest_hit.color.g, closest_hit.color.b));
+	else
+		return (create_color(0, 0, 0));
 }
 
