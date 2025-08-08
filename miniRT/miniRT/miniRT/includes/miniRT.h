@@ -167,6 +167,9 @@ int	ft_isspace(char c);
 int	ft_strcmp(const char *s1, const char *s2);
 int	ft_count_size(char **tokens);
 
+//error.c
+int	error_msg(const char *msg, int ret);
+
 //image
 //img_utils
 t_image	*create_image(t_scene *scene);
@@ -215,5 +218,6 @@ int		my_mlx_hook_callback(int keycode, t_scene *scene);
 //close_window.c
 void	free_all_allocated_memory(t_scene *scene);
 int		close_window(t_scene *scene);
+int	close_program(t_scene *scene, const char *msg, int state);
 
 #endif /* miniRT_h */

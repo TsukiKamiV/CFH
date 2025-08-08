@@ -24,39 +24,27 @@ int main(int argc, const char * argv[])
 	t_scene		*scene;
 	
 	if (argc != 2)
-	{
-		ft_putstr_fd("Error!\nUsage: ./miniRT scene.rt\n",2);
-		return (1);
-	}
+		return (error_msg("usage: ./miniRT scene.rt", 1));
 	scene = malloc(sizeof(t_scene));
 	if (!scene)
-		return (1);
+		return (error_msg("memory allocation failed", 1));
 	ft_memset(scene, 0, sizeof(t_scene));
 	scene->mlx_ptr = mlx_init();
 	if (!scene->mlx_ptr)
-	{
-		ft_putstr_fd("Error: mlx_init failed\n", 2);
-		return (1);
-	}
+		return (close_program(scene, "mlx initiation failed", 1));
 	scene->win_ptr = mlx_new_window(scene->mlx_ptr, 800, 600, "miniRT");
 	if (!scene->win_ptr)
-	{
-		ft_putstr_fd("Error: mlx_new_window failed\n", 2);
-		return (1);
-	}
+		return (error_msg("mlx initiation failed", 1));
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Error!/nFailed to load .rt file.");
 		free (scene);
-		return (1);
+		return (error_msg("Failed to load .rt file", 1));
 	}
 	read_file(fd, scene);
 	close(fd);
-	
 	render_scene(scene);
 	mlx_key_hook(scene->win_ptr, ft_key_hook, scene);
 	mlx_hook(scene->win_ptr, 17, 0, my_mlx_hook_callback, &scene);
 	mlx_loop(scene->mlx_ptr);
-	//return (0);
 }
