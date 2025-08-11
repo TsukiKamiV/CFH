@@ -18,20 +18,6 @@ t_color	parse_color(char *str)
 	return (color);
 }
 
-void	free_tab(char **tab)
-{
-	int	i;
-
-	if (!tab)
-		return ;
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
 
 void	add_object(t_scene *scene, t_object *new)
 {
@@ -46,4 +32,33 @@ void	add_object(t_scene *scene, t_object *new)
 	while (current->next)
 		current = current->next;
 	current->next = new;
+}
+
+int	validate_assign_rgb(t_color *color, char **rgb)
+{
+	int	i;
+	int	v;
+	
+	i = 0;
+	while (i < 3)
+	{
+		v = ft_atoi(rgb[i]);
+		if (v < 0 || v > 255)
+			return (error_msg("color component out of range.", 1));
+		i++;
+	}
+	color->r = ft_atoi(rgb[0]);
+	color->g = ft_atoi(rgb[1]);
+	color->b = ft_atoi(rgb[2]);
+	return (0);
+}
+
+int	normal_is_unit(t_vec3 n)
+{
+	double	len;
+	
+	len = vec3_length(n);
+	if (len < 0.99 || len > 1.01)
+		return (error_msg("object normal must be normalized.", 1));
+	return (0);
 }

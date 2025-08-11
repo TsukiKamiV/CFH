@@ -7,3 +7,4 @@ int	error_msg(const char *msg, int ret)
 	ft_putstr_fd("\n", 1);
 	return (ret);
 }
+

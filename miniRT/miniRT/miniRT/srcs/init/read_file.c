@@ -32,32 +32,6 @@ static void	dispatch_element(char **tokens, t_scene *scene)
 		ft_putstr_fd("Unknown element type\n", 2);
 }
 
-/*void	read_file(int fd, t_scene *scene)
-{
-	char	*line;
-	char	**tokens;
-	
-	line = get_next_line(fd);
-	while (line)
-	{
-		if (is_line_empty(line))
-		{
-			free (line);
-			line = get_next_line(fd);
-			continue;
-		}
-		tokens = ft_split(line, ' ');
-		if (!tokens || !tokens[0])
-		{
-			free (line);
-			continue;
-		}
-		dispatch_element(tokens, scene);
-		free_tab(tokens);
-		free (line);
-	}
-}*/
-
 void	read_file(int fd, t_scene *scene)
 {
 	char	*line;

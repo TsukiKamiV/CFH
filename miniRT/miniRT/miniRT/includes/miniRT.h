@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 #include "vec3.h"
 
@@ -153,7 +154,8 @@ int	parse_plane(char **tokens, t_scene *scene);
 int	parse_cylinder(char **tokens, t_scene *scene);
 
 //parse_utils.c
-void	free_tab(char **tab);
+int	validate_assign_rgb(t_color *color, char **rgb);
+int		normal_is_unit(t_vec3 n);
 t_color	parse_color(char *str);
 void	add_object(t_scene *scene, t_object *new);
 
@@ -163,9 +165,11 @@ int	ft_key_hook(int keycode, t_scene *scene);
 
 //utils
 //utils.c
-int	ft_isspace(char c);
-int	ft_strcmp(const char *s1, const char *s2);
-int	ft_count_size(char **tokens);
+int		ft_isspace(char c);
+int		ft_strcmp(const char *s1, const char *s2);
+int		ft_count_size(char **tokens);
+void	free_multiple_tab(int count, ...);
+void	free_tab(char **tab);
 
 //error.c
 int	error_msg(const char *msg, int ret);

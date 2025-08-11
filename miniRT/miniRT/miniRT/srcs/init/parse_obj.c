@@ -1,63 +1,82 @@
 #include "../../includes/miniRT.h"
 
-int	parse_plane(char **tokens, t_scene *scene)
+static int	split_plane_tokens(char **tokens, char ***pos, char ***normal, char ***color)
 {
-	t_object	*obj;
-	t_plane		*pl;
-	char		**pos;
-	char		**normal;
-	char		**color;
-	
-	if (!tokens[1] || !tokens[2] || !tokens[3])
+	*pos = NULL;
+	*normal = NULL;
+	*color = NULL;
+	*pos = ft_split(tokens[1], ',');
+	*normal = ft_split(tokens[2], ',');
+	*color = ft_split(tokens[3], ',');
+	if (!(*pos) || !(*normal) || !(*color))
 	{
-		ft_putstr_fd("Error.\nInvalid plane format.", 2);
-		return (0);
+		free_multiple_tab(3, *pos, *normal, *color);
+		return (error_msg("invalid plane vector formatting.", 1));
 	}
-	pl = malloc(sizeof(t_plane));
-	if (!pl)
+	if (ft_count_size(*pos) != 3 || ft_count_size(*normal) != 3 || ft_count_size(*color) != 3)
 	{
-		ft_putstr_fd("Error.\nMalloc failed when creating plane.", 2);
-		return (0);
+		free_multiple_tab(3, *pos, *normal, *color);
+		return (error_msg("invalid plane parameter size.", 1));
 	}
-	pos = ft_split(tokens[1], ',');
-	normal = ft_split(tokens[2], ',');
-	color = ft_split(tokens[3], ',');
-	
-	if (!pos || !normal || !color)
-	{
-		ft_putstr_fd("Error.\nInvalid plane vector formatting.\n", 2);
-		if (pos)
-			free_tab(pos);
-		if (normal)
-			free_tab(normal);
-		if (color)
-			free_tab(color);
-		free(pl);
-		return (0);
-	}
-	
+	return (0);
+}
+
+static void	assign_plane_point_normal(t_plane *pl, char **pos, char **normal)
+{
 	pl->point.x = atof(pos[0]);
 	pl->point.y = atof(pos[1]);
 	pl->point.z = atof(pos[2]);
-	
 	pl->normal.x = atof(normal[0]);
 	pl->normal.y = atof(normal[1]);
 	pl->normal.z = atof(normal[2]);
+}
+
+static int	fill_plane(char **tokens, t_plane *pl)
+{
+	char	**pos;
+	char	**normal;
+	char	**color;
 	
-	pl->color.r = ft_atoi(color[0]);
-	pl->color.g = ft_atoi(color[1]);
-	pl->color.b = ft_atoi(color[2]);
+	pos = NULL;
+	normal = NULL;
+	color = NULL;
+	if (split_plane_tokens(tokens, &pos, &normal, &color))
+		return (1);
+	assign_plane_point_normal(pl, pos, normal);
+	if (normal_is_unit(pl->normal))
+	{
+		free_multiple_tab(3, pos, normal, color);
+		return (error_msg("plane normal must be normalized.", 1));
+	}
+	if (validate_assign_rgb(&pl->color, color))
+	{
+		free_multiple_tab(3, pos, normal, color);
+		return (1);
+	}
+	free_multiple_tab(3, pos, normal, color);
+	return (0);
+}
+
+int	parse_plane(char **tokens, t_scene *scene)
+{
+	t_plane		*pl;
+	t_object	*obj;
 	
-	free_tab(pos);
-	free_tab(normal);
-	free_tab(color);
-	
+	if (ft_count_size(tokens) != 4)
+		return (error_msg("invalid plane parameter count.", 1));
+	pl = malloc(sizeof(t_plane));
+	if (!pl)
+		return (error_msg("allocation failed for plane.", 1) && 0);
+	if (fill_plane(tokens, pl))
+	{
+		free(pl);
+		return (0);
+	}
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 	{
-		ft_putstr_fd("Error.\nMalloc failed for t_object.\n", 2);
 		free(pl);
-		return (0);
+		return (error_msg("allocation failed for t_object.", 1) && 0);
 	}
 	obj->type = PLANE;
 	obj->element = pl;
@@ -65,6 +84,72 @@ int	parse_plane(char **tokens, t_scene *scene)
 	add_object(scene, obj);
 	return (1);
 }
+
+//int	parse_plane(char **tokens, t_scene *scene)
+//{
+//	t_object	*obj;
+//	t_plane		*pl;
+//	char		**pos;
+//	char		**normal;
+//	char		**color;
+//
+//	if (!tokens[1] || !tokens[2] || !tokens[3])
+//	{
+//		ft_putstr_fd("Error.\nInvalid plane format.", 2);
+//		return (0);
+//	}
+//	pl = malloc(sizeof(t_plane));
+//	if (!pl)
+//	{
+//		ft_putstr_fd("Error.\nMalloc failed when creating plane.", 2);
+//		return (0);
+//	}
+//	pos = ft_split(tokens[1], ',');
+//	normal = ft_split(tokens[2], ',');
+//	color = ft_split(tokens[3], ',');
+//
+//	if (!pos || !normal || !color)
+//	{
+//		ft_putstr_fd("Error.\nInvalid plane vector formatting.\n", 2);
+//		if (pos)
+//			free_tab(pos);
+//		if (normal)
+//			free_tab(normal);
+//		if (color)
+//			free_tab(color);
+//		free(pl);
+//		return (0);
+//	}
+//
+//	pl->point.x = atof(pos[0]);
+//	pl->point.y = atof(pos[1]);
+//	pl->point.z = atof(pos[2]);
+//
+//	pl->normal.x = atof(normal[0]);
+//	pl->normal.y = atof(normal[1]);
+//	pl->normal.z = atof(normal[2]);
+//
+//	pl->color.r = ft_atoi(color[0]);
+//	pl->color.g = ft_atoi(color[1]);
+//	pl->color.b = ft_atoi(color[2]);
+//
+//	free_tab(pos);
+//	free_tab(normal);
+//	free_tab(color);
+//
+//	obj = malloc(sizeof(t_object));
+//	if (!obj)
+//	{
+//		ft_putstr_fd("Error.\nMalloc failed for t_object.\n", 2);
+//		free(pl);
+//		return (0);
+//	}
+//	obj->type = PLANE;
+//	obj->element = pl;
+//	obj->next = NULL;
+//	add_object(scene, obj);
+//	return (1);
+//}
 
 int	parse_sphere(char **tokens, t_scene *scene)
 {
