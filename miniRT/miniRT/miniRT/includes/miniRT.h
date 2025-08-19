@@ -13,7 +13,13 @@
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
 	
- #define	EPSILON 1e-4
+ #define		EPSILON 			1e-4
+ #define		EXIT_SUCCESS_MXL	0
+ #define		EXIT_SUCCESS_KEY	1
+ #define		EXIT_ERROR_MLX 		2
+ #define		EXIT_ERROR_FILE		3
+ #define		EXIT_ERROR_PARAM	4
+ #define		EXIT_ERROR_MALLOC	5
 
 typedef struct	s_point2
 {
@@ -139,6 +145,14 @@ typedef struct	s_hit
 	t_object	*obj;
 }				t_hit;
 
+typedef struct s_quad 
+{
+	double	a;
+	double	b;
+	double	c;
+	double	discriminant;
+}	t_quad;
+
 //init
 //read_file.c
 void	read_file(int fd, t_scene *scene);
@@ -158,6 +172,7 @@ int	validate_assign_rgb(t_color *color, char **rgb);
 int		normal_is_unit(t_vec3 n);
 t_color	parse_color(char *str);
 void	add_object(t_scene *scene, t_object *new);
+int	create_and_fill_obj(t_scene *scene, t_object_type type, void *element);
 
 //hook.c
 int	ft_key_hook(int keycode, t_scene *scene);
@@ -194,10 +209,10 @@ t_color		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是�
 
 //ray_hit.c
 int	hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
-int	hit_sphere(t_ray ray, t_sphere *sphere, t_hit *hit);
-int	hit_cylinder_body(t_ray ray, t_cylinder *cy, t_hit *hit);
-int	hit_cylinder_cap(t_ray ray, t_cylinder *cy, t_hit *hit);
-int	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
+bool	hit_sphere(t_ray ray, t_sphere *sphere, t_hit *hit);
+bool	hit_cylinder_body(t_ray ray, t_cylinder *cy, t_hit *hit);
+bool	hit_cylinder_cap(t_ray ray, t_cylinder *cy, t_hit *hit);
+bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
 
 //ray_utils.c
 t_vec3	ray_at(t_ray ray, double t);

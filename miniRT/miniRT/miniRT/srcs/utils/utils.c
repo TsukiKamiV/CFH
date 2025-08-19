@@ -32,6 +32,10 @@ int	ft_count_size(char **tokens)
 		return (0);
 	count = 0;
 	while (tokens[count])
+	//{
+	//	printf("%s\n", tokens[count]);
+	//	count++;
+	//}
 		count++;
 	return (count);
 }

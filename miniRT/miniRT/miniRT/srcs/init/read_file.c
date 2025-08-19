@@ -29,7 +29,7 @@ static void	dispatch_element(char **tokens, t_scene *scene)
 	else if(ft_strcmp(tokens[0], "cy") == 0)
 		parse_cylinder(tokens, scene);
 	else
-		ft_putstr_fd("Unknown element type\n", 2);
+		close_program(scene, "Error.\nUnknown parameter type in .rt file.\n", EXIT_ERROR_FILE);
 }
 
 void	read_file(int fd, t_scene *scene)
@@ -53,4 +53,8 @@ void	read_file(int fd, t_scene *scene)
 		free(line);
 		line = get_next_line(fd);
 	}
+	if (!scene->amb || !scene->cam || !scene->light)
+		close_program(scene, "Error: missing key element to create the scene.\n", EXIT_ERROR_PARAM);
+	if (!scene->objs)
+		close_program(scene, "Error: at least one object (plane/sphere/cylinder) required.\n", EXIT_ERROR_PARAM);
 }
