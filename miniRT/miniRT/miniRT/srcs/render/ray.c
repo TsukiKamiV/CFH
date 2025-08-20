@@ -107,6 +107,7 @@ t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 	t_hit		tmp;
 	bool		hit;
 	
+	(void)pixel;
 	ft_memset(&closest, 0, sizeof(t_hit));
 	ft_memset(&tmp, 0, sizeof(t_hit));
 	closest.t = INFINITY;

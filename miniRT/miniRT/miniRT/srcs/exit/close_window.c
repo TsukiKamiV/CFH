@@ -11,6 +11,7 @@ void	destroy_display(void *mlx_ptr)
 
 void	destroy_display(void *mlx_ptr)
 {
+	(void)mlx_ptr;
 }
 #endif
 

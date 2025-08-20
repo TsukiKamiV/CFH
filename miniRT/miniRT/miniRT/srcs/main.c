@@ -5,7 +5,7 @@
 //  Created by Luyao Xu on 22/05/2025.
 //
 
-#include "./includes/miniRT.h"
+#include "../includes/miniRT.h"
 /**
  *
  *解析器（parser）解析.rt文件并构建场景结构体

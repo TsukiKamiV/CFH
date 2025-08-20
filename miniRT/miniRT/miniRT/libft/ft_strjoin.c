@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 15:21:22 by luxu              #+#    #+#             */
-/*   Updated: 2024/05/31 18:00:20 by luxu             ###   ########.fr       */
+/*   Updated: 2024/10/06 13:42:59 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,13 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(dest, s1, len1 + 1);
 	ft_strlcat(dest, s2, len1 + len2 + 1);
 	return (dest);
+}
+
+void	ft_strexpand(char **origin, char const *s2)
+{
+	char	*holder;
+
+	holder = *origin;
+	*origin = ft_strjoin(holder, s2);
+	free (holder);
 }

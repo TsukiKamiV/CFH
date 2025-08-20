@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:18:05 by luxu              #+#    #+#             */
-/*   Updated: 2024/06/03 17:14:28 by luxu             ###   ########.fr       */
+/*   Updated: 2024/10/06 13:41:23 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <unistd.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <stdarg.h>
+# include <stdint.h>
 
 typedef struct s_list
 {
@@ -25,7 +27,7 @@ typedef struct s_list
 }				t_list;
 
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 100
+#  define BUFFER_SIZE 100
 # endif
 
 int				ft_isalpha(int c);
@@ -78,6 +80,8 @@ char			*ft_substr(char const *s, unsigned int start, size_t len);
 
 char			*ft_strjoin(char const *s1, char const *s2);
 
+void			ft_strexpand(char **origin, char const *s2);
+
 char			*ft_strtrim(char const *s1, char const *set);
 
 char			**ft_split(char const *s, char c);
@@ -114,14 +118,29 @@ void			ft_lstiter(t_list *lst, void (*f)(void *));
 
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void*));
 
-char	*get_next_line(int fd);
+char			*get_next_line(int fd);
 
-char	*add(char *a, char *b);
+char			*add(char *a, char *b);
 
-char	*add_break(char *a);
+char			*add_break(char *a);
 
-char	*gimme_current(int fd, char **remainder, char **ret_to_free);
+char			*get_current(int fd, char **remainder, char **ret_to_free);
 
-char	*process_current(char **current, char **ret, char **remainder_to_fill);
+char			*process_current(char **current, char **ret, \
+		char **remainder_to_fill);
+
+int				ft_printf(const char *arg, ...);
+
+int				print_char(const char c);
+
+int				print_string(char *s);
+
+int				print_int(int n);
+
+int				print_unsigned(unsigned int nb);
+
+int				print_hex(unsigned int n, const int fmt);
+
+int				print_pointer(void *address);
 
 #endif

@@ -42,11 +42,6 @@ void	put_pixel(t_image *img, int x, int y, t_color color)
 	*(unsigned int *)dst = packed_color;
 }
 
-//int	create_color(int r, int g, int b)
-//{
-//	return ((r << 16) | (g << 8) | b);
-//}
-
 t_color	create_color(int r, int g, int b)
 {
 	t_color	res;

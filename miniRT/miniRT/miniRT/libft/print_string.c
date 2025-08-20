@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memchr.c                                        :+:      :+:    :+:   */
+/*   print_string.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/20 18:32:27 by luxu              #+#    #+#             */
-/*   Updated: 2024/10/03 19:29:40 by luxu             ###   ########.fr       */
+/*   Created: 2024/06/06 19:40:21 by luxu              #+#    #+#             */
+/*   Updated: 2024/10/06 13:35:39 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+int	print_string(char *s)
 {
-	unsigned char	*str;
-	size_t			i;
+	unsigned int	i;
 
-	str = (unsigned char *)s;
 	i = 0;
-	while (i < n)
+	if (!s)
 	{
-		if (str[i] == (unsigned char)c)
-			return ((void *)(s + i));
-		i++;
+		ft_putstr_fd("(null)", 1);
+		return (6);
 	}
-	return (NULL);
+	while (s[i])
+		i++;
+	ft_putstr_fd(s, 1);
+	return (i);
 }

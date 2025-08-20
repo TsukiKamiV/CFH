@@ -81,6 +81,8 @@ int	parse_ambient(char **tokens, t_scene *scene)
 
 static int	parse_cam_pos_orientation(t_scene *scene, char **tokens, char ***pos, char ***orient)
 {
+	t_vec3	tmp_orient;
+	
 	*pos = ft_split(tokens[1], ',');
 	*orient = ft_split(tokens[2], ',');
 	if (!(*pos) || !(*orient) || ft_count_size(*pos) != 3 || ft_count_size(*orient) != 3)
@@ -91,9 +93,15 @@ static int	parse_cam_pos_orientation(t_scene *scene, char **tokens, char ***pos,
 	scene->cam->pos.x = atof((*pos)[0]);
 	scene->cam->pos.y = atof((*pos)[1]);
 	scene->cam->pos.z = atof((*pos)[2]);
-	scene->cam->orient.x = atof((*orient)[0]);
-	scene->cam->orient.y = atof((*orient)[1]);
-	scene->cam->orient.z = atof((*orient)[2]);
+	tmp_orient.x = atof((*orient)[0]);
+	tmp_orient.y = atof((*orient)[1]);
+	tmp_orient.z = atof((*orient)[2]);
+	if (normal_is_unit(tmp_orient))
+	{
+		free_multiple_tab(2, pos, orient);
+		close_program(scene, "Error: camera orient must be normalized.\n", EXIT_ERROR_PARAM);
+	}
+	scene->cam->orient = tmp_orient;
 	return (0);
 }
 
@@ -101,7 +109,8 @@ int	parse_camera(char **tokens, t_scene *scene)
 {
 	char	**pos;
 	char	**orient;
-	double	len;
+	double	tmp_fov;
+	//double	len;
 	
 	if (ft_count_size(tokens) != 4)
 		close_program(scene, "Error: invalid camera parameter number.\n", EXIT_ERROR_PARAM);
@@ -110,18 +119,21 @@ int	parse_camera(char **tokens, t_scene *scene)
 		close_program(scene, "Error: allocation failed for t_camera.\n", EXIT_ERROR_MALLOC);
 	if (parse_cam_pos_orientation(scene, tokens, &pos, &orient))
 		return (1);
-	len = vec3_length(scene->cam->orient);
-	if (len < 0.99 || len > 1.01)
-	{
-		free_multiple_tab(2, pos, orient);
-		close_program(scene, "Error: camera orientation must be normalized.\n", EXIT_ERROR_PARAM);
-	}
-	scene->cam->fov = atof(tokens[3]);
-	if (scene->cam->fov < 0.0 || scene->cam->fov > 180.0)
+	//len = vec3_length(scene->cam->orient);
+	//if (len < 0.99 || len > 1.01)
+	//{
+	//if (normal_is_unit(scene->cam->orient))
+	//{
+	//	free_multiple_tab(2, pos, orient);
+	//	close_program(scene, "Error: camera orientation must be normalized.\n", EXIT_ERROR_PARAM);
+	//}
+	tmp_fov = atof(tokens[3]);
+	if (tmp_fov < 0.0 || tmp_fov > 180.0)
 	{
 		free_multiple_tab(2, pos, orient);
 		close_program(scene, "Error: camera FOV out of range.\n", EXIT_ERROR_PARAM);
 	}
+	scene->cam->fov = tmp_fov;
 	free_multiple_tab(2, pos, orient);
 	return (0);
 }
@@ -220,8 +232,8 @@ static int	validate_light_ratio(t_scene *scene, char *s, double *out_ratio)
 	
 	val = strtod(s, NULL);
 	if (val < 0.0 || val > 1.0)
-		//close_program(scene, "Error: light ratio out of range.\n", EXIT_ERROR_PARAM);
-		return (error_msg("light ratio out of range.", 1));
+		close_program(scene, "Error: light ratio out of range.\n", EXIT_ERROR_PARAM);
+		//return (error_msg("light ratio out of range.", 1));
 	*out_ratio = val;
 	return (0);
 }

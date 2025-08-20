@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:50:12 by luxu              #+#    #+#             */
-/*   Updated: 2024/05/31 17:33:47 by luxu             ###   ########.fr       */
+/*   Updated: 2024/10/03 19:26:11 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	ft_atoi(const char *nptr)
 {
-	int	i;
-	int	sign;
-	int	nbr;
+	int				i;
+	int				sign;
+	int				nbr;
 	unsigned char	*str;
 
 	str = (unsigned char *)nptr;

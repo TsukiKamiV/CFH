@@ -186,14 +186,13 @@ int		ft_count_size(char **tokens);
 void	free_multiple_tab(int count, ...);
 void	free_tab(char **tab);
 
-//error.c
-int	error_msg(const char *msg, int ret);
-
-//image
 //img_utils
 t_image	*create_image(t_scene *scene);
 void	put_pixel(t_image *img, int x, int y, t_color color);
 t_color		create_color(int r, int g, int b);
+
+//error.c
+int	error_msg(const char *msg, int ret);
 
 //render
 //render_scene.c
