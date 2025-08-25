@@ -26,6 +26,7 @@ int	parse_ambient(char **tokens, t_scene *scene)
 	return (0);
 }
 
+/*
 //int	parse_ambient(char **tokens, t_scene *scene)
 //{
 //	char	**rgb;
@@ -68,7 +69,7 @@ int	parse_ambient(char **tokens, t_scene *scene)
 //	//scene->amb->color.b = ft_atoi(rgb[2]);
 //	free_tab(rgb);
 //	return (0);
-//}
+//}*/
 
 /**
  * Camera参数
@@ -138,6 +139,7 @@ int	parse_camera(char **tokens, t_scene *scene)
 	return (0);
 }
 
+/*
 //int	parse_camera(char **tokens, t_scene *scene)
 //{
 //	char	**pos;
@@ -195,7 +197,7 @@ int	parse_camera(char **tokens, t_scene *scene)
 //	//free_tab(pos);
 //	//free_tab(orient);
 //	return (0);
-//}
+//}*/
 
 static int	parse_light_pos_color(t_scene *scene, char **tokens, char ***pos, char ***rgb)
 {
