@@ -266,7 +266,7 @@ int	parse_light(char **tokens, t_scene *scene)
 	return (0);
 }
 
-
+/*
 //int	parse_light(char **tokens, t_scene *scene)
 //{
 //	char	**pos;
@@ -349,3 +349,4 @@ int	parse_light(char **tokens, t_scene *scene)
 //	free_multiple_tab(2, pos, rgb);
 //	return (0);
 //}
+*/

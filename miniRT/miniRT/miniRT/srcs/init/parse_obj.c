@@ -231,6 +231,7 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 	}
 	return (create_and_fill_obj(scene, CYLINDER, cy));
 }
+/*
 //int	parse_plane(char **tokens, t_scene *scene)
 //{
 //	t_object	*obj;
@@ -419,4 +420,4 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 //	obj->next = NULL;
 //	add_object(scene, obj);
 //	return (1);
-//}
+//}*/
