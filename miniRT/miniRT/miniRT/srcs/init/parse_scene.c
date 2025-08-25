@@ -21,7 +21,10 @@ int	parse_ambient(char **tokens, t_scene *scene)
 		close_program(scene, "Error: ambient ratio out of range.\n", EXIT_ERROR_PARAM);
 	rgb = ft_split(tokens[2], ',');
 	if (validate_assign_rgb(&scene->amb->color, rgb))
+	{
+		free_tab(rgb);
 		close_program(scene, NULL, EXIT_ERROR_PARAM);
+	}
 	free_tab(rgb);
 	return (0);
 }
