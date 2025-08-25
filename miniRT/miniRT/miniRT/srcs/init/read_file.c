@@ -196,8 +196,13 @@ static int	line_has_illegal_character(char *line)
 	int		i;
 	
 	tokens = ft_split(line, ' ');
-	if (!tokens || !tokens[0])
+	if (!tokens)
 		return (1);
+	if (!tokens[0])
+	{
+		free_tab(tokens);
+		return (1);
+	}
 	i = 1;
 	while (tokens[i])
 	{
@@ -230,13 +235,41 @@ static void	dispatch_element(char **tokens, t_scene *scene)
 		close_program(scene, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
 }
 
+
+static int	is_valid_key(const char *s)
+{
+	if (!s)
+		return (0);
+	if (ft_strcmp(s, "A") == 0)
+		return (1);
+	if (ft_strcmp(s, "C") == 0)
+		return (1);
+	if (ft_strcmp(s, "L") == 0)
+		return (1);
+	if (ft_strcmp(s, "sp") == 0)
+		return (1);
+	if (ft_strcmp(s, "pl") == 0)
+		return (1);
+	if (ft_strcmp(s, "cy") == 0)
+		return (1);
+	return (0);
+}
+
 static void	dispatch_valid_line(char *line, t_scene *scene)
 {
 	char	**tokens;
 	
 	tokens = ft_split(line, ' ');
 	if (tokens && tokens[0])
+	{
+		if (!is_valid_key(tokens[0]))
+		{
+			free_tab(tokens);
+			free(line);
+			close_program(scene, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
+		}
 		dispatch_element(tokens, scene);
+	}
 	free_tab(tokens);
 	free(line);
 }
@@ -250,6 +283,18 @@ static void	strip_newline(char *line)
 	len = ft_strlen(line);
 	if (len > 0 && line[len - 1] == '\n')
 		line[len - 1] = '\0';
+}
+
+static void	gnl_drain(int fd)
+{
+	char	*tmp;
+	
+	tmp = get_next_line(fd);
+	while (tmp)
+	{
+		free(tmp);
+		tmp = get_next_line(fd);
+	}
 }
 
 void	read_file(int fd, t_scene *scene)
@@ -269,6 +314,7 @@ void	read_file(int fd, t_scene *scene)
 		}
 		if (line_has_illegal_character(line))
 		{
+			gnl_drain(fd);
 			free (line);
 			close_program(scene, "Error: illegal character found in rt file.\n", EXIT_ERROR_PARAM);
 		}
