@@ -34,29 +34,42 @@ static int	load_rt_file(const char *filename, t_scene *scene)
 	
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		close_program(scene, "Error\nFailed to load .rt file.\n", EXIT_ERROR_FILE);
+		close_program(scene, "Error: failed to load .rt file.\n", EXIT_ERROR_FILE);
 		//return (error_msg("failed to load .rt file.", 1));
 	read_file(fd, scene);
 	close(fd);
 	return (0);
 }
 
-int main(int argc, const char * argv[])
+int	verify_arg(int argc, char *argv[])
+{
+	size_t	argv_len;
+	
+	if (argc != 2)
+		return (1);
+	argv_len = ft_strlen(argv[1]);
+	if (!ft_strnstr(&argv[1][argv_len - 3], ".rt", 3))
+		return (1);
+	return (0);
+}
+
+int main(int argc, char *argv[])
 {
 	//int			fd;
 	t_scene		*scene;
 	
-	if (argc != 2)
+	if (verify_arg(argc, argv))
 		return (error_msg("usage: ./miniRT scene.rt", 1));
 	scene = malloc(sizeof(t_scene));
 	if (!scene)
 		return (error_msg("memory allocation failed", 1));
 	ft_memset(scene, 0, sizeof(t_scene));
-	if (init_mlx_and_window(scene))
-		return (close_program(scene, NULL, EXIT_ERROR_MLX));
+	//if (init_mlx_and_window(scene))
+	//	return (close_program(scene, NULL, EXIT_ERROR_MLX));
 	if (load_rt_file(argv[1], scene))
 		return (close_program(scene, NULL, EXIT_ERROR_FILE));
-	
+	if (init_mlx_and_window(scene))
+		return (close_program(scene, NULL, EXIT_ERROR_MLX));
 	//scene->mlx_ptr = mlx_init();
 	//if (!scene->mlx_ptr)
 	//	return (close_program(scene, "mlx initiation failed", 1));
