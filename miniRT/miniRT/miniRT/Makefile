@@ -15,9 +15,9 @@ MLX = ./mlx/libmlx.a
 # 编译器与参数
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I$(INC)
-#MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
+MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
 # 如果你在Linux上编译，则取消下面一行注释并注释掉上面一行
-MLX_FLAGS = -Lmlx -lmlx -lX11 -lXext -lm
+#MLX_FLAGS = -Lmlx -lmlx -lX11 -lXext -lm
 
 # 源文件
 SRC_FILES = \
