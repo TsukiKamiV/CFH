@@ -268,13 +268,12 @@ static void	dispatch_valid_line(char *line, t_scene *scene)
 			free(line);
 			close_program(scene, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
 		}
-		free (line);
 		dispatch_element(tokens, scene);
 		free_tab(tokens);
 		return ;
 	}
 	free_tab(tokens);
-	//free(line);
+	free(line);
 }
 
 static void	strip_newline(char *line)
@@ -321,7 +320,7 @@ void	read_file(int fd, t_scene *scene)
 			free (line);
 			close_program(scene, "Error: illegal character found in rt file.\n", EXIT_ERROR_PARAM);
 		}
-		free (line);
+		//free (line);
 		dispatch_valid_line(line, scene);
 		//tokens = ft_split(line, ' ');
 		//if (tokens && tokens[0])
