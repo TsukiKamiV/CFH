@@ -31,8 +31,7 @@ int	parse_ambient(char **tokens, t_scene *scene)
 	rgb = ft_split(tokens[2], ',');
 	if (validate_assign_rgb(&scene->amb->color, rgb))
 	{
-		free_tab(tokens);
-		free_tab(rgb);
+		free_multiple_tab(2, tokens, rgb);
 		close_program(scene, NULL, EXIT_ERROR_PARAM);
 	}
 	free_tab(rgb);
