@@ -13,15 +13,25 @@ int	parse_ambient(char **tokens, t_scene *scene)
 	
 	scene->amb = malloc(sizeof(t_ambient));
 	if (!scene->amb)
+	{
+		free_tab(tokens);
 		close_program(scene, "Error: memory allocation failed.\n", EXIT_ERROR_MALLOC);
+	}
 	if (ft_count_size(tokens) != 3)
+	{
+		free_tab(tokens);
 		close_program(scene, "Error: invalid ambient parameter number.\n", EXIT_ERROR_PARAM);
+	}
 	scene->amb->ratio = strtod(tokens[1], NULL);
 	if (scene->amb->ratio < 0.0 || scene->amb->ratio > 1.0)
+	{
+		free_tab(tokens);
 		close_program(scene, "Error: ambient ratio out of range.\n", EXIT_ERROR_PARAM);
+	}
 	rgb = ft_split(tokens[2], ',');
 	if (validate_assign_rgb(&scene->amb->color, rgb))
 	{
+		free_tab(tokens);
 		free_tab(rgb);
 		close_program(scene, NULL, EXIT_ERROR_PARAM);
 	}
