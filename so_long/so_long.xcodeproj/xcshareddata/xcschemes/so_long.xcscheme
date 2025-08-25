@@ -74,7 +74,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_empty.ber"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_empty_line_2.ber"
@@ -86,7 +86,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_valid_2.ber"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "/Users/luyao/Projects/CFH/so_long_bak/assets/maps/map_invalid_item.ber"
