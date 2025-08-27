@@ -3,3 +3,5 @@
 *.xcodeproj
 *.o
 /miniRT/miniRT/miniRT/mlx*/
+/miniRT/miniRT/miniRT/Makefile
+/miniRT/miniRT/miniRT/mlx_linux*/
