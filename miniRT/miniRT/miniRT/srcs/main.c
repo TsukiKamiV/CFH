@@ -35,11 +35,11 @@ static int	load_rt_file(const char *filename, t_scene *scene)
 	
 	ok = read_all_lines(filename, &ls);
 	if (!ok)
-		return (error_msg("open/read failed.", 1));
+		return (0);
 	ok = parse_scene_from_lines(&ls, scene);
 	free_lines(&ls);
 	if (!ok)
-		return (error_msg("parse failed", 1));
+		return (0);
 	return (1);
 }
 
