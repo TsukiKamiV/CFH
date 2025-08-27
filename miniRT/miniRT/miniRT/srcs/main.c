@@ -30,15 +30,17 @@ static int	init_mlx_and_window(t_scene *scene)
 
 static int	load_rt_file(const char *filename, t_scene *scene)
 {
-	int	fd;
+	int		ok;
+	t_lines	ls;
 	
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-		close_program(scene, "Error: failed to load .rt file.\n", EXIT_ERROR_FILE);
-		//return (error_msg("failed to load .rt file.", 1));
-	read_file(fd, scene);
-	close(fd);
-	return (0);
+	ok = read_all_lines(filename, &ls);
+	if (!ok)
+		return (error_msg("open/read failed.", 1));
+	ok = parse_scene_from_lines(&ls, scene);
+	free_lines(&ls);
+	if (!ok)
+		return (error_msg("parse failed", 1));
+	return (1);
 }
 
 int	verify_arg(int argc, char *argv[])
@@ -66,7 +68,7 @@ int main(int argc, char *argv[])
 	ft_memset(scene, 0, sizeof(t_scene));
 	//if (init_mlx_and_window(scene))
 	//	return (close_program(scene, NULL, EXIT_ERROR_MLX));
-	if (load_rt_file(argv[1], scene))
+	if (!load_rt_file(argv[1], scene))
 		return (close_program(scene, NULL, EXIT_ERROR_FILE));
 	if (init_mlx_and_window(scene))
 		return (close_program(scene, NULL, EXIT_ERROR_MLX));

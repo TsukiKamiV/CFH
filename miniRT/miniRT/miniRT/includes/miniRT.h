@@ -21,6 +21,12 @@
  #define		EXIT_ERROR_PARAM	4
  #define		EXIT_ERROR_MALLOC	5
 
+typedef struct	s_lines
+{
+	char	**arr;
+	int		count;
+}				t_lines;
+
 typedef struct	s_point2
 {
 	int	x;
@@ -156,6 +162,11 @@ typedef struct s_quad
 //init
 //read_file.c
 void	read_file(int fd, t_scene *scene);
+void	dispatch_element(char **tokens, t_scene *scene);
+int		read_all_lines(const char *filename, t_lines *out);
+int		parse_scene_from_lines(t_lines *ls, t_scene *scene);
+void	free_lines(t_lines *ls);
+int		line_has_illegal_character(char *line);
 
 //parse_scene.c
 int	parse_ambient(char **tokens, t_scene *scene);
