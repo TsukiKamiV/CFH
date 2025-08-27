@@ -14,28 +14,51 @@ static int	is_line_empty(char *line)
 	return (1);
 }
 
-static int	push_line(t_lines *ls, char *line)
+static int	push_line(t_params *ls, char *line)
 {
-	char	**new_arr;
-	int		i;
+	t_line	*node;
 	
-	new_arr = (char **)malloc(sizeof(char *) * (ls->count + 2));
-	if (!new_arr)
-		return (0);
-	i = 0;
-	while (i < ls->count)
+	node = (t_line *)malloc(sizeof(t_line));
+	if (!node)
+		return (error_msg("malloc failed for inputting params", 0));
+	node->s = line;
+	node->next = NULL;
+	if (!ls->head)
 	{
-		new_arr[i] = ls->arr[i];
-		i++;
+		ls->head = node;
+		ls->tail = node;
 	}
-	new_arr[i] = line;
-	new_arr[i + 1] = NULL;
-	if (ls->arr)
-		free (ls->arr);
-	ls->arr = new_arr;
-	ls->count = ls->count + 1;
+	else
+	{
+		ls->tail->next = node;
+		ls->tail = node;
+	}
+	ls->count++;
 	return (1);
 }
+
+//static int	push_line(t_lines *ls, char *line)
+//{
+//	char	**new_arr;
+//	int		i;
+//
+//	new_arr = (char **)malloc(sizeof(char *) * (ls->count + 2));
+//	if (!new_arr)
+//		return (0);
+//	i = 0;
+//	while (i < ls->count)
+//	{
+//		new_arr[i] = ls->arr[i];
+//		i++;
+//	}
+//	new_arr[i] = line;
+//	new_arr[i + 1] = NULL;
+//	if (ls->arr)
+//		free (ls->arr);
+//	ls->arr = new_arr;
+//	ls->count = ls->count + 1;
+//	return (1);
+//}
 
 static void	trim_newline(char *s)
 {
@@ -55,13 +78,14 @@ static void	trim_newline(char *s)
 	}
 }
 
-int	read_all_lines(const char *filename, t_lines *out)
+int	read_all_lines(const char *filename, t_params *out)
 {
 	int		fd;
 	char	*line;
 	int		ok;
 	
-	out->arr = NULL;
+	out->head = NULL;
+	out->tail = NULL;
 	out->count = 0;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -74,46 +98,104 @@ int	read_all_lines(const char *filename, t_lines *out)
 		{
 			free (line);
 			line = get_next_line(fd);
-			continue ;
+			continue;
 		}
 		ok = push_line(out, line);
 		if (!ok)
 		{
 			free (line);
 			close (fd);
+			free_lines(out);
 			return (0);
 		}
 		line = get_next_line(fd);
 	}
 	if (line)
 		free (line);
-	close (fd);
+	close(fd);
 	return (1);
 }
 
-static void	exit_with_lines(t_scene *scene, t_lines *ls, const char *msg, int code)
+//int	read_all_lines(const char *filename, t_lines *out)
+//{
+//	int		fd;
+//	char	*line;
+//	int		ok;
+//
+//	out->arr = NULL;
+//	out->count = 0;
+//	fd = open(filename, O_RDONLY);
+//	if (fd < 0)
+//		return (0);
+//	line = get_next_line(fd);
+//	while (line)
+//	{
+//		trim_newline(line);
+//		if (is_line_empty(line))
+//		{
+//			free (line);
+//			line = get_next_line(fd);
+//			continue ;
+//		}
+//		ok = push_line(out, line);
+//		if (!ok)
+//		{
+//			free (line);
+//			close (fd);
+//			return (0);
+//		}
+//		line = get_next_line(fd);
+//	}
+//	if (line)
+//		free (line);
+//	close (fd);
+//	return (1);
+//}
+
+static void	exit_with_lines(t_scene *scene, t_params *ls, const char *msg, int code)
 {
 	free_lines(ls);
 	close_program(scene, msg, code);
 }
 
-void	free_lines(t_lines *ls)
+void	free_lines(t_params *ls)
 {
-	int	i;
+	t_line	*cur;
+	t_line	*next;
 	
-	if (!ls || !ls->arr)
+	if (!ls)
 		return ;
-	i = 0;
-	while (i < ls->count)
+	cur = ls->head;
+	while (cur)
 	{
-		if (ls->arr[i])
-			free (ls->arr[i]);
-		i++;
+		next = cur->next;
+		if (cur->s)
+			free (cur->s);
+		free (cur);
+		cur = next;
 	}
-	free (ls->arr);
-	ls->arr = NULL;
+	ls->head = NULL;
+	ls->tail = NULL;
 	ls->count = 0;
 }
+
+//void	free_lines(t_lines *ls)
+//{
+//	int	i;
+//
+//	if (!ls || !ls->arr)
+//		return ;
+//	i = 0;
+//	while (i < ls->count)
+//	{
+//		if (ls->arr[i])
+//			free (ls->arr[i]);
+//		i++;
+//	}
+//	free (ls->arr);
+//	ls->arr = NULL;
+//	ls->count = 0;
+//}
 
 static int	is_valid_key(const char *s)
 {
@@ -134,46 +216,76 @@ static int	is_valid_key(const char *s)
 	return (0);
 }
 
-static int all_lines_empty(t_lines *ls)
+static int	all_lines_empty(t_params *ls)
 {
-	int	i;
+	t_line	*cur;
 	
 	if (!ls || ls->count == 0)
 		return (1);
-	i = 0;
-	while (i < ls->count)
+	cur = ls->head;
+	while (cur)
 	{
-		if (!is_line_empty(ls->arr[i]))
+		if (!is_line_empty(cur->s))
 			return (0);
-		i++;
+		cur = cur->next;
 	}
 	return (1);
 }
 
-static void	validate_scene_or_exit(t_scene *scene)
+//static int all_lines_empty(t_lines *ls)
+//{
+//	int	i;
+//
+//	if (!ls || ls->count == 0)
+//		return (1);
+//	i = 0;
+//	while (i < ls->count)
+//	{
+//		if (!is_line_empty(ls->arr[i]))
+//			return (0);
+//		i++;
+//	}
+//	return (1);
+//}
+
+//static void	validate_scene_or_exit(t_scene *scene, t_params *ls)
+//{
+//	if (!scene->amb || !scene->cam || !scene->light)
+//		close_program(scene, "Error: missing key element to create the //scene.\n", EXIT_ERROR_PARAM);
+//	if (!scene->objs)
+//		close_program(scene, "Error: at least one object //(plane/sphere/cylinder) required.\n", EXIT_ERROR_PARAM);
+//}
+
+static void validate_scene_or_exit(t_scene *scene, t_params *ls)
 {
 	if (!scene->amb || !scene->cam || !scene->light)
-		close_program(scene, "Error: missing key element to create the scene.\n", EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls,
+						"Error: missing key element to create the scene.\n",
+						EXIT_ERROR_PARAM);
 	if (!scene->objs)
-		close_program(scene, "Error: at least one object (plane/sphere/cylinder) required.\n", EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls,
+						"Error: at least one object (plane/sphere/cylinder) required.\n",
+						EXIT_ERROR_PARAM);
 }
 
-int	parse_scene_from_lines(t_lines *ls, t_scene *scene)
+int parse_scene_from_lines(t_params *ls, t_scene *scene)
 {
-	int		i;
-	char	*line;
-	char	**tokens;
+	t_line  *cur;
+	char    *line;
+	char    **tokens;
 	
 	if (all_lines_empty(ls))
 		exit_with_lines(scene, ls, "Error: empty rt file.\n", EXIT_ERROR_FILE);
-	i = 0;
-	while (i < ls->count)
+	cur = ls->head;
+	while (cur)
 	{
-		line = ls->arr[i];
+		line = cur->s;
 		if (!is_line_empty(line))
 		{
 			if (line_has_illegal_character(line))
-				close_program(scene, "Error: illegal character found in rt file.\n", EXIT_ERROR_PARAM);
+				exit_with_lines(scene, ls,
+								"Error: illegal character found in rt file.\n",
+								EXIT_ERROR_PARAM);
 			tokens = ft_split(line, ' ');
 			if (!tokens)
 				return (0);
@@ -185,11 +297,44 @@ int	parse_scene_from_lines(t_lines *ls, t_scene *scene)
 			dispatch_element(tokens, scene);
 			free_tab(tokens);
 		}
-		i++;
+		cur = cur->next;
 	}
-	validate_scene_or_exit(scene);
+	validate_scene_or_exit(scene, ls);
 	return (1);
 }
+
+//int	parse_scene_from_lines(t_lines *ls, t_scene *scene)
+//{
+//	int		i;
+//	char	*line;
+//	char	**tokens;
+//
+//	if (all_lines_empty(ls))
+//		exit_with_lines(scene, ls, "Error: empty rt file.\n", //EXIT_ERROR_FILE);
+//	i = 0;
+//	while (i < ls->count)
+//	{
+//		line = ls->arr[i];
+//		if (!is_line_empty(line))
+//		{
+//			if (line_has_illegal_character(line))
+//				close_program(scene, "Error: illegal character found in rt //file.\n", EXIT_ERROR_PARAM);
+//			tokens = ft_split(line, ' ');
+//			if (!tokens)
+//				return (0);
+//			if (!is_valid_key(tokens[0]))
+//			{
+//				free_tab(tokens);
+//				return (error_msg("key element type error", 1) && 0);
+//			}
+//			dispatch_element(tokens, scene);
+//			free_tab(tokens);
+//		}
+//		i++;
+//	}
+//	validate_scene_or_exit(scene);
+//	return (1);
+//}
 
 
 

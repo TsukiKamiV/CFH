@@ -30,18 +30,39 @@ static int	init_mlx_and_window(t_scene *scene)
 
 static int	load_rt_file(const char *filename, t_scene *scene)
 {
-	int		ok;
-	t_lines	ls;
+	int			ok;
+	t_params	ls;
 	
+	ls.head = NULL;
+	ls.tail = NULL;
+	ls.count = 0;
 	ok = read_all_lines(filename, &ls);
 	if (!ok)
 		return (0);
 	ok = parse_scene_from_lines(&ls, scene);
-	free_lines(&ls);
 	if (!ok)
+	{
+		free_lines(&ls);
 		return (0);
+	}
+	free_lines(&ls);
 	return (1);
 }
+
+//static int	load_rt_file(const char *filename, t_scene *scene)
+//{
+//	int		ok;
+//	t_lines	ls;
+//
+//	ok = read_all_lines(filename, &ls);
+//	if (!ok)
+//		return (0);
+//	ok = parse_scene_from_lines(&ls, scene);
+//	free_lines(&ls);
+//	if (!ok)
+//		return (0);
+//	return (1);
+//}
 
 int	verify_arg(int argc, char *argv[])
 {
