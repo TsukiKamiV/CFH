@@ -2,3 +2,4 @@
 *.xcuserstate
 *.xcodeproj
 *.o
+/miniRT/miniRT/miniRT/mlx*/
