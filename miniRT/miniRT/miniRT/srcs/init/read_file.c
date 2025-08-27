@@ -70,6 +70,12 @@ int	read_all_lines(const char *filename, t_lines *out)
 	while (line)
 	{
 		trim_newline(line);
+		if (is_line_empty(line))
+		{
+			free (line);
+			line = get_next_line(fd);
+			continue ;
+		}
 		ok = push_line(out, line);
 		if (!ok)
 		{
@@ -79,8 +85,16 @@ int	read_all_lines(const char *filename, t_lines *out)
 		}
 		line = get_next_line(fd);
 	}
+	if (line)
+		free (line);
 	close (fd);
 	return (1);
+}
+
+static void	exit_with_lines(t_scene *scene, t_lines *ls, const char *msg, int code)
+{
+	free_lines(ls);
+	close_program(scene, msg, code);
 }
 
 void	free_lines(t_lines *ls)
@@ -151,7 +165,7 @@ int	parse_scene_from_lines(t_lines *ls, t_scene *scene)
 	char	**tokens;
 	
 	if (all_lines_empty(ls))
-		close_program(scene, "Error: empty rt file.\n", EXIT_ERROR_FILE);
+		exit_with_lines(scene, ls, "Error: empty rt file.\n", EXIT_ERROR_FILE);
 	i = 0;
 	while (i < ls->count)
 	{
