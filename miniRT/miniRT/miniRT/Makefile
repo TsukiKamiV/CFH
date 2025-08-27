@@ -14,10 +14,28 @@ MLX = ./mlx/libmlx.a
 
 # 编译器与参数
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I$(INC)
+#CFLAGS = -Wall -Wextra -Werror -I$(INC)
 #MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
 # 如果你在Linux上编译，则取消下面一行注释并注释掉上面一行
-MLX_FLAGS = -Lmlx -lmlx -lX11 -lXext -lm
+#MLX_FLAGS = -Lmlx -lmlx -lX11 -lXext -lm
+
+# 编译器与参数（自动检测平台；可用 make TARGET_OS=Linux 或 TARGET_OS=Darwin 覆盖）
+CFLAGS  = -Wall -Wextra -Werror -I$(INC)
+
+# 平台检测：默认取 uname -s；允许用 TARGET_OS 手动覆盖（Darwin 或 Linux）
+TARGET_OS ?= $(shell uname -s)
+
+ifeq ($(TARGET_OS),Darwin)
+    # macOS 使用 Cocoa 版 MiniLibX
+    MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
+    CFLAGS   += -DMRT_MACOS
+else ifeq ($(TARGET_OS),Linux)
+    # Linux 使用 X11 版 MiniLibX
+    MLX_FLAGS = -Lmlx -lmlx -lX11 -lXext -lm
+    CFLAGS   += -DMRT_LINUX
+else
+    $(error Unsupported OS: $(TARGET_OS). Use TARGET_OS=Darwin or TARGET_OS=Linux)
+endif
 
 # 源文件
 SRC_FILES = \
