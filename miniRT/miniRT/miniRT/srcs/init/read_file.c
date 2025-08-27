@@ -266,14 +266,17 @@ static void	dispatch_valid_line(char *line, t_scene *scene)
 		{
 			free_tab(tokens);
 			free(line);
+			//printf("line < %s > is freed", line);
 			close_program(scene, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
 		}
+		free (line);
 		dispatch_element(tokens, scene);
 		free_tab(tokens);
 		return ;
 	}
 	free_tab(tokens);
 	free(line);
+	//printf("line < %s > is freed", line);
 }
 
 static void	strip_newline(char *line)
@@ -295,6 +298,7 @@ static void	gnl_drain(int fd)
 	while (tmp)
 	{
 		free(tmp);
+		printf("line %s is freed.\n", tmp);
 		tmp = get_next_line(fd);
 	}
 }
@@ -329,6 +333,7 @@ void	read_file(int fd, t_scene *scene)
 		//free(line);
 		line = get_next_line(fd);
 	}
+	//gnl_drain(fd);
 	if (!scene->amb || !scene->cam || !scene->light)
 		close_program(scene, "Error: missing key element to create the scene.\n", EXIT_ERROR_PARAM);
 	if (!scene->objs)
