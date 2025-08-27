@@ -298,7 +298,6 @@ static void	gnl_drain(int fd)
 	while (tmp)
 	{
 		free(tmp);
-		printf("line %s is freed.\n", tmp);
 		tmp = get_next_line(fd);
 	}
 }
