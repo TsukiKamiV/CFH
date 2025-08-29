@@ -81,3 +81,27 @@ int	create_and_fill_obj(t_scene *scene, t_object_type type, void *element)
 	add_object(scene, obj);
 	return (1);
 }
+
+void	free_lines(t_params *ls)
+{
+	int	i;
+	
+	if (!ls || !ls->tab)
+		return ;
+	i = 0;
+	while (i < ls->count)
+	{
+		if (ls->tab[i])
+			free (ls->tab[i]);
+		i++;
+	}
+	free (ls->tab);
+	ls->tab = NULL;
+	ls->count = 0;
+}
+
+void	exit_with_lines(t_scene *scene, t_params *ls, const char *msg, int code)
+{
+	free_lines(ls);
+	close_program(scene, msg, code);
+}

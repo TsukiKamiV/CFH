@@ -33,9 +33,6 @@ static int	load_rt_file(const char *filename, t_scene *scene)
 	int			ok;
 	t_params	ls;
 	
-	ls.head = NULL;
-	ls.tail = NULL;
-	ls.count = 0;
 	ok = read_all_lines(filename, &ls);
 	if (!ok)
 		return (0);

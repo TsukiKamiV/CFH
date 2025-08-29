@@ -7,7 +7,7 @@
  * rgb范围 0 ～ 255 （含）
  */
 
-int	parse_ambient(char **tokens, t_scene *scene)
+int	parse_ambient(char **tokens, t_scene *scene, t_params *ls)
 {
 	char	**rgb;
 	
@@ -15,24 +15,24 @@ int	parse_ambient(char **tokens, t_scene *scene)
 	if (!scene->amb)
 	{
 		free_tab(tokens);
-		close_program(scene, "Error: memory allocation failed.\n", EXIT_ERROR_MALLOC);
+		exit_with_lines(scene, ls, "Error: memory allocation failed.\n", EXIT_ERROR_MALLOC);
 	}
 	if (ft_count_size(tokens) != 3)
 	{
 		free_tab(tokens);
-		close_program(scene, "Error: invalid ambient parameter number.\n", EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "Error: invalid ambient parameter number.\n", EXIT_ERROR_PARAM);
 	}
 	scene->amb->ratio = strtod(tokens[1], NULL);
 	if (scene->amb->ratio < 0.0 || scene->amb->ratio > 1.0)
 	{
 		free_tab(tokens);
-		close_program(scene, "Error: ambient ratio out of range.\n", EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "Error: ambient ratio out of range.\n", EXIT_ERROR_PARAM);
 	}
 	rgb = ft_split(tokens[2], ',');
 	if (validate_assign_rgb(&scene->amb->color, rgb))
 	{
 		free_multiple_tab(2, tokens, rgb);
-		close_program(scene, NULL, EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
 	}
 	free_tab(rgb);
 	return (0);
@@ -92,33 +92,69 @@ int	parse_ambient(char **tokens, t_scene *scene)
  * 视角：0 ～ 180（度）
  */
 
-static int	parse_cam_pos_orientation(t_scene *scene, char **tokens, char ***pos, char ***orient)
+//static int	parse_cam_pos_orientation(t_scene *scene, char **tokens, char ***pos, char ***orient)
+//{
+//	t_vec3	tmp_orient;
+//
+//	*pos = ft_split(tokens[1], ',');
+//	*orient = ft_split(tokens[2], ',');
+//	if (!(*pos) || !(*orient) || ft_count_size(*pos) != 3 || ft_count_size(*orient) != 3)
+//	{
+//		free_multiple_tab(2, pos, orient);
+//		close_program(scene, "Error: invalid camera parameter formatting.\n", EXIT_ERROR_PARAM);
+//	}
+//	scene->cam->pos.x = atof((*pos)[0]);
+//	scene->cam->pos.y = atof((*pos)[1]);
+//	scene->cam->pos.z = atof((*pos)[2]);
+//	tmp_orient.x = atof((*orient)[0]);
+//	tmp_orient.y = atof((*orient)[1]);
+//	tmp_orient.z = atof((*orient)[2]);
+//	if (normal_is_unit(tmp_orient))
+//	{
+//		free_multiple_tab(2, pos, orient);
+//		close_program(scene, "Error: camera orient must be normalized.\n", EXIT_ERROR_PARAM);
+//	}
+//	scene->cam->orient = tmp_orient;
+//	return (0);
+//}
+
+static int	parse_cam_pos(t_scene *scene, char **tokens, char ***pos, t_params *ls)
 {
-	t_vec3	tmp_orient;
-	
 	*pos = ft_split(tokens[1], ',');
-	*orient = ft_split(tokens[2], ',');
-	if (!(*pos) || !(*orient) || ft_count_size(*pos) != 3 || ft_count_size(*orient) != 3)
+	if (!(*pos) || ft_count_size(*pos) != 3)
 	{
-		free_multiple_tab(2, pos, orient);
-		close_program(scene, "Error: invalid camera parameter formatting.\n", EXIT_ERROR_PARAM);
+		free_tab(*pos);
+		exit_with_lines(scene, ls, "Error: invalid camera position formatting.\n", EXIT_ERROR_PARAM);
 	}
 	scene->cam->pos.x = atof((*pos)[0]);
 	scene->cam->pos.y = atof((*pos)[1]);
 	scene->cam->pos.z = atof((*pos)[2]);
+	return (0);
+}
+
+static int	parse_cam_orientation(t_scene *scene, char **tokens, char ***orient, t_params *ls)
+{
+	t_vec3	tmp_orient;
+	
+	*orient = ft_split(tokens[2], ',');
+	if (!(*orient) || ft_count_size(*orient) != 3)
+	{
+		free_tab(*orient);
+		exit_with_lines(scene, ls, "Error: invalid camera orientation formatting.\n", EXIT_ERROR_PARAM);
+	}
 	tmp_orient.x = atof((*orient)[0]);
 	tmp_orient.y = atof((*orient)[1]);
 	tmp_orient.z = atof((*orient)[2]);
 	if (normal_is_unit(tmp_orient))
 	{
-		free_multiple_tab(2, pos, orient);
-		close_program(scene, "Error: camera orient must be normalized.\n", EXIT_ERROR_PARAM);
+		free_tab(*orient);
+		exit_with_lines(scene, ls, "Error: camera orient must be normalized.\n", EXIT_ERROR_PARAM);
 	}
 	scene->cam->orient = tmp_orient;
 	return (0);
 }
 
-int	parse_camera(char **tokens, t_scene *scene)
+int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 {
 	char	**pos;
 	char	**orient;
@@ -130,7 +166,8 @@ int	parse_camera(char **tokens, t_scene *scene)
 	scene->cam = malloc(sizeof(t_camera));
 	if (!scene->cam)
 		close_program(scene, "Error: allocation failed for t_camera.\n", EXIT_ERROR_MALLOC);
-	if (parse_cam_pos_orientation(scene, tokens, &pos, &orient))
+	//if (parse_cam_pos_orientation(scene, tokens, &pos, &orient))
+	if (parse_cam_pos(scene, tokens, &pos, ls) || parse_cam_orientation(scene, tokens, &orient, ls))
 		return (1);
 	//len = vec3_length(scene->cam->orient);
 	//if (len < 0.99 || len > 1.01)
@@ -252,12 +289,13 @@ static int	validate_light_ratio(t_scene *scene, char *s, double *out_ratio)
 	return (0);
 }
 
-int	parse_light(char **tokens, t_scene *scene)
+int	parse_light(char **tokens, t_scene *scene, t_params *ls)
 {
 	char	**pos;
 	char	**rgb;
 	double	ratio;
 
+	(void)ls;
 	if (ft_count_size(tokens) != 4)
 		close_program(scene, "Error: invalid light parameter number.\n", EXIT_ERROR_PARAM);
 	scene->light = malloc(sizeof(t_light));

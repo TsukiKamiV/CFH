@@ -60,11 +60,12 @@ static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl)
 	return (0);
 }
 
-int	parse_plane(char **tokens, t_scene *scene)
+int	parse_plane(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_plane		*pl;
 	t_object	*obj;
 	
+	(void)ls;
 	if (ft_count_size(tokens) != 4)
 		close_program(scene, "Error: invalid plane parameter number.\n", EXIT_ERROR_PARAM);
 		//return (error_msg("invalid plane parameter count.", 1));
@@ -122,10 +123,11 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 	return (0);
 }
 
-int	parse_sphere(char **tokens, t_scene *scene)
+int	parse_sphere(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_sphere	*sp;
-	
+
+	(void)ls;
 	if (ft_count_size(tokens) != 4)
 		return (error_msg("invalid sphere parameter count.", 1) && 0);
 	sp = malloc(sizeof(t_sphere));
@@ -215,10 +217,11 @@ static int	parse_fill_cylinder(char **tokens, t_cylinder *cy)
 	return (0);
 }
 
-int	parse_cylinder(char **tokens, t_scene *scene)
+int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_cylinder	*cy;
 	
+	(void)ls;
 	if (ft_count_size(tokens) != 6)
 		return (error_msg("invalid cylinder parameter count", 1) && 0);
 	cy = malloc(sizeof(t_cylinder));

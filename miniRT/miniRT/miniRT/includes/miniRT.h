@@ -27,12 +27,18 @@ typedef struct	s_line
 	struct s_line *next;
 }				t_line;
 
-typedef struct s_params
+
+typedef struct	s_params
 {
-	t_line	*head;
-	t_line	*tail;
+	char	**tab;
 	int		count;
 }				t_params;
+//typedef struct s_params
+//{
+//	t_line	*head;
+//	t_line	*tail;
+//	int		count;
+//}				t_params;
 
 typedef struct	s_point2
 {
@@ -169,21 +175,21 @@ typedef struct s_quad
 //init
 //read_file.c
 void	read_file(int fd, t_scene *scene);
-void	dispatch_element(char **tokens, t_scene *scene);
+void	dispatch_element(char **tokens, t_scene *scene, t_params *ls);
 int		read_all_lines(const char *filename, t_params *out);
 int 	parse_scene_from_lines(t_params *ls, t_scene *scene);
 void	free_lines(t_params *ls);
 int		line_has_illegal_character(char *line);
 
 //parse_scene.c
-int	parse_ambient(char **tokens, t_scene *scene);
-int	parse_camera(char **tokens, t_scene *scene);
-int	parse_light(char **tokens, t_scene *scene);
+int	parse_ambient(char **tokens, t_scene *scene, t_params *ls);
+int	parse_camera(char **tokens, t_scene *scene, t_params *ls);
+int	parse_light(char **tokens, t_scene *scene, t_params *ls);
 
 //parse_obj.c
-int	parse_sphere(char **tokens, t_scene *scene);
-int	parse_plane(char **tokens, t_scene *scene);
-int	parse_cylinder(char **tokens, t_scene *scene);
+int	parse_sphere(char **tokens, t_scene *scene, t_params *ls);
+int	parse_plane(char **tokens, t_scene *scene, t_params *ls);
+int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls);
 
 //parse_utils.c
 int	validate_assign_rgb(t_color *color, char **rgb);
@@ -191,6 +197,8 @@ int		normal_is_unit(t_vec3 n);
 t_color	parse_color(char *str);
 void	add_object(t_scene *scene, t_object *new);
 int	create_and_fill_obj(t_scene *scene, t_object_type type, void *element);
+void	free_lines(t_params *ls);
+void	exit_with_lines(t_scene *scene, t_params *ls, const char *msg, int code);
 
 //hook.c
 int	ft_key_hook(int keycode, t_scene *scene);
