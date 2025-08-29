@@ -272,7 +272,7 @@ void	dispatch_element(char **tokens, t_scene *scene, t_params *ls)
 	else if(ft_strcmp(tokens[0], "cy") == 0)
 		parse_cylinder(tokens, scene, ls);
 	else
-		close_program(scene, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
+		exit_with_lines(scene, ls, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
 }
 
 int parse_scene_from_lines(t_params *ls, t_scene *scene)
