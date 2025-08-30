@@ -162,7 +162,10 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 	//double	len;
 	
 	if (ft_count_size(tokens) != 4)
+	{
+		free_tab(tokens);
 		exit_with_lines(scene, ls, "Error: invalid camera parameter number.\n", EXIT_ERROR_PARAM);
+	}
 	scene->cam = malloc(sizeof(t_camera));
 	if (!scene->cam)
 		close_program(scene, "Error: allocation failed for t_camera.\n", EXIT_ERROR_MALLOC);
