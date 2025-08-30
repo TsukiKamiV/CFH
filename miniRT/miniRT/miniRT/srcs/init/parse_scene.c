@@ -183,8 +183,9 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 	tmp_fov = atof(tokens[3]);
 	if (tmp_fov < 0.0 || tmp_fov > 180.0)
 	{
+		free_tab(tokens);
 		free_multiple_tab(2, pos, orient);
-		close_program(scene, "Error: camera FOV out of range.\n", EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "Error: camera FOV out of range.\n", EXIT_ERROR_PARAM);
 	}
 	scene->cam->fov = tmp_fov;
 	free_multiple_tab(2, pos, orient);
