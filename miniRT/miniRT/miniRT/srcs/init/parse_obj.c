@@ -67,7 +67,7 @@ int	parse_plane(char **tokens, t_scene *scene, t_params *ls)
 	t_plane		*pl;
 	t_object	*obj;
 	
-	(void)ls;
+	//(void)ls;
 	if (ft_count_size(tokens) != 4)
 	{
 		free_tab(tokens);
@@ -87,7 +87,8 @@ int	parse_plane(char **tokens, t_scene *scene, t_params *ls)
 	if (!obj)
 	{
 		free(pl);
-		close_program(scene, "Error: allocation failed for t_object.\n", EXIT_ERROR_MALLOC);
+		exit_with_lines(scene, ls, "Error: allocation failed for t_object.\n", EXIT_ERROR_MALLOC);
+		//close_program(scene, "Error: allocation failed for t_object.\n", EXIT_ERROR_MALLOC);
 	}
 	//{
 	//	free(pl);
