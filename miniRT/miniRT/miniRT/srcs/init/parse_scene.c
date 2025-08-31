@@ -168,18 +168,12 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 	}
 	scene->cam = malloc(sizeof(t_camera));
 	if (!scene->cam)
-		close_program(scene, "Error: allocation failed for t_camera.\n", EXIT_ERROR_MALLOC);
-	//if (parse_cam_pos_orientation(scene, tokens, &pos, &orient))
+	{
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: allocation failed for t_camera.\n", EXIT_ERROR_MALLOC);
+	}
 	if (parse_cam_pos(scene, tokens, &pos, ls) || parse_cam_orientation(scene, tokens, &orient, ls))
 		return (1);
-	//len = vec3_length(scene->cam->orient);
-	//if (len < 0.99 || len > 1.01)
-	//{
-	//if (normal_is_unit(scene->cam->orient))
-	//{
-	//	free_multiple_tab(2, pos, orient);
-	//	close_program(scene, "Error: camera orientation must be normalized.\n", EXIT_ERROR_PARAM);
-	//}
 	tmp_fov = atof(tokens[3]);
 	if (tmp_fov < 0.0 || tmp_fov > 180.0)
 	{
@@ -252,27 +246,61 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 //	return (0);
 //}*/
 
-static int	parse_light_pos_color(t_scene *scene, char **tokens, char ***pos, char ***rgb)
+static int	parse_light_pos(t_scene *scene, char **tokens, char***pos, t_params *ls)
 {
-	int	ok;
-	
-	ok = 1;
 	*pos = NULL;
-	*rgb = NULL;
 	*pos = ft_split(tokens[1], ',');
-	*rgb = ft_split(tokens[3], ',');
-	if (!(*pos) || !(*rgb))
-		ok = 0;
-	if (ok && (ft_count_size(*pos) != 3 || ft_count_size(*rgb) != 3))
-		ok = 0;
-	if (!ok)
+	if (!(*pos))
 	{
-		free_multiple_tab(2, *pos, *rgb);
-		close_program(scene, "Error: invalid light parameter.\n", EXIT_ERROR_PARAM);
-		//return (error_msg("invalid light parameter.", 1));
+		free_multiple_tab(2, tokens, (*pos));
+		exit_with_lines(scene, ls, "Error: failed splitting light position parameter.\n", EXIT_ERROR_PARAM);
+	}
+	if ((ft_count_size(*pos) != 3))
+	{
+		free_multiple_tab(2, tokens, (*pos));
+		exit_with_lines(scene, ls, "Error: wrong light parameter number.\n", EXIT_ERROR_PARAM);
 	}
 	return (0);
 }
+
+static int	parse_light_rgb(t_scene *scene, char **tokens, char***rgb, t_params *ls)
+{
+	*rgb = NULL;
+	*rgb = ft_split(tokens[3], ',');
+	if (!(*rgb))
+	{
+		free_multiple_tab(2, tokens, (*rgb));
+		exit_with_lines(scene, ls, "Error: failed splitting light position parameter.\n", EXIT_ERROR_PARAM);
+	}
+	if ((ft_count_size(*rgb) != 3))
+	{
+		free_multiple_tab(2, tokens, (*rgb));
+		exit_with_lines(scene, ls, "Error: wrong light parameter number.\n", EXIT_ERROR_PARAM);
+	}
+	return (0);
+}
+
+//static int	parse_light_pos_color(t_scene *scene, char **tokens, char ***pos, char ***rgb)
+//{
+//	int	ok;
+//
+//	ok = 1;
+//	*pos = NULL;
+//	*rgb = NULL;
+//	*pos = ft_split(tokens[1], ',');
+//	*rgb = ft_split(tokens[3], ',');
+//	if (!(*pos) || !(*rgb))
+//		ok = 0;
+//	if (ok && (ft_count_size(*pos) != 3 || ft_count_size(*rgb) != 3))
+//		ok = 0;
+//	if (!ok)
+//	{
+//		free_multiple_tab(3, *pos, *rgb, tokens);
+//		close_program(scene, "Error: invalid light parameter.\n", EXIT_ERROR_PARAM);
+//		//return (error_msg("invalid light parameter.", 1));
+//	}
+//	return (0);
+//}
 
 static void	assign_light_pos(t_light *light, char **pos)
 {
@@ -281,16 +309,15 @@ static void	assign_light_pos(t_light *light, char **pos)
 	light->pos.z = atof(pos[2]);
 }
 
-static int	validate_light_ratio(t_scene *scene, char *s, double *out_ratio)
+static int	validate_light_ratio(char *s, double *out_ratio)
 {
 	double	val;
 	
 	val = strtod(s, NULL);
 	if (val < 0.0 || val > 1.0)
-		close_program(scene, "Error: light ratio out of range.\n", EXIT_ERROR_PARAM);
-		//return (error_msg("light ratio out of range.", 1));
+		return (0);
 	*out_ratio = val;
-	return (0);
+	return (1);
 }
 
 int	parse_light(char **tokens, t_scene *scene, t_params *ls)
@@ -299,24 +326,31 @@ int	parse_light(char **tokens, t_scene *scene, t_params *ls)
 	char	**rgb;
 	double	ratio;
 
-	(void)ls;
 	if (ft_count_size(tokens) != 4)
-		close_program(scene, "Error: invalid light parameter number.\n", EXIT_ERROR_PARAM);
+	{
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: invalid light parameter number.\n", EXIT_ERROR_PARAM);
+	}
 	scene->light = malloc(sizeof(t_light));
 	if (!scene->light)
-		close_program(scene, "Error: allocation failed for t_light.\n", EXIT_ERROR_MALLOC);
-	parse_light_pos_color(scene, tokens, &pos, &rgb);
-	assign_light_pos(scene->light, pos);
-	if (validate_light_ratio(scene, tokens[2], &ratio))
 	{
-		free_multiple_tab(2, pos, rgb);
-		close_program(scene, NULL, EXIT_ERROR_PARAM);
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: invalid light parameter number.\n", EXIT_ERROR_PARAM);
+	}
+	//parse_light_pos_color(scene, tokens, &pos, &rgb);
+	parse_light_pos(scene, tokens, &pos, ls);
+	parse_light_rgb(scene, tokens, &rgb, ls);
+	assign_light_pos(scene->light, pos);
+	if (!validate_light_ratio(tokens[2], &ratio))
+	{
+		free_multiple_tab(3, pos, rgb, tokens);
+		exit_with_lines(scene, ls, "Error: light ratio out of range", EXIT_ERROR_PARAM);
 	}
 	scene->light->ratio = ratio;
 	if (validate_assign_rgb(&scene->light->color, rgb))
 	{
-		free_multiple_tab(2, pos, rgb);
-		close_program(scene, NULL, EXIT_ERROR_PARAM);
+		free_multiple_tab(3, pos, rgb, tokens);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
 	}
 	free_multiple_tab(2, pos, rgb);
 	return (0);

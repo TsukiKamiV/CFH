@@ -10,12 +10,12 @@ static int	split_plane_tokens(char **tokens, char ***pos, char ***normal, char *
 	*color = ft_split(tokens[3], ',');
 	if (!(*pos) || !(*normal) || !(*color))
 	{
-		free_multiple_tab(3, *pos, *normal, *color);
+		free_multiple_tab(4, *pos, *normal, *color, tokens);
 		return (error_msg("invalid plane vector formatting.", 1));
 	}
 	if (ft_count_size(*pos) != 3 || ft_count_size(*normal) != 3 || ft_count_size(*color) != 3)
 	{
-		free_multiple_tab(3, *pos, *normal, *color);
+		free_multiple_tab(4, *pos, *normal, *color, tokens);
 		return (error_msg("invalid plane parameter size.", 1));
 	}
 	return (0);
@@ -31,7 +31,7 @@ static void	assign_plane_point_normal(t_plane *pl, char **pos, char **normal)
 	pl->normal.z = atof(normal[2]);
 }
 
-static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl)
+static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl, t_params *ls)
 {
 	char	**pos;
 	char	**normal;
@@ -41,19 +41,21 @@ static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl)
 	normal = NULL;
 	color = NULL;
 	if (split_plane_tokens(tokens, &pos, &normal, &color))
-		close_program(scene, NULL, EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
 		//return (1);
 	assign_plane_point_normal(pl, pos, normal);
 	if (normal_is_unit(pl->normal))
 	{
-		free_multiple_tab(3, pos, normal, color);
-		close_program(scene, "Error: plane normal must be normalized.\n", EXIT_ERROR_PARAM);
+		free_multiple_tab(4, pos, normal, color, tokens);
+		exit_with_lines(scene, ls, "Error: plane normal must be normalized.\n", EXIT_ERROR_PARAM);
+		//close_program(scene, "Error: plane normal must be normalized.\n", EXIT_ERROR_PARAM);
 		//return (error_msg("plane normal must be normalized.", 1));
 	}
 	if (validate_assign_rgb(&pl->color, color))
 	{
-		free_multiple_tab(3, pos, normal, color);
-		close_program(scene, NULL, EXIT_ERROR_PARAM);
+		free_multiple_tab(4, pos, normal, color, tokens);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+		//close_program(scene, NULL, EXIT_ERROR_PARAM);
 		//return (1);
 	}
 	free_multiple_tab(3, pos, normal, color);
@@ -67,18 +69,20 @@ int	parse_plane(char **tokens, t_scene *scene, t_params *ls)
 	
 	(void)ls;
 	if (ft_count_size(tokens) != 4)
-		close_program(scene, "Error: invalid plane parameter number.\n", EXIT_ERROR_PARAM);
+	{
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: invalid plane parameter number.\n", EXIT_ERROR_PARAM);
+	}
+		//close_program(scene, "Error: invalid plane parameter number.\n", EXIT_ERROR_PARAM);
 		//return (error_msg("invalid plane parameter count.", 1));
 	pl = malloc(sizeof(t_plane));
 	if (!pl)
-		close_program(scene, "Error: allocation failed for t_plane.\n", EXIT_ERROR_MALLOC);
-		//return (error_msg("allocation failed for plane.", 1) && 0);
-	//if (fill_plane(scene, tokens, pl))
-	//{
-	//	free(pl);
-	//	return (0);
-	//}
-	fill_plane(scene, tokens, pl);
+	{
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: allocation failed for t_plane.\n", EXIT_ERROR_MALLOC);
+	}
+		//close_program(scene, "Error: allocation failed for t_plane.\n", EXIT_ERROR_MALLOC);
+	fill_plane(scene, tokens, pl, ls);
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 	{
@@ -116,7 +120,7 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 	sp->radius = atof(tokens[2]) / 2.0;
 	if (validate_assign_rgb(&sp->color, color))
 	{
-		free_multiple_tab(2, center, color);
+		free_multiple_tab(3, tokens, center, color);
 		return (1);
 	}
 	free_multiple_tab(2, center, color);
