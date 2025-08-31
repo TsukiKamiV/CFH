@@ -47,6 +47,7 @@ static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl, t_params *ls)
 	if (normal_is_unit(pl->normal))
 	{
 		free_multiple_tab(4, pos, normal, color, tokens);
+		free (pl);
 		exit_with_lines(scene, ls, "Error: plane normal must be normalized.\n", EXIT_ERROR_PARAM);
 		//close_program(scene, "Error: plane normal must be normalized.\n", EXIT_ERROR_PARAM);
 		//return (error_msg("plane normal must be normalized.", 1));
@@ -54,6 +55,7 @@ static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl, t_params *ls)
 	if (validate_assign_rgb(&pl->color, color))
 	{
 		free_multiple_tab(4, pos, normal, color, tokens);
+		free (pl);
 		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
 		//close_program(scene, NULL, EXIT_ERROR_PARAM);
 		//return (1);
