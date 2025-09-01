@@ -114,7 +114,7 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 	color = ft_split(tokens[3], ',');
 	if (!center || !color)
 	{
-		free_multiple_tab(2, center, color);
+		free_multiple_tab(3, tokens, center, color);
 		return (error_msg("invalid spherej formatting", 1));
 	}
 	sp->center.x = atof(center[0]);
@@ -134,18 +134,27 @@ int	parse_sphere(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_sphere	*sp;
 
-	(void)ls;
 	if (ft_count_size(tokens) != 4)
-		return (error_msg("invalid sphere parameter count.", 1) && 0);
+	{
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: invalid sphere parameter number.\n", EXIT_ERROR_PARAM);
+	}
 	sp = malloc(sizeof(t_sphere));
 	if (!sp)
-		return (error_msg("allocation failed: sphere.", 1) && 0);
+	{
+		free_tab(tokens);
+		exit_with_lines(scene, ls, "Error: allocation failed for t_sphere.\n", EXIT_ERROR_MALLOC);
+	}
 	if (parse_fill_sphere(tokens, sp))
 	{
 		free(sp);
+		free_tab(tokens);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
 		return (0);
 	}
-	return (create_and_fill_obj(scene, SPHERE, sp));
+	if (!create_and_fill_obj(scene, SPHERE, sp))
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+	return (0);
 }
 
 static int	split_cy_fields(char **tokens, char ***center, char ***axis, char ***color)
