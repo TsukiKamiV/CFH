@@ -128,7 +128,7 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 	sp->radius = atof(tokens[2]) / 2.0;
 	if (validate_assign_rgb(&sp->color, color))
 	{
-		free_multiple_tab(3, tokens, center, color);
+		free_multiple_tab(2, center, color);
 		return (1);
 	}
 	free_multiple_tab(2, center, color);
