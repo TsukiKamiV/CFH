@@ -114,8 +114,13 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 	color = ft_split(tokens[3], ',');
 	if (!center || !color)
 	{
-		free_multiple_tab(3, tokens, center, color);
-		return (error_msg("invalid spherej formatting", 1));
+		free_multiple_tab(2, center, color);
+		return (error_msg("invalid sphere formatting", 1));
+	}
+	if (ft_count_size(center) != 3 || ft_count_size(color) != 3)
+	{
+		free_multiple_tab(2, center, color);
+		return (error_msg("invalid sphere parameter number", 1));
 	}
 	sp->center.x = atof(center[0]);
 	sp->center.y = atof(center[1]);
