@@ -239,7 +239,7 @@ int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls)
 	
 	if (ft_count_size(tokens) != 6)
 	{
-		free (tokens);
+		free_tab(tokens);
 		exit_with_lines(scene, ls, "Error: invalid cylinder parameter number", EXIT_ERROR_PARAM);
 	}
 	cy = malloc(sizeof(t_cylinder));
