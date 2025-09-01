@@ -69,33 +69,24 @@ int	parse_plane(char **tokens, t_scene *scene, t_params *ls)
 	t_plane		*pl;
 	t_object	*obj;
 	
-	//(void)ls;
 	if (ft_count_size(tokens) != 4)
 	{
 		free_tab(tokens);
 		exit_with_lines(scene, ls, "Error: invalid plane parameter number.\n", EXIT_ERROR_PARAM);
 	}
-		//close_program(scene, "Error: invalid plane parameter number.\n", EXIT_ERROR_PARAM);
-		//return (error_msg("invalid plane parameter count.", 1));
 	pl = malloc(sizeof(t_plane));
 	if (!pl)
 	{
 		free_tab(tokens);
 		exit_with_lines(scene, ls, "Error: allocation failed for t_plane.\n", EXIT_ERROR_MALLOC);
 	}
-		//close_program(scene, "Error: allocation failed for t_plane.\n", EXIT_ERROR_MALLOC);
 	fill_plane(scene, tokens, pl, ls);
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 	{
 		free(pl);
 		exit_with_lines(scene, ls, "Error: allocation failed for t_object.\n", EXIT_ERROR_MALLOC);
-		//close_program(scene, "Error: allocation failed for t_object.\n", EXIT_ERROR_MALLOC);
 	}
-	//{
-	//	free(pl);
-	//	return (error_msg("allocation failed for t_object.", 1) && 0);
-	//}
 	obj->type = PLANE;
 	obj->element = pl;
 	obj->next = NULL;
@@ -158,7 +149,11 @@ int	parse_sphere(char **tokens, t_scene *scene, t_params *ls)
 		return (0);
 	}
 	if (!create_and_fill_obj(scene, SPHERE, sp))
+	{
+		free_tab(tokens);
+		free (sp);
 		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+	}
 	return (0);
 }
 
@@ -222,7 +217,7 @@ static int	parse_fill_cylinder(char **tokens, t_cylinder *cy)
 	if (normal_is_unit(cy->axis))
 	{
 		free_multiple_tab(3, center, axis, color);
-		return (1);
+		return (error_msg("cylinder axis vector must be normalized.", 1));
 	}
 	if (assign_cy_dims(cy, tokens))
 	{
@@ -242,18 +237,32 @@ int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_cylinder	*cy;
 	
-	(void)ls;
 	if (ft_count_size(tokens) != 6)
-		return (error_msg("invalid cylinder parameter count", 1) && 0);
+	{
+		free (tokens);
+		exit_with_lines(scene, ls, "Error: invalid cylinder parameter number", EXIT_ERROR_PARAM);
+	}
 	cy = malloc(sizeof(t_cylinder));
 	if (!cy)
-		return (error_msg("allocation failed for t_cylinder.", 1) && 0);
+	{
+		free (tokens);
+		exit_with_lines(scene, ls, "Error: allocation failed for t_cylinder.\n", EXIT_ERROR_MALLOC);
+	}
 	if (parse_fill_cylinder(tokens, cy))
 	{
 		free(cy);
-		return (0);
+		free_tab(tokens);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+
 	}
-	return (create_and_fill_obj(scene, CYLINDER, cy));
+	if (!create_and_fill_obj(scene, CYLINDER, cy))
+	{
+		free_tab(tokens);
+		free (cy);
+		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+	}
+	return (0);
+	//return (create_and_fill_obj(scene, CYLINDER, cy));
 }
 /*
 //int	parse_plane(char **tokens, t_scene *scene)
