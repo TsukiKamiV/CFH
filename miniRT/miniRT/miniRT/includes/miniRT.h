@@ -21,6 +21,20 @@
  #define		EXIT_ERROR_PARAM	4
  #define		EXIT_ERROR_MALLOC	5
 
+ #ifdef __APPLE__
+ # define KEY_Q 12
+ # define KEY_ESC 53
+ #else
+ # define KEY_Q	113
+ # define KEY_ESC 65307
+ #endif
+
+typedef enum e_key
+{
+	KEY_QUIT = KEY_Q,
+	KEY_EXIT = KEY_ESC
+}				t_key;
+
 typedef struct	s_line
 {
 	char	*s;
