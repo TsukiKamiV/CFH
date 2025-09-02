@@ -167,6 +167,7 @@ typedef struct	s_scene
 	t_light		*light;
 	t_camera	*cam;
 	t_object	*objs;
+	t_image		*img;
 }	t_scene;
 
 typedef struct	s_hit

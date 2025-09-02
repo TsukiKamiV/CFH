@@ -15,7 +15,7 @@ void	render_scene(t_scene *scene)
 	while (pixel.y < img->height)
 	{
 		pixel.x = 0;
-		printf("%d\n", (pixel.y * 100)/(img->height - 1));
+		//printf("%d\n", (pixel.y * 100)/(img->height - 1));
 		while (pixel.x < img->width)
 		{
 			ray = generate_ray(scene->cam, pixel, *img);
@@ -25,5 +25,5 @@ void	render_scene(t_scene *scene)
 		}
 		pixel.y++;
 	}
-	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, img->img_ptr, 0, 0);
+	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img->img_ptr, 0, 0);
 }

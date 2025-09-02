@@ -22,6 +22,11 @@ void	free_scene(t_scene *scene)
 		free(scene->cam);
 	if (scene->light)
 		free(scene->light);
+	if (scene->img)
+	{
+		mlx_destroy_image(scene->mlx_ptr, scene->img->img_ptr);
+		free (scene->img);
+	}
 	if (scene->objs)
 		free_objects(scene->objs);
 }
