@@ -15,6 +15,7 @@ void	render_scene(t_scene *scene)
 	while (pixel.y < img->height)
 	{
 		pixel.x = 0;
+		printf("%d\n", (pixel.y * 100)/(img->height - 1));
 		while (pixel.x < img->width)
 		{
 			ray = generate_ray(scene->cam, pixel, *img);
