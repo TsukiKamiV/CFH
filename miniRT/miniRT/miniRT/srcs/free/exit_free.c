@@ -31,16 +31,26 @@ void	free_scene(t_scene *scene)
 		free_objects(scene->objs);
 }
 
-int	my_mlx_hook_callback(int keycode, t_scene *scene)
+int my_mlx_hook_callback(int code, void *param)
 {
-	if (keycode == 17)
-	{
-		//free_all_allocated_memory(scene);
-		close_program(scene, NULL, EXIT_SUCCESS_KEY);
-		free(scene);
-	}
-	exit(0);
+	t_scene *scene;
+	
+	(void)code;
+	scene = (t_scene *)param;
+	close_program(scene, NULL, EXIT_SUCCESS_KEY);
+	return (0);
 }
+
+//int	my_mlx_hook_callback(int keycode, t_scene *scene)
+//{
+//	if (keycode == 17)
+//	{
+//		//free_all_allocated_memory(scene);
+//		close_program(scene, NULL, EXIT_SUCCESS_KEY);
+//		free(scene);
+//	}
+//	exit(0);
+//}
 
 //void	exit_with_cleanup(t_scene *scene, char ***tabs, const char *msg, int code)
 //{

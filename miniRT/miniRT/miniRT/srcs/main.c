@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	//close(fd);
 	render_scene(scene);
 	mlx_key_hook(scene->win_ptr, ft_key_hook, scene);
-	mlx_hook(scene->win_ptr, 17, 0, my_mlx_hook_callback, &scene);
+	mlx_hook(scene->win_ptr, 17, 0, my_mlx_hook_callback, scene);
 	mlx_loop(scene->mlx_ptr);
 	return (0);
 }

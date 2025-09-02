@@ -271,7 +271,7 @@ bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 dir);
 //exit_free.c
 void	free_objects(t_object *obj);
 void	free_scene(t_scene *scene);
-int		my_mlx_hook_callback(int keycode, t_scene *scene);
+int		my_mlx_hook_callback(int keycode, void *param);
 
 //exit
 //close_window.c
