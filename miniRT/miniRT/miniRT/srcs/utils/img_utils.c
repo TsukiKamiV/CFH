@@ -29,7 +29,7 @@
 //	return (img);
 //}
 
-t_image	*create_image(t_scene *scene)
+void	create_image(t_scene *scene)
 {
 	t_image	*img;
 	
@@ -37,7 +37,7 @@ t_image	*create_image(t_scene *scene)
 	if (!img)
 	{
 		ft_putstr_fd("Error\nFailed to malloc image.", 1);
-		return (NULL);
+		return ;
 	}
 	/* 你也可以改成使用 scene->width/height */
 	img->width = 800;
@@ -47,13 +47,13 @@ t_image	*create_image(t_scene *scene)
 	{
 		ft_putstr_fd("Error\nFailed to create image.", 1);
 		free(img);
-		return (NULL);
+		return ;
 	}
 	img->addr = mlx_get_data_addr(img->img_ptr, &img->bits_per_pixel, &img->line_length, &img->endian);
 	
 	/* 将当前图像托管给 scene，便于统一在退出时销毁 */
 	scene->img = img;
-	return (img);
+	return ;
 }
 
 void	put_pixel(t_image *img, int x, int y, t_color color)

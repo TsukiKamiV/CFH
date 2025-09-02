@@ -228,7 +228,7 @@ void	free_multiple_tab(int count, ...);
 void	free_tab(char **tab);
 
 //img_utils
-t_image	*create_image(t_scene *scene);
+void	create_image(t_scene *scene);
 void	put_pixel(t_image *img, int x, int y, t_color color);
 t_color		create_color(int r, int g, int b);
 
