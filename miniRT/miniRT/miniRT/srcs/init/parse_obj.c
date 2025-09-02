@@ -262,7 +262,6 @@ int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls)
 		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
 	}
 	return (0);
-	//return (create_and_fill_obj(scene, CYLINDER, cy));
 }
 /*
 //int	parse_plane(char **tokens, t_scene *scene)
