@@ -81,9 +81,15 @@ int	close_program(t_scene *scene, const char *msg, int state)
 	if (scene)
 	{
 		destroy_scene_image(scene);
+		if (scene->mlx_ptr	 && scene->win_ptr)
+		{
+			mlx_destroy_window(scene->mlx_ptr, scene->win_ptr);
+			scene->win_ptr = NULL;
+		}
 		if (scene->mlx_ptr)
 		{
 			destroy_display(scene->mlx_ptr);
+			free (scene->mlx_ptr);
 			scene->mlx_ptr = NULL;
 		}
 		free_scene(scene);
