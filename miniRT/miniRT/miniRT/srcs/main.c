@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 	scene = malloc(sizeof(t_scene));
 	if (!scene)
 		return (error_msg("memory allocation failed", 1));
+	//printf("scene addr: %p\n", scene);
 	ft_memset(scene, 0, sizeof(t_scene));
 	if (!load_rt_file(argv[1], scene))
 		return (close_program(scene, NULL, EXIT_ERROR_FILE));
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
 		return (close_program(scene, NULL, EXIT_ERROR_MLX));
 	render_scene(scene);
 	mlx_key_hook(scene->win_ptr, ft_key_hook, scene);
-	mlx_hook(scene->win_ptr, 17, (1L << 17), my_mlx_hook_callback, scene);
+	mlx_hook(scene->win_ptr, 17, 0, my_mlx_hook_callback, scene);
 	mlx_loop(scene->mlx_ptr);
 	return (0);
 }

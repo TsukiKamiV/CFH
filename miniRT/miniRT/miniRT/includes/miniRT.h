@@ -14,7 +14,7 @@
 #include "../libft/libft.h"
 	
  #define		EPSILON 			1e-4
- #define		EXIT_SUCCESS_MXL	0
+ #define		EXIT_SUCCESS_MLX	0
  #define		EXIT_SUCCESS_KEY	1
  #define		EXIT_ERROR_MLX 		2
  #define		EXIT_ERROR_FILE		3
@@ -271,7 +271,7 @@ bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 dir);
 //exit_free.c
 void	free_objects(t_object *obj);
 void	free_scene(t_scene *scene);
-int		my_mlx_hook_callback(int keycode, void *param);
+int		my_mlx_hook_callback(void *param);
 
 //exit
 //close_window.c
