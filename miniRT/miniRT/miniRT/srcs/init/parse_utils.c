@@ -1,24 +1,5 @@
 #include "../../includes/miniRT.h"
 
-//t_color	parse_color(char *str)
-//{
-//	t_color	color;
-//	char	**rgb;
-//
-//	rgb = ft_split(str, ',');
-//	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
-//	{
-//		ft_putstr_fd("Error\nInvalid RGB setting.", 1);
-//		return ((t_color){0, 0, 0});
-//	}
-//	color.r = ft_atoi(rgb[0]);
-//	color.g = ft_atoi(rgb[1]);
-//	color.b = ft_atoi(rgb[2]);
-//	free_tab(rgb);
-//	return (color);
-//}
-
-
 void	add_object(t_scene *scene, t_object *new)
 {
 	t_object	*current;
@@ -100,8 +81,3 @@ void	free_lines(t_params *ls)
 	ls->count = 0;
 }
 
-void	exit_with_lines(t_scene *scene, t_params *ls, const char *msg, int code)
-{
-	free_lines(ls);
-	close_program(scene, msg, code);
-}

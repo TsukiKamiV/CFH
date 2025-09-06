@@ -31,6 +31,13 @@ void	free_scene(t_scene *scene)
 		free_objects(scene->objs);
 }
 
+void	exit_with_lines(t_scene *scene, t_params *ls, const char *msg, int code)
+{
+	free_lines(ls);
+	close_program(scene, msg, code);
+}
+
+
 //int my_mlx_hook_callback(int code, void *param)
 //{
 //	t_scene *scene;

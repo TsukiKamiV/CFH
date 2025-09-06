@@ -250,7 +250,9 @@ t_color		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是�
 //ray_hit.c
 int	hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
 bool	hit_sphere(t_ray ray, t_sphere *sphere, t_hit *hit);
+//ray_hit_cy_annex.c
 bool	hit_cylinder_body(t_ray ray, t_cylinder *cy, t_hit *hit);
+//ray_hit_cy.c
 bool	hit_cylinder_cap(t_ray ray, t_cylinder *cy, t_hit *hit);
 bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
 

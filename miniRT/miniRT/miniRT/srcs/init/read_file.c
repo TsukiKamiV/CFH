@@ -1,34 +1,18 @@
 #include "../../includes/miniRT.h"
-
-void	print_tab(char **tab)
-{
-	int	i;
-	
-	if (!tab)
-		return ;
-	i = 0;
-	while (tab[i])
-	{
-		printf("%d: %s\n", i, tab[i]);
-		i++;
-	}
-}
-
-void	free_tab_n(char **tab, int count)
-{
-	int	i;
-	
-	if (!tab)
-		return ;
-	i = 0;
-	while (i < count)
-	{
-		if (tab[i])
-			free (tab[i]);
-		i++;
-	}
-	free (tab);
-}
+//
+//void	print_tab(char **tab)
+//{
+//	int	i;
+//
+//	if (!tab)
+//		return ;
+//	i = 0;
+//	while (tab[i])
+//	{
+//		printf("%d: %s\n", i, tab[i]);
+//		i++;
+//	}
+//}
 
 static void	trim_newline(char *s)
 {
@@ -72,26 +56,11 @@ int	count_lines_in_file(const char *filename, int *out_count)
 	return (1);
 }
 
-int	load_lines_into_tab(const char *filename, char ***out_tab, int count)
+static char **read_file_with_gnl(int fd, char *line, char **tab)
 {
-	int		fd;
-	char	**tab;
-	char	*line;
-	int		i;
+	int	i;
 	
-	if (!filename || !out_tab || count < 0)
-		return (0);
-	*out_tab = NULL;
-	tab = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!tab)
-		return (0);
 	i = 0;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		free(tab);
-		return (0);
-	}
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -102,9 +71,65 @@ int	load_lines_into_tab(const char *filename, char ***out_tab, int count)
 	}
 	close(fd);
 	tab[i] = NULL;
-	*out_tab = tab;
+	return (tab);
+}
+
+int	load_lines_into_tab(const char *filename, char ***out_tab, int count)
+{
+	int		fd;
+	char	**tab;
+	char	*line;
+	
+	if (!filename || !out_tab || count < 0)
+		return (0);
+	*out_tab = NULL;
+	line = NULL;
+	tab = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!tab)
+		return (0);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+	{
+		free(tab);
+		return (0);
+	}
+	*out_tab = read_file_with_gnl(fd, line, tab);
 	return (1);
 }
+
+//int	load_lines_into_tab(const char *filename, char ***out_tab, int count)
+//{
+//	int		fd;
+//	char	**tab;
+//	char	*line;
+//	int		i;
+//
+//	if (!filename || !out_tab || count < 0)
+//		return (0);
+//	*out_tab = NULL;
+//	tab = (char **)malloc(sizeof(char *) * (count + 1));
+//	if (!tab)
+//		return (0);
+//	i = 0;
+//	fd = open(filename, O_RDONLY);
+//	if (fd < 0)
+//	{
+//		free(tab);
+//		return (0);
+//	}
+//	line = get_next_line(fd);
+//	while (line)
+//	{
+//		trim_newline(line);
+//		tab[i] = line;
+//		i++;
+//		line = get_next_line(fd);
+//	}
+//	close(fd);
+//	tab[i] = NULL;
+//	*out_tab = tab;
+//	return (1);
+//}
 
 int	read_all_lines(const char *filename, t_params *params)
 {
@@ -176,47 +201,99 @@ static int	all_lines_empty(t_params *ls)
 	return (1);
 }
 
-static int is_valid_number_list(const char *t)
+static int	parse_number_segment(const char *t, int *pi)
 {
 	int	i;
 	int	digits;
 	int	frac;
+	
+	i = *pi;
+	digits = 0;
+	frac = 0;
+	if (t[i] == '+' || t[i] == '-')
+		i++;
+	while (ft_isdigit(t[i]))
+	{
+		digits++;
+		i++;
+	}
+	if (t[i] == '.')
+	{
+		i++;
+		while (ft_isdigit(t[i]))
+		{
+			frac++;
+			i++;
+		}
+	}
+	if (digits + frac == 0)
+		return (0);
+	*pi = i;
+	return (1);
+}
+
+static int	is_valid_number_list(const char *t)
+{
+	int	i;
+	int	ok;
 	
 	i = 0;
 	if (!t || !*t)
 		return (0);
 	while (t[i])
 	{
-		digits = 0;
-		frac = 0;
-		if (t[i] == '+' || t[i] == '-')
-			i++;
-		while (ft_isdigit(t[i]))
-		{
-			i++;
-			digits++;
-		}
-		if (t[i] == '.')
-		{
-			i++;
-			while(ft_isdigit(t[i]))
-			{
-				i++;
-				frac++;
-			}
-		}
-		if (digits + frac == 0)
+		ok = parse_number_segment(t, &i);
+		if (!ok)
 			return (0);
 		if (t[i] == '\0')
 			return (1);
-		if (t[i] != ',')
+		if (t[i] != ',' || t[i + 1] == '\0')
 			return (0);
 		i++;
-		if (t[i] == '\0')
-			return (0);
 	}
 	return (1);
 }
+//static int is_valid_number_list(const char *t)
+//{
+//	int	i;
+//	int	digits;
+//	int	frac;
+//
+//	i = 0;
+//	if (!t || !*t)
+//		return (0);
+//	while (t[i])
+//	{
+//		digits = 0;
+//		frac = 0;
+//		if (t[i] == '+' || t[i] == '-')
+//			i++;
+//		while (ft_isdigit(t[i]))
+//		{
+//			i++;
+//			digits++;
+//		}
+//		if (t[i] == '.')
+//		{
+//			i++;
+//			while(ft_isdigit(t[i]))
+//			{
+//				i++;
+//				frac++;
+//			}
+//		}
+//		if (digits + frac == 0)
+//			return (0);
+//		if (t[i] == '\0')
+//			return (1);
+//		if (t[i] != ',')
+//			return (0);
+//		i++;
+//		if (t[i] == '\0')
+//			return (0);
+//	}
+//	return (1);
+//}
 
 int	line_has_illegal_character(char *line)
 {
@@ -249,11 +326,11 @@ static void validate_scene_or_exit(t_scene *scene, t_params *ls)
 {
 	if (!scene->amb || !scene->cam || !scene->light)
 		exit_with_lines(scene, ls,
-						"Error: missing key element to create the scene.\n",
+						"Error\n missing key element to create the scene.\n",
 						EXIT_ERROR_PARAM);
 	if (!scene->objs)
 		exit_with_lines(scene, ls,
-						"Error: at least one object (plane/sphere/cylinder) required.\n",
+						"Error\n at least one object (plane/sphere/cylinder) required.\n",
 						EXIT_ERROR_PARAM);
 }
 
@@ -274,7 +351,7 @@ void	dispatch_element(char **tokens, t_scene *scene, t_params *ls)
 	else
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "Error: key element type error found in rt file.\n", EXIT_ERROR_FILE);
+		exit_with_lines(scene, ls, "Error\n key element type error found in rt file.\n", EXIT_ERROR_FILE);
 	}
 }
 
@@ -284,7 +361,7 @@ int parse_scene_from_lines(t_params *ls, t_scene *scene)
 	char  **tokens;
 	
 	if (all_lines_empty(ls))
-		exit_with_lines(scene, ls, "Error: empty rt file.\n", EXIT_ERROR_FILE);
+		exit_with_lines(scene, ls, "Error\n empty rt file.\n", EXIT_ERROR_FILE);
 	i = 0;
 	while (i < ls->count)
 	{
@@ -292,7 +369,7 @@ int parse_scene_from_lines(t_params *ls, t_scene *scene)
 		{
 			if (line_has_illegal_character(ls->tab[i]))
 				exit_with_lines(scene, ls,
-								"Error: illegal character found in rt file.\n",
+								"Error\n illegal character found in rt file.\n",
 								EXIT_ERROR_PARAM);
 			tokens = ft_split(ls->tab[i], ' ');
 			if (!tokens)

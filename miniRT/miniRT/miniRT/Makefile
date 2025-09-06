@@ -40,7 +40,6 @@ endif
 # 源文件
 SRC_FILES = \
 	main.c \
-	free/parse_free.c \
 	free/exit_free.c \
 	exit/close_window.c \
 	math/vec3.c \
@@ -52,14 +51,23 @@ SRC_FILES = \
 	render/ambient.c \
 	render/lighting.c \
 	render/diffuse.c \
+	render/ray_hit_pl.c\
+	render/ray_hit_sp.c\
+	render/ray_hit_cy.c\
+	render/ray_hit_cy_annex.c\
 	utils/utils.c \
+	utils/utils_2.c\
 	utils/error.c \
 	utils/img_utils.c \
 	init/hook.c \
 	init/read_file.c \
-	init/parse_scene.c \
-	init/parse_obj.c \
-	init/parse_utils.c
+	init/parse_utils.c\
+	init/parse_scene/parse_amb.c\
+	init/parse_scene/parse_cam.c\
+	init/parse_scene/parse_light.c\
+	init/parse_obj/parse_plane.c\
+	init/parse_obj/parse_sphere.c\
+	init/parse_obj/parse_cylinder.c
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJS = $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
