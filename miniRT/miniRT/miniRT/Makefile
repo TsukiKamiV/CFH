@@ -46,7 +46,6 @@ SRC_FILES = \
 	math/vec3_bis.c \
 	render/render_scene.c \
 	render/ray.c \
-	render/ray_hit.c \
 	render/ray_utils.c \
 	render/ambient.c \
 	render/lighting.c \
@@ -61,6 +60,8 @@ SRC_FILES = \
 	utils/img_utils.c \
 	init/hook.c \
 	init/read_file.c \
+	init/read_utils_1.c\
+	init/read_utils_2.c\
 	init/parse_utils.c\
 	init/parse_scene/parse_amb.c\
 	init/parse_scene/parse_cam.c\

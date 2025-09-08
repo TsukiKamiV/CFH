@@ -75,31 +75,6 @@ t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
 	return (ray);
 }
 
-static bool	is_closer_hit(t_hit *tmp, t_hit *closest)
-{
-	if (tmp->t < closest->t)
-	{
-		*closest = *tmp;
-		return (true);
-	}
-	return (false);
-}
-
-static void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *hit)
-{
-	bool	res;
-	
-	res = false;
-	if (obj->type == PLANE)
-		res = hit_plane(ray, (t_plane *)obj->element, tmp);
-	else if (obj->type == SPHERE)
-		res = hit_sphere(ray, (t_sphere *)obj->element, tmp);
-	else if(obj->type == CYLINDER)
-		res = hit_cylinder(ray, (t_cylinder *)obj->element, tmp);
-	if (res && is_closer_hit(tmp, closest))
-		*hit = true;
-}
-
 t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 {
 	t_object	*obj;

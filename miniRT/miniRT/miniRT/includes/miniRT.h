@@ -196,6 +196,19 @@ int 	parse_scene_from_lines(t_params *ls, t_scene *scene);
 void	free_lines(t_params *ls);
 int		line_has_illegal_character(char *line);
 
+//read_utils_1.c
+int	count_lines_in_file(const char *filename, int *out_count);
+int	is_line_empty(char *line);
+int	all_lines_empty(t_params *ls);
+int	parse_number_segment(const char *t, int *pi);
+int	is_valid_number_list(const char *t);
+
+//read_utils_2.c
+int		is_valid_key(const char *s);
+int		line_has_illegal_character(char *line);
+void	validate_scene_or_exit(t_scene *scene, t_params *ls);
+void	trim_newline(char *s);
+
 //parse_scene.c
 int	parse_ambient(char **tokens, t_scene *scene, t_params *ls);
 int	parse_camera(char **tokens, t_scene *scene, t_params *ls);
@@ -258,6 +271,8 @@ bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
 
 //ray_utils.c
 t_vec3	ray_at(t_ray ray, double t);
+bool	is_closer_hit(t_hit *tmp, t_hit *closest);
+void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *hit);
 
 //ambient.c
 t_color	compute_ambient(t_color obj_color, t_scene *scene);
