@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   close_window.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 13:13:34 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/08 13:15:20 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/miniRT.h"
 
 #if defined(__linux__)
@@ -18,7 +30,7 @@ void	destroy_display(void *mlx_ptr)
 void	destroy_scene_image(t_scene *scene)
 {
 	t_image	*img;
-	
+
 	if (!scene)
 		return ;
 	img = scene->img;
@@ -30,7 +42,6 @@ void	destroy_scene_image(t_scene *scene)
 	scene->img = NULL;
 }
 
-
 int	close_program(t_scene *scene, const char *msg, int state)
 {
 	if (msg)
@@ -38,7 +49,7 @@ int	close_program(t_scene *scene, const char *msg, int state)
 	if (scene)
 	{
 		destroy_scene_image(scene);
-		if (scene->mlx_ptr	 && scene->win_ptr)
+		if (scene->mlx_ptr && scene->win_ptr)
 		{
 			mlx_destroy_window(scene->mlx_ptr, scene->win_ptr);
 			scene->win_ptr = NULL;

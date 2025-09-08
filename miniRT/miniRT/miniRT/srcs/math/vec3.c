@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vec3.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 14:59:30 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/08 15:00:00 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/miniRT.h"
 
 t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 {
 	t_vec3	res;
-	
+
 	res.x = a.x + b.x;
 	res.y = a.y + b.y;
 	res.z = a.z + b.z;
@@ -13,7 +25,7 @@ t_vec3	vec3_add(t_vec3 a, t_vec3 b)
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
 {
 	t_vec3	res;
-	
+
 	res.x = a.x - b.x;
 	res.y = a.y - b.y;
 	res.z = a.z - b.z;
@@ -23,7 +35,7 @@ t_vec3	vec3_sub(t_vec3 a, t_vec3 b)
 t_vec3	vec3_scale(t_vec3 a, double s)
 {
 	t_vec3	res;
-	
+
 	res.x = a.x * s;
 	res.y = a.y * s;
 	res.z = a.z * s;

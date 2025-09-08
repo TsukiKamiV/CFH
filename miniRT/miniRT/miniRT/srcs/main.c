@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 14:58:35 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/08 14:59:06 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/miniRT.h"
 
 static int	init_mlx_and_window(t_scene *scene)
@@ -15,7 +27,7 @@ static int	load_rt_file(const char *filename, t_scene *scene)
 {
 	int			ok;
 	t_params	ls;
-	
+
 	ok = read_all_lines(filename, &ls);
 	if (!ok)
 		return (0);
@@ -32,7 +44,7 @@ static int	load_rt_file(const char *filename, t_scene *scene)
 int	verify_arg(int argc, char *argv[])
 {
 	size_t	argv_len;
-	
+
 	if (argc != 2)
 		return (1);
 	argv_len = ft_strlen(argv[1]);
@@ -41,16 +53,15 @@ int	verify_arg(int argc, char *argv[])
 	return (0);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	t_scene		*scene;
-	
+
 	if (verify_arg(argc, argv))
 		return (error_msg("usage: ./miniRT scene.rt", 1));
 	scene = malloc(sizeof(t_scene));
 	if (!scene)
 		return (error_msg("memory allocation failed", 1));
-	//printf("scene addr: %p\n", scene);
 	ft_memset(scene, 0, sizeof(t_scene));
 	if (!load_rt_file(argv[1], scene))
 		return (close_program(scene, NULL, EXIT_ERROR_FILE));

@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_sphere.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 14:36:31 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/08 14:37:17 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../../includes/miniRT.h"
 
 static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 {
 	char	**center;
 	char	**color;
-	
+
 	center = NULL;
 	color = NULL;
 	center = ft_split(tokens[1], ',');
@@ -35,17 +47,19 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 int	parse_sphere(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_sphere	*sp;
-	
+
 	if (ft_count_size(tokens) != 4)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "Error: invalid sphere parameter number.\n", EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "Error\ninvalid sphere parameter number.", \
+				EXIT_ERROR_PARAM);
 	}
 	sp = malloc(sizeof(t_sphere));
 	if (!sp)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "Error: allocation failed for t_sphere.\n", EXIT_ERROR_MALLOC);
+		exit_with_lines(scene, ls, "Error: allocation failed for t_sphere.\n", \
+				EXIT_ERROR_MALLOC);
 	}
 	if (parse_fill_sphere(tokens, sp))
 	{

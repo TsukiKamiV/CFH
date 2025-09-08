@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 15:09:23 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/08 15:24:36 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/miniRT.h"
 
 /**
@@ -9,17 +21,19 @@
  *垂直基向量：basis.v = cross(w, u);
  *横向向量：horizontal = u * viewport.width;
  *纵向向量：vertical = v * viewport.height;
- *视平面左下角坐标：lower_left_corner = cam->pos - horizontal/2 - vertical/2 - w * focal_length;
+ *视平面左下角坐标：
+ *lower_left_corner = cam->pos - horizontal/2 - vertical/2 - w * focal_length;
  *归一化像素坐标：u_ratio = x / (image_width - 1);
  *v_ratio = y / (image_height - 1);
- *像素在视平面上的实际坐标：pixel_pos = lower_left_corner + horizontal * u_ratio + vertical * v_ratio;
+ *像素在视平面上的实际坐标：
+ *pixel_pos = lower_left_corner + horizontal * u_ratio + vertical * v_ratio;
  *光线方向：direction = normalize(pixel_pos - cam->pos);
  */
-
-static void	init_viewport_and_basis(t_camera *cam, t_image img, t_viewport *vp, t_basis *basis)
+static void	init_viewport_and_basis(t_camera *cam, t_image img, \
+		t_viewport *vp, t_basis *basis)
 {
 	double	fov_rad;
-	
+
 	vp->aspect_ratio = (double)img.width / (double)img.height;
 	fov_rad = cam->fov * M_PI / 180.0;
 	vp->height = 2.0 * tan(fov_rad / 2.0);
@@ -30,14 +44,15 @@ static void	init_viewport_and_basis(t_camera *cam, t_image img, t_viewport *vp, 
 	basis->v = vec3_cross(basis->w, basis->u);
 }
 
-static void	compute_lower_left_corner(t_camera *cam, t_viewport vp, t_basis basis, t_vec3 *ll_corner)
+static void	compute_lower_left_corner(t_camera *cam, t_viewport vp, \
+		t_basis basis, t_vec3 *ll_corner)
 {
 	t_vec3	horizontal;
 	t_vec3	vertical;
-	
+
 	horizontal = vec3_scale(basis.u, vp.width);
 	vertical = vec3_scale(basis.v, vp.height);
-	*ll_corner = vec3_sub(vec3_sub(vec3_sub(cam->pos, vec3_scale(horizontal, 0.5)), vec3_scale(vertical, 0.5)), vec3_scale(basis.w, vp.focal_length));
+	*ll_corner = vec3_sub(vec3_sub(vec3_sub(cam->pos, veic3_scale(horizontal, 0.5)), vec3_scale(vertical, 0.5)), vec3_scale(basis.w, vp.focal_length));
 }
 
 static t_vec3	compute_pixel_pos(t_vec3 ll_corner, t_basis basis, t_viewport vp, t_point2 pixel, t_image img)
@@ -47,7 +62,7 @@ static t_vec3	compute_pixel_pos(t_vec3 ll_corner, t_basis basis, t_viewport vp, 
 	t_vec3	horizontal;
 	t_vec3	vertical;
 	t_vec3	pos;
-	
+
 	u_ratio = (double)pixel.x / (img.width - 1);
 	v_ratio = (double)pixel.y / (img.height - 1);
 	horizontal = vec3_scale(basis.u, vp.width);
@@ -63,7 +78,7 @@ t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
 	t_vec3		ll_corner;
 	t_basis		basis;
 	t_vec3		pixel_pos;
-	
+
 	ft_memset(&vp, 0, sizeof(t_viewport));
 	ft_memset(&ray, 0, sizeof(t_ray));
 	ft_memset(&basis, 0, sizeof(t_basis));
@@ -81,7 +96,7 @@ t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 	t_hit		closest;
 	t_hit		tmp;
 	bool		hit;
-	
+
 	(void)pixel;
 	ft_memset(&closest, 0, sizeof(t_hit));
 	ft_memset(&tmp, 0, sizeof(t_hit));
@@ -202,4 +217,3 @@ t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 //	else
 //		return (create_color(0, 0, 0));
 //}
-

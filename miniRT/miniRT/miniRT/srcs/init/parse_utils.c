@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 13:20:39 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/08 13:23:18 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/miniRT.h"
 
 void	add_object(t_scene *scene, t_object *new)
 {
 	t_object	*current;
-	
+
 	if (!scene->objs)
 	{
 		scene->objs = new;
@@ -19,7 +31,7 @@ int	validate_assign_rgb(t_color *color, char **rgb)
 {
 	int	i;
 	int	v;
-	
+
 	i = 0;
 	if (ft_count_size(rgb) != 3)
 		return (error_msg("wrong color parameter count.", 1));
@@ -39,7 +51,7 @@ int	validate_assign_rgb(t_color *color, char **rgb)
 int	normal_is_unit(t_vec3 n)
 {
 	double	len;
-	
+
 	len = vec3_length(n);
 	if (len < 0.99 || len > 1.01)
 		return (1);
@@ -49,7 +61,7 @@ int	normal_is_unit(t_vec3 n)
 int	create_and_fill_obj(t_scene *scene, t_object_type type, void *element)
 {
 	t_object	*obj;
-	
+
 	obj = malloc(sizeof(t_object));
 	if (!obj)
 	{
@@ -66,7 +78,7 @@ int	create_and_fill_obj(t_scene *scene, t_object_type type, void *element)
 void	free_lines(t_params *ls)
 {
 	int	i;
-	
+
 	if (!ls || !ls->tab)
 		return ;
 	i = 0;
@@ -80,4 +92,3 @@ void	free_lines(t_params *ls)
 	ls->tab = NULL;
 	ls->count = 0;
 }
-
