@@ -52,23 +52,7 @@ static void	compute_lower_left_corner(t_camera *cam, t_viewport vp, \
 
 	horizontal = vec3_scale(basis.u, vp.width);
 	vertical = vec3_scale(basis.v, vp.height);
-	*ll_corner = vec3_sub(vec3_sub(vec3_sub(cam->pos, veic3_scale(horizontal, 0.5)), vec3_scale(vertical, 0.5)), vec3_scale(basis.w, vp.focal_length));
-}
-
-static t_vec3	compute_pixel_pos(t_vec3 ll_corner, t_basis basis, t_viewport vp, t_point2 pixel, t_image img)
-{
-	double	u_ratio;
-	double	v_ratio;
-	t_vec3	horizontal;
-	t_vec3	vertical;
-	t_vec3	pos;
-
-	u_ratio = (double)pixel.x / (img.width - 1);
-	v_ratio = (double)pixel.y / (img.height - 1);
-	horizontal = vec3_scale(basis.u, vp.width);
-	vertical = vec3_scale(basis.v, vp.height);
-	pos = vec3_add(vec3_add(ll_corner, vec3_scale(horizontal, u_ratio)), vec3_scale(vertical, v_ratio));
-	return (pos);
+	*ll_corner = vec3_sub(vec3_sub(vec3_sub(cam->pos, vec3_scale(horizontal, 0.5)), vec3_scale(vertical, 0.5)), vec3_scale(basis.w, vp.focal_length));
 }
 
 t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
@@ -77,16 +61,18 @@ t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
 	t_viewport	vp;
 	t_vec3		ll_corner;
 	t_basis		basis;
-	t_vec3		pixel_pos;
+	t_uv		uv;
+	//t_vec3		pixel_pos;
 
 	ft_memset(&vp, 0, sizeof(t_viewport));
 	ft_memset(&ray, 0, sizeof(t_ray));
 	ft_memset(&basis, 0, sizeof(t_basis));
 	init_viewport_and_basis(cam, img, &vp, &basis);
 	compute_lower_left_corner(cam, vp, basis, &ll_corner);
-	pixel_pos = compute_pixel_pos(ll_corner, basis, vp, pixel, img);
+	uv.u = (double)pixel.x / (img.width - 1);
+	uv.v = (double)pixel.y / (img.height - 1);
 	ray.origin = cam->pos;
-	ray.direction = vec3_normalize(vec3_sub(pixel_pos, cam->pos));
+	ray.direction = vec3_normalize(vec3_sub(pixel_pos_from_offset(ll_corner, compute_view_offset(basis, vp, uv)), cam->pos));
 	return (ray);
 }
 
@@ -112,6 +98,7 @@ t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
 		return (compute_lighting(scene, &closest));
 	return (create_color(0, 0, 0));
 }
+
 
 //t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
 //{

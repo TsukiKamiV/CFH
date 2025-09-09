@@ -45,7 +45,7 @@ static void	assign_cy_center_axis(t_cylinder *cy, char **center, char **axis)
 	cy->axis.z = atof(axis[2]);
 }
 
-static int	assign_cy_dims(t_cylinder *cy, char **tokens)
+int	assign_cy_dims(t_cylinder *cy, char **tokens)
 {
 	double	r;
 	double	h;
@@ -74,14 +74,9 @@ static int	parse_fill_cylinder(char **tokens, t_cylinder *cy)
 	if (normal_is_unit(cy->axis))
 	{
 		free_multiple_tab(3, center, axis, color);
-		return (error_msg("cylinder axis vector must be normalized.", 1));
+		return (error_msg("cylinder axis not normalized.", 1));
 	}
-	if (assign_cy_dims(cy, tokens))
-	{
-		free_multiple_tab(3, center, axis, color);
-		return (1);
-	}
-	if (validate_assign_rgb(&cy->color, color))
+	if (validate_cy_dims_and_color(cy, tokens, color))
 	{
 		free_multiple_tab(3, center, axis, color);
 		return (1);
@@ -97,29 +92,27 @@ int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls)
 	if (ft_count_size(tokens) != 6)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, \
-				"Error\ninvalid cylinder parameter number", \
-				EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "cy param error", ERR_PARAM);
 	}
 	cy = malloc(sizeof(t_cylinder));
 	if (!cy)
 	{
-		free (tokens);
-		exit_with_lines(scene, ls, \
-				"Error\nallocation failed for t_cylinder.", \
-				EXIT_ERROR_MALLOC);
+		free_tab (tokens);
+		exit_with_lines(scene, ls, "cy malloc error", ERR_MALLOC);
 	}
 	if (parse_fill_cylinder(tokens, cy))
-	{
-		free(cy);
-		free_tab(tokens);
-		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
-	}
+		cy_exit(scene, ls, tokens, cy);
+	//{
+	//	free(cy);
+	//	free_tab(tokens);
+	//	exit_with_lines(scene, ls, NULL, ERR_PARAM);
+	//}
 	if (!create_and_fill_obj(scene, CYLINDER, cy))
-	{
-		free_tab(tokens);
-		free (cy);
-		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
-	}
+		cy_exit(scene, ls, tokens, cy);
+	//{
+	//	free_tab(tokens);
+	//	free (cy);
+	//	exit_with_lines(scene, ls, NULL, ERR_PARAM);
+	//}
 	return (0);
 }

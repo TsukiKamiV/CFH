@@ -58,15 +58,15 @@ int	main(int argc, char *argv[])
 	t_scene		*scene;
 
 	if (verify_arg(argc, argv))
-		return (error_msg("usage: ./miniRT scene.rt", 1));
+		return (error_msg("usage: ./miniRT *.rt", 1));
 	scene = malloc(sizeof(t_scene));
 	if (!scene)
 		return (error_msg("memory allocation failed", 1));
 	ft_memset(scene, 0, sizeof(t_scene));
 	if (!load_rt_file(argv[1], scene))
-		return (close_program(scene, NULL, EXIT_ERROR_FILE));
+		return (close_program(scene, NULL, ERR_FILE));
 	if (init_mlx_and_window(scene))
-		return (close_program(scene, NULL, EXIT_ERROR_MLX));
+		return (close_program(scene, NULL, ERR_MLX));
 	render_scene(scene);
 	mlx_key_hook(scene->win_ptr, ft_key_hook, scene);
 	mlx_hook(scene->win_ptr, 17, 0, my_mlx_hook_callback, scene);

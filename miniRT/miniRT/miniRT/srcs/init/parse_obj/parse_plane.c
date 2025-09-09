@@ -55,21 +55,19 @@ static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl, t_params *ls)
 	normal = NULL;
 	color = NULL;
 	if (split_plane_tokens(tokens, &pos, &normal, &color))
-		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, NULL, ERR_PARAM);
 	assign_plane_point_normal(pl, pos, normal);
 	if (normal_is_unit(pl->normal))
 	{
 		free_multiple_tab(4, pos, normal, color, tokens);
 		free (pl);
-		exit_with_lines(scene, ls, \
-				"Error\nplane normal must be normalized.", \
-				EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "pl normal not normalized", ERR_PARAM);
 	}
 	if (validate_assign_rgb(&pl->color, color))
 	{
 		free_multiple_tab(4, pos, normal, color, tokens);
 		free (pl);
-		exit_with_lines(scene, ls, NULL, EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, NULL, ERR_PARAM);
 	}
 	free_multiple_tab(3, pos, normal, color);
 	return (0);
@@ -78,33 +76,24 @@ static int	fill_plane(t_scene *scene, char **tokens, t_plane *pl, t_params *ls)
 int	parse_plane(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_plane		*pl;
-	t_object	*obj;
 
 	if (ft_count_size(tokens) != 4)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, \
-				"Error\ninvalid plane parameter number.", \
-				EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "wrong pl param number.", ERR_PARAM);
 	}
 	pl = malloc(sizeof(t_plane));
 	if (!pl)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "Error\nallocation failed for t_plane.", \
-				EXIT_ERROR_MALLOC);
+		exit_with_lines(scene, ls, "malloc failed: pl", ERR_MALLOC);
 	}
 	fill_plane(scene, tokens, pl, ls);
-	obj = malloc(sizeof(t_object));
-	if (!obj)
+	if (!create_and_fill_obj(scene, PLANE, pl))
 	{
-		free(pl);
-		exit_with_lines(scene, ls, "Error\nallocation failed for t_object.", \
-				EXIT_ERROR_MALLOC);
+		free_tab(tokens);
+		free (pl);
+		exit_with_lines(scene, ls, NULL, ERR_PARAM);
 	}
-	obj->type = PLANE;
-	obj->element = pl;
-	obj->next = NULL;
-	add_object(scene, obj);
 	return (1);
 }

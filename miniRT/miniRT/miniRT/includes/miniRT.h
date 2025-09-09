@@ -16,10 +16,10 @@
  #define		EPSILON 			1e-4
  #define		EXIT_SUCCESS_MLX	0
  #define		EXIT_SUCCESS_KEY	1
- #define		EXIT_ERROR_MLX 		2
- #define		EXIT_ERROR_FILE		3
- #define		EXIT_ERROR_PARAM	4
- #define		EXIT_ERROR_MALLOC	5
+ #define		ERR_MLX 			2
+ #define		ERR_FILE			3
+ #define		ERR_PARAM			4
+ #define		ERR_MALLOC			5
 
  #ifdef __APPLE__
  # define KEY_Q 12
@@ -80,6 +80,12 @@ typedef struct	s_basis//代表摄像机坐标系的三个正交基向量
 	t_vec3	v;
 	t_vec3	w;
 }				t_basis;
+
+typedef struct	s_uv
+{
+	double	u;
+	double	v;
+}				t_uv;
 
 typedef struct s_color
 {
@@ -208,6 +214,10 @@ int		is_valid_key(const char *s);
 int		line_has_illegal_character(char *line);
 void	validate_scene_or_exit(t_scene *scene, t_params *ls);
 void	trim_newline(char *s);
+char	**read_file_with_gnl(int fd, char *line, char **tab);
+
+//read_utils_3.c
+int	scan_frac(const char *t, int i, int *count);
 
 //parse_scene.c
 int	parse_ambient(char **tokens, t_scene *scene, t_params *ls);
@@ -218,6 +228,11 @@ int	parse_light(char **tokens, t_scene *scene, t_params *ls);
 int	parse_sphere(char **tokens, t_scene *scene, t_params *ls);
 int	parse_plane(char **tokens, t_scene *scene, t_params *ls);
 int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls);
+int	assign_cy_dims(t_cylinder *cy, char **tokens);
+
+//parse_obj_utils.c
+int	validate_cy_dims_and_color(t_cylinder *cy, char **tokens, char **color);
+void	cy_exit(t_scene *scene, t_params *ls, char **tokens, t_cylinder *cy);
 
 //parse_utils.c
 int	validate_assign_rgb(t_color *color, char **rgb);
@@ -273,6 +288,8 @@ bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
 t_vec3	ray_at(t_ray ray, double t);
 bool	is_closer_hit(t_hit *tmp, t_hit *closest);
 void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *hit);
+t_vec3	compute_view_offset(t_basis basis, t_viewport vp, t_uv uv);
+t_vec3	pixel_pos_from_offset(t_vec3 ll_corner, t_vec3 offset);
 
 //ambient.c
 t_color	compute_ambient(t_color obj_color, t_scene *scene);

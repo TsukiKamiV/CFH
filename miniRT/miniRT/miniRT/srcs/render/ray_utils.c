@@ -32,3 +32,22 @@ void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *h
 	if (res && is_closer_hit(tmp, closest))
 		*hit = true;
 }
+
+/*计算视平面偏移：horizontal * u + vertical * v*/
+t_vec3	compute_view_offset(t_basis basis, t_viewport vp, t_uv uv)
+{
+	t_vec3	h;
+	t_vec3	v;
+	t_vec3	offset;
+	
+	h = vec3_scale(basis.u, vp.width);
+	v = vec3_scale(basis.v, vp.height);
+	offset = vec3_add(vec3_scale(h, uv.u), vec3_scale(v, uv.v));
+	return (offset);
+}
+
+/*由左下角 + 偏移 计算像素位置*/
+t_vec3	pixel_pos_from_offset(t_vec3 ll_corner, t_vec3 offset)
+{
+	return (vec3_add(ll_corner, offset));
+}

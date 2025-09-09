@@ -22,7 +22,7 @@ int	count_lines_in_file(const char *filename, int *out_count)
 		return (0);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		return (0);
+		return (error_msg("cannot open file", 0));
 	count = 0;
 	line = get_next_line(fd);
 	while (line)
@@ -82,15 +82,7 @@ int	parse_number_segment(const char *t, int *pi)
 		digits++;
 		i++;
 	}
-	if (t[i] == '.')
-	{
-		i++;
-		while (ft_isdigit(t[i]))
-		{
-			frac++;
-			i++;
-		}
-	}
+	i = scan_frac(t, i, &frac);
 	if (digits + frac == 0)
 		return (0);
 	*pi = i;

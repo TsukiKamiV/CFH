@@ -62,12 +62,12 @@ void	validate_scene_or_exit(t_scene *scene, t_params *ls)
 {
 	if (!scene->amb || !scene->cam || !scene->light)
 		exit_with_lines(scene, ls, \
-				"Error\nmissing key element to create the scene.\n", \
-				EXIT_ERROR_PARAM);
+				"missing key element to create the scene.", \
+				ERR_PARAM);
 	if (!scene->objs)
 		exit_with_lines(scene, ls, \
-				"Error\nat least one object required.\n", \
-				EXIT_ERROR_PARAM);
+				"at least one object required.", \
+				ERR_PARAM);
 }
 
 void	trim_newline(char *s)
@@ -86,4 +86,22 @@ void	trim_newline(char *s)
 		}
 		i++;
 	}
+}
+
+char	**read_file_with_gnl(int fd, char *line, char **tab)
+{
+	int	i;
+	
+	i = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		trim_newline(line);
+		tab[i] = line;
+		i++;
+		line = get_next_line(fd);
+	}
+	close(fd);
+	tab[i] = NULL;
+	return (tab);
 }

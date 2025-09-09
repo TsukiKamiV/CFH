@@ -12,24 +12,6 @@
 
 #include "../../includes/miniRT.h"
 
-static char	**read_file_with_gnl(int fd, char *line, char **tab)
-{
-	int	i;
-
-	i = 0;
-	line = get_next_line(fd);
-	while (line)
-	{
-		trim_newline(line);
-		tab[i] = line;
-		i++;
-		line = get_next_line(fd);
-	}
-	close(fd);
-	tab[i] = NULL;
-	return (tab);
-}
-
 int	load_lines_into_tab(const char *filename, char ***out_tab, int count)
 {
 	int		fd;
@@ -42,7 +24,7 @@ int	load_lines_into_tab(const char *filename, char ***out_tab, int count)
 	line = NULL;
 	tab = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!tab)
-		return (0);
+		return (error_msg("malloc failed", 0));
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
@@ -92,38 +74,41 @@ void	dispatch_element(char **tokens, t_scene *scene, t_params *ls)
 	{
 		free_tab(tokens);
 		exit_with_lines(scene, ls, \
-				"Error\n key element type error found in rt file.\n", \
-				EXIT_ERROR_FILE);
+				"wrong element type\n", ERR_FILE);
 	}
+}
+
+int	process_line(t_scene *scene, t_params *ls, char *s)
+{
+	char	**tokens;
+	
+	if (line_has_illegal_character(s))
+		exit_with_lines(scene, ls, "illegal characters", ERR_PARAM);
+	tokens = ft_split(s, ' ');
+	if (!tokens)
+		return (0);
+	if (!is_valid_key(tokens[0]))
+	{
+		free_tab(tokens);
+		return (error_msg("wrong element type", 1) && 0);
+	}
+	dispatch_element(tokens, scene, ls);
+	free_tab(tokens);
+	return (1);
 }
 
 int	parse_scene_from_lines(t_params *ls, t_scene *scene)
 {
 	int		i;
-	char	**tokens;
 
 	if (all_lines_empty(ls))
-		exit_with_lines(scene, ls, "Error\n empty rt file.\n", EXIT_ERROR_FILE);
+		exit_with_lines(scene, ls, "empty rt file", ERR_FILE);
 	i = 0;
 	while (i < ls->count)
 	{
 		if (!is_line_empty(ls->tab[i]))
-		{
-			if (line_has_illegal_character(ls->tab[i]))
-				exit_with_lines(scene, ls, \
-						"Error\n illegal character found in rt file.\n", \
-						EXIT_ERROR_PARAM);
-			tokens = ft_split(ls->tab[i], ' ');
-			if (!tokens)
+			if (!process_line(scene, ls, ls->tab[i]))
 				return (0);
-			if (!is_valid_key(tokens[0]))
-			{
-				free_tab(tokens);
-				return (error_msg("key element type error", 1) && 0);
-			}
-			dispatch_element(tokens, scene, ls);
-			free_tab(tokens);
-		}
 		i++;
 	}
 	validate_scene_or_exit(scene, ls);

@@ -27,6 +27,15 @@ void	destroy_display(void *mlx_ptr)
 }
 #endif
 
+int	error_msg(const char *msg, int ret)
+{
+	ft_putstr_fd("Error", 2);
+	ft_putstr_fd("\n", 2);
+	ft_putstr_fd((char *)msg, 2);
+	ft_putstr_fd("\n", 2);
+	return (ret);
+}
+
 void	destroy_scene_image(t_scene *scene)
 {
 	t_image	*img;
@@ -45,7 +54,7 @@ void	destroy_scene_image(t_scene *scene)
 int	close_program(t_scene *scene, const char *msg, int state)
 {
 	if (msg)
-		ft_putstr_fd((char *)msg, 2);
+		error_msg(msg, state);
 	if (scene)
 	{
 		destroy_scene_image(scene);

@@ -20,8 +20,8 @@ static int	parse_cam_pos(t_scene *scene, char **tokens, \
 	{
 		free_tab(*pos);
 		exit_with_lines(scene, ls, \
-				"Error: invalid camera position formatting.\n", \
-				EXIT_ERROR_PARAM);
+				"invalid camera position formatting.", \
+				ERR_PARAM);
 	}
 	scene->cam->pos.x = atof((*pos)[0]);
 	scene->cam->pos.y = atof((*pos)[1]);
@@ -39,8 +39,8 @@ static int	parse_cam_orientation(t_scene *scene, char **tokens, \
 	{
 		free_tab(*orient);
 		exit_with_lines(scene, ls, \
-				"Error: invalid camera orientation formatting.\n", \
-				EXIT_ERROR_PARAM);
+				"invalid camera orientation formatting.", \
+				ERR_PARAM);
 	}
 	tmp_orient.x = atof((*orient)[0]);
 	tmp_orient.y = atof((*orient)[1]);
@@ -49,8 +49,8 @@ static int	parse_cam_orientation(t_scene *scene, char **tokens, \
 	{
 		free_tab(*orient);
 		exit_with_lines(scene, ls, \
-				"Error: camera orient must be normalized.\n", \
-				EXIT_ERROR_PARAM);
+				"camera orient must be normalized.", \
+				ERR_PARAM);
 	}
 	scene->cam->orient = tmp_orient;
 	return (0);
@@ -65,15 +65,14 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 	if (ft_count_size(tokens) != 4)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "Error: invalid camera parameter number.\n", \
-				EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "invalid camera parameter number.", \
+				ERR_PARAM);
 	}
 	scene->cam = malloc(sizeof(t_camera));
 	if (!scene->cam)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "Error: allocation failed for t_camera.\n", \
-				EXIT_ERROR_MALLOC);
+		exit_with_lines(scene, ls, "malloc failed for cam", ERR_MALLOC);
 	}
 	if (parse_cam_pos(scene, tokens, &pos, ls) || \
 			parse_cam_orientation(scene, tokens, &orient, ls))
@@ -83,8 +82,7 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 	{
 		free_tab(tokens);
 		free_multiple_tab(2, pos, orient);
-		exit_with_lines(scene, ls, "Error: camera FOV out of range.\n", \
-				EXIT_ERROR_PARAM);
+		exit_with_lines(scene, ls, "camera FOV out of range", ERR_PARAM);
 	}
 	scene->cam->fov = tmp_fov;
 	free_multiple_tab(2, pos, orient);
