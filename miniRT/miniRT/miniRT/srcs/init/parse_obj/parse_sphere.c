@@ -49,6 +49,13 @@ static int	parse_fill_sphere(char **tokens, t_sphere *sp)
 	return (0);
 }
 
+static void	exit_sp(t_scene *scene, t_params *ls, char **tokens, t_sphere *sp)
+{
+	free_tab(tokens);
+	free (sp);
+	exit_with_lines(scene, ls, NULL, ERR_PARAM);
+}
+
 int	parse_sphere(char **tokens, t_scene *scene, t_params *ls)
 {
 	t_sphere	*sp;
@@ -65,16 +72,8 @@ int	parse_sphere(char **tokens, t_scene *scene, t_params *ls)
 		exit_with_lines(scene, ls, "malloc failed: sp", ERR_MALLOC);
 	}
 	if (parse_fill_sphere(tokens, sp))
-	{
-		free(sp);
-		free_tab(tokens);
-		exit_with_lines(scene, ls, NULL, ERR_PARAM);
-	}
+		exit_sp(scene, ls, tokens, sp);
 	if (!create_and_fill_obj(scene, SPHERE, sp))
-	{
-		free_tab(tokens);
-		free (sp);
-		exit_with_lines(scene, ls, NULL, ERR_PARAM);
-	}
+		exit_sp(scene, ls, tokens, sp);
 	return (0);
 }
