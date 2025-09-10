@@ -12,7 +12,7 @@
 
 #include "../../../includes/miniRT.h"
 
-static int	parse_cam_pos(t_scene *scene, char **tokens, \
+static void	parse_cam_pos(t_scene *scene, char **tokens, \
 		char ***pos, t_params *ls)
 {
 	*pos = ft_split(tokens[1], ',');
@@ -26,10 +26,9 @@ static int	parse_cam_pos(t_scene *scene, char **tokens, \
 	scene->cam->pos.x = atof((*pos)[0]);
 	scene->cam->pos.y = atof((*pos)[1]);
 	scene->cam->pos.z = atof((*pos)[2]);
-	return (0);
 }
 
-static int	parse_cam_orientation(t_scene *scene, char **tokens, \
+static void	parse_cam_orientation(t_scene *scene, char **tokens, \
 		char ***orient, t_params *ls)
 {
 	t_vec3	tmp_orient;
@@ -53,20 +52,31 @@ static int	parse_cam_orientation(t_scene *scene, char **tokens, \
 				ERR_PARAM);
 	}
 	scene->cam->orient = tmp_orient;
-	return (0);
+}
+
+static int fill_cam_fov(char **tokens, t_scene *scene, char **pos, char **orient)
+{
+	double	tmp_fov;
+	
+	tmp_fov = atof(tokens[3]);
+	if (tmp_fov < 0.0 || tmp_fov > 180.0)
+	{
+		free_multiple_tab(3, tokens, pos, orient);
+		return (0);
+	}
+	scene->cam->fov = tmp_fov;
+	return (1);
 }
 
 int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 {
 	char	**pos;
 	char	**orient;
-	double	tmp_fov;
 
 	if (ft_count_size(tokens) != 4)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "invalid camera parameter number.", \
-				ERR_PARAM);
+		exit_with_lines(scene, ls, "wrong cam param", ERR_PARAM);
 	}
 	scene->cam = malloc(sizeof(t_camera));
 	if (!scene->cam)
@@ -74,17 +84,10 @@ int	parse_camera(char **tokens, t_scene *scene, t_params *ls)
 		free_tab(tokens);
 		exit_with_lines(scene, ls, "malloc failed for cam", ERR_MALLOC);
 	}
-	if (parse_cam_pos(scene, tokens, &pos, ls) || \
-			parse_cam_orientation(scene, tokens, &orient, ls))
-		return (1);
-	tmp_fov = atof(tokens[3]);
-	if (tmp_fov < 0.0 || tmp_fov > 180.0)
-	{
-		free_tab(tokens);
-		free_multiple_tab(2, pos, orient);
+	parse_cam_pos(scene, tokens, &pos, ls);
+	parse_cam_orientation(scene, tokens, &orient, ls);
+	if (!fill_cam_fov(tokens, scene, pos, orient))
 		exit_with_lines(scene, ls, "camera FOV out of range", ERR_PARAM);
-	}
-	scene->cam->fov = tmp_fov;
 	free_multiple_tab(2, pos, orient);
 	return (0);
 }

@@ -61,46 +61,39 @@ static void	assign_light_pos(t_light *light, char **pos)
 	light->pos.z = atof(pos[2]);
 }
 
-static int	validate_light_ratio(char *s, double *out_ratio)
+static int	validate_light_ratio(char **tokens, char **pos, char **rgb, t_scene *scene)
 {
-	double	val;
-
-	val = strtod(s, NULL);
-	if (val < 0.0 || val > 1.0)
+	double	tmp_ratio;
+	
+	tmp_ratio = strtod(tokens[2], NULL);
+	if (tmp_ratio < 0.0 || tmp_ratio > 1.0)
+	{
+		free_multiple_tab(3, tokens, rgb, pos);
 		return (0);
-	*out_ratio = val;
+	}
+	scene->light->ratio = tmp_ratio;
 	return (1);
 }
+
+
 
 int	parse_light(char **tokens, t_scene *scene, t_params *ls)
 {
 	char	**pos;
 	char	**rgb;
-	double	ratio;
 
-	if (ft_count_size(tokens) != 4)
-	{
-		free_tab(tokens);
-		exit_with_lines(scene, ls, "invalid light parameter number", \
-				ERR_PARAM);
-	}
+	check_light_size(tokens, scene, ls);
 	scene->light = malloc(sizeof(t_light));
 	if (!scene->light)
 	{
 		free_tab(tokens);
-		exit_with_lines(scene, ls, "invalid light parameter number", \
-				ERR_PARAM);
+		exit_with_lines(scene, ls, "malloc failed: light", ERR_MALLOC);
 	}
 	parse_light_pos(scene, tokens, &pos, ls);
 	parse_light_rgb(scene, tokens, &rgb, ls);
 	assign_light_pos(scene->light, pos);
-	if (!validate_light_ratio(tokens[2], &ratio))
-	{
-		free_multiple_tab(3, pos, rgb, tokens);
-		exit_with_lines(scene, ls, "light ratio out of range", \
-				ERR_PARAM);
-	}
-	scene->light->ratio = ratio;
+	if (!validate_light_ratio(tokens, pos, rgb, scene))
+		exit_with_lines(scene, ls, "wrong light ratio", ERR_PARAM);
 	if (validate_assign_rgb(&scene->light->color, rgb))
 	{
 		free_multiple_tab(3, pos, rgb, tokens);

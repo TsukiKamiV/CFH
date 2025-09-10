@@ -219,10 +219,15 @@ char	**read_file_with_gnl(int fd, char *line, char **tab);
 //read_utils_3.c
 int	scan_frac(const char *t, int i, int *count);
 
-//parse_scene.c
+//parse_scene
+//parse_amb.c
 int	parse_ambient(char **tokens, t_scene *scene, t_params *ls);
+//parse_cam.c
 int	parse_camera(char **tokens, t_scene *scene, t_params *ls);
+//parse_light.c
 int	parse_light(char **tokens, t_scene *scene, t_params *ls);
+//parse_light_utils.c
+void	check_light_size(char **tokens, t_scene *scene, t_params *ls);
 
 //parse_obj.c
 int	parse_sphere(char **tokens, t_scene *scene, t_params *ls);
