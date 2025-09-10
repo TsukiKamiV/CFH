@@ -1,33 +1,43 @@
-#ifndef miniRT_h
-#define miniRT_h
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   miniRT.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/10 16:18:13 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/10 18:53:27 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <math.h>
-#include <stdbool.h>
-#include <stdarg.h>
+#ifndef MINIRT_H
+# define MINIRT_H
 
-#include "vec3.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <math.h>
+# include <stdbool.h>
+# include <stdarg.h>
+# include "vec3.h"
+# include "../mlx/mlx.h"
+# include "../libft/libft.h"
 
-#include "../mlx/mlx.h"
-#include "../libft/libft.h"
-	
- #define		EPSILON 			1e-4
- #define		EXIT_SUCCESS_MLX	0
- #define		EXIT_SUCCESS_KEY	1
- #define		ERR_MLX 			2
- #define		ERR_FILE			3
- #define		ERR_PARAM			4
- #define		ERR_MALLOC			5
+# define EPSILON 		1e-4
+# define EXIT_SUCCESS_MLX	0
+# define EXIT_SUCCESS_KEY	1
+# define ERR_MLX 		2
+# define ERR_FILE		3
+# define ERR_PARAM		4
+# define ERR_MALLOC		5
 
- #ifdef __APPLE__
- # define KEY_Q 12
- # define KEY_ESC 53
- #else
- # define KEY_Q	113
- # define KEY_ESC 65307
- #endif
+# ifdef __APPLE__
+#  define KEY_Q 12
+#  define KEY_ESC 53
+# else
+#  define KEY_Q	113
+#  define KEY_ESC 65307
+# endif
 
 typedef enum e_key
 {
@@ -35,14 +45,13 @@ typedef enum e_key
 	KEY_EXIT = KEY_ESC
 }				t_key;
 
-typedef struct	s_line
+typedef struct s_line
 {
-	char	*s;
-	struct s_line *next;
+	char			*s;
+	struct s_line	*next;
 }				t_line;
 
-
-typedef struct	s_params
+typedef struct s_params
 {
 	char	**tab;
 	int		count;
@@ -54,7 +63,7 @@ typedef struct	s_params
 //	int		count;
 //}				t_params;
 
-typedef struct	s_point2
+typedef struct s_point2
 {
 	int	x;
 	int	y;
@@ -62,11 +71,11 @@ typedef struct	s_point2
 
 typedef struct s_ray
 {
-	t_vec3 origin;
-	t_vec3 direction;
-}	t_ray;
+	t_vec3	origin;
+	t_vec3	direction;
+}				t_ray;
 
-typedef struct	s_viewport
+typedef struct s_viewport
 {
 	double	width;
 	double	height;
@@ -74,14 +83,14 @@ typedef struct	s_viewport
 	double	focal_length;
 }				t_viewport;
 
-typedef struct	s_basis//代表摄像机坐标系的三个正交基向量
+typedef struct s_basis//代表摄像机坐标系的三个正交基向量
 {
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
 }				t_basis;
 
-typedef struct	s_uv
+typedef struct s_uv
 {
 	double	u;
 	double	v;
@@ -109,33 +118,33 @@ typedef struct s_camera
 
 typedef struct s_light
 {
-	t_vec3	pos;
+	t_vec3		pos;
 	double		ratio;
-	t_color	color;
+	t_color		color;
 }		t_light;
 
-typedef enum	e_object_type
+typedef enum e_object_type
 {
 	SPHERE,
 	PLANE,
 	CYLINDER
 }	t_object_type;
 
-typedef struct	s_sphere
+typedef struct s_sphere
 {
 	t_vec3	center;
 	double	radius;
 	t_color	color;
 }	t_sphere;
 
-typedef struct	s_plane
+typedef struct s_plane
 {
 	t_vec3	point;
 	t_vec3	normal;
 	t_color	color;
 }		t_plane;
 
-typedef struct	s_cylinder
+typedef struct s_cylinder
 {
 	t_vec3	centre;
 	t_vec3	axis;
@@ -144,14 +153,14 @@ typedef struct	s_cylinder
 	t_color	color;
 }		t_cylinder;
 
-typedef struct	s_object
+typedef struct s_object
 {
-	t_object_type type;
-	void	*element;
-	struct	s_object *next;
+	t_object_type		type;
+	void				*element;
+	struct s_object		*next;
 }		t_object;
 
-typedef struct	s_image
+typedef struct s_image
 {
 	void	*img_ptr;
 	char	*addr;//指向图像缓冲区的起始地址
@@ -162,13 +171,12 @@ typedef struct	s_image
 	int		height;//图像高度
 }				t_image;
 
-typedef struct	s_scene
+typedef struct s_scene
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	int		height;
-	int		width;
-	
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int			height;
+	int			width;
 	t_ambient	*amb;
 	t_light		*light;
 	t_camera	*cam;
@@ -176,23 +184,23 @@ typedef struct	s_scene
 	t_image		*img;
 }	t_scene;
 
-typedef struct	s_hit
+typedef struct s_hit
 {
-	double	t;
-	t_vec3	point;
-	t_vec3 	normal;
-	t_color	color;
+	double		t;
+	t_vec3		point;
+	t_vec3		normal;
+	t_color		color;
 	t_object	*obj;
 }				t_hit;
 
-typedef struct	s_hitcheck
+typedef struct s_hitcheck
 {
 	t_hit	tmp;
 	t_hit	closest;
 	bool	hit;
 }				t_hitcheck;
 
-typedef struct s_quad 
+typedef struct s_quad
 {
 	double	a;
 	double	b;
@@ -205,16 +213,16 @@ typedef struct s_quad
 void	read_file(int fd, t_scene *scene);
 void	dispatch_element(char **tokens, t_scene *scene, t_params *ls);
 int		read_all_lines(const char *filename, t_params *out);
-int 	parse_scene_from_lines(t_params *ls, t_scene *scene);
+int		parse_scene_from_lines(t_params *ls, t_scene *scene);
 void	free_lines(t_params *ls);
 int		line_has_illegal_character(char *line);
 
 //read_utils_1.c
-int	count_lines_in_file(const char *filename, int *out_count);
-int	is_line_empty(char *line);
-int	all_lines_empty(t_params *ls);
-int	parse_number_segment(const char *t, int *pi);
-int	is_valid_number_list(const char *t);
+int		count_lines_in_file(const char *filename, int *out_count);
+int		is_line_empty(char *line);
+int		all_lines_empty(t_params *ls);
+int		parse_number_segment(const char *t, int *pi);
+int		is_valid_number_list(const char *t);
 
 //read_utils_2.c
 int		is_valid_key(const char *s);
@@ -224,40 +232,40 @@ void	trim_newline(char *s);
 char	**read_file_with_gnl(int fd, char *line, char **tab);
 
 //read_utils_3.c
-int	scan_frac(const char *t, int i, int *count);
+int		scan_frac(const char *t, int i, int *count);
 
 //parse_scene
 //parse_amb.c
-int	parse_ambient(char **tokens, t_scene *scene, t_params *ls);
+int		parse_ambient(char **tokens, t_scene *scene, t_params *ls);
 //parse_cam.c
-int	parse_camera(char **tokens, t_scene *scene, t_params *ls);
+int		parse_camera(char **tokens, t_scene *scene, t_params *ls);
 //parse_light.c
-int	parse_light(char **tokens, t_scene *scene, t_params *ls);
+int		parse_light(char **tokens, t_scene *scene, t_params *ls);
 //parse_light_utils.c
 void	check_light_size(char **tokens, t_scene *scene, t_params *ls);
 
 //parse_obj.c
-int	parse_sphere(char **tokens, t_scene *scene, t_params *ls);
-int	parse_plane(char **tokens, t_scene *scene, t_params *ls);
-int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls);
-int	assign_cy_dims(t_cylinder *cy, char **tokens);
+int		parse_sphere(char **tokens, t_scene *scene, t_params *ls);
+int		parse_plane(char **tokens, t_scene *scene, t_params *ls);
+int		parse_cylinder(char **tokens, t_scene *scene, t_params *ls);
+int		assign_cy_dims(t_cylinder *cy, char **tokens);
 
 //parse_obj_utils.c
-int	validate_cy_dims_and_color(t_cylinder *cy, char **tokens, char **color);
+int		validate_cy_dims_and_color(t_cylinder *cy, char **tokens, char **color);
 void	cy_exit(t_scene *scene, t_params *ls, char **tokens, t_cylinder *cy);
 
 //parse_utils.c
-int	validate_assign_rgb(t_color *color, char **rgb);
+int		validate_assign_rgb(t_color *color, char **rgb);
 int		normal_is_unit(t_vec3 n);
 t_color	parse_color(char *str);
 void	add_object(t_scene *scene, t_object *new);
-int	create_and_fill_obj(t_scene *scene, t_object_type type, void *element);
+int		create_and_fill_obj(t_scene *scene, t_object_type type, void *element);
 void	free_lines(t_params *ls);
-void	exit_with_lines(t_scene *scene, t_params *ls, const char *msg, int code);
+void	exit_with_lines(t_scene *scene, t_params *ls,
+			const char *msg, int code);
 
 //hook.c
-int	ft_key_hook(int keycode, t_scene *scene);
-
+int		ft_key_hook(int keycode, t_scene *scene);
 
 //utils
 //utils.c
@@ -270,10 +278,10 @@ void	free_tab(char **tab);
 //img_utils
 void	create_image(t_scene *scene);
 void	put_pixel(t_image *img, int x, int y, t_color color);
-t_color		create_color(int r, int g, int b);
+t_color	create_color(int r, int g, int b);
 
 //error.c
-int	error_msg(const char *msg, int ret);
+int		error_msg(const char *msg, int ret);
 
 //render
 //render_scene.c
@@ -286,10 +294,9 @@ void	render_plane(t_image *img, t_plane *pl);
 //ray.c
 t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img);
 t_color	trace_ray(t_ray ray, t_scene *scene);
-//t_color		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是为了debug
 
 //ray_hit.c
-int	hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
+int		hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
 bool	hit_sphere(t_ray ray, t_sphere *sphere, t_hit *hit);
 //ray_hit_cy_annex.c
 bool	hit_cylinder_body(t_ray ray, t_cylinder *cy, t_hit *hit);
@@ -301,7 +308,6 @@ bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
 t_vec3	ray_at(t_ray ray, double t);
 bool	is_closer_hit(t_hit *tmp, t_hit *closest);
 void	check_hit_obj(t_object *obj, t_ray ray, t_hitcheck *hc);
-//void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *hit);
 t_vec3	compute_view_offset(t_basis basis, t_viewport vp, t_uv uv);
 t_vec3	pixel_pos_from_offset(t_vec3 ll_corner, t_vec3 offset);
 
@@ -325,6 +331,6 @@ int		my_mlx_hook_callback(void *param);
 //close_window.c
 void	free_all_allocated_memory(t_scene *scene);
 int		close_window(t_scene *scene);
-int	close_program(t_scene *scene, const char *msg, int state);
+int		close_program(t_scene *scene, const char *msg, int state);
 
 #endif /* miniRT_h */

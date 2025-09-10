@@ -1,19 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/10 16:06:24 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/10 16:08:05 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/miniRT.h"
 
 int	ft_isspace(char c)
 {
-	return (c == ' '  ||
-			c == '\t' ||
-			c == '\n' ||
-			c == '\v' ||
-			c == '\f' ||
-			c == '\r');
+	return (c == ' ' || c == '\t' || c == '\n'\
+			|| c == '\v' || c == '\f' || c == '\r');
 }
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	int	i;
-	
+
 	i = 0;
 	while (s1[i] && s2[i])
 	{
@@ -27,17 +35,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 int	ft_count_size(char **tokens)
 {
 	int	count;
-	
+
 	if (!tokens)
 		return (0);
 	count = 0;
 	while (tokens[count])
-	//{
-	//	printf("%s\n", tokens[count]);
-	//	count++;
-	//}
 		count++;
 	return (count);
 }
-
-
