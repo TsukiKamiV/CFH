@@ -79,25 +79,27 @@ t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img)
 	return (ray);
 }
 
-t_color	trace_ray(t_ray ray, t_scene *scene, t_point2 pixel)
+static void	init_hitcheck(t_hitcheck *hc)
+{
+	if (!hc)
+		return ;
+	ft_memset(hc, 0, sizeof(t_hitcheck));
+	hc->closest.t = INFINITY;
+}
+
+t_color	trace_ray(t_ray ray, t_scene *scene)
 {
 	t_object	*obj;
-	t_hit		closest;
-	t_hit		tmp;
-	bool		hit;
+	t_hitcheck	hc;
 
-	(void)pixel;
-	ft_memset(&closest, 0, sizeof(t_hit));
-	ft_memset(&tmp, 0, sizeof(t_hit));
-	closest.t = INFINITY;
-	hit = false;
+	init_hitcheck(&hc);
 	obj = scene->objs;
 	while (obj)
 	{
-		check_hit_obj(obj, ray, &tmp, &closest, &hit);
+		check_hit_obj(obj, ray, &hc);
 		obj = obj->next;
 	}
-	if (hit)
-		return (compute_lighting(scene, &closest));
+	if (hc.hit)
+		return (compute_lighting(scene, &hc.closest));
 	return (create_color(0, 0, 0));
 }

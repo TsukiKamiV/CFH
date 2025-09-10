@@ -14,7 +14,7 @@ void	render_scene(t_scene *scene)
 		while (pixel.x < scene->img->width)
 		{
 			ray = generate_ray(scene->cam, pixel, *(scene->img));
-			color = trace_ray(ray, scene, pixel);
+			color = trace_ray(ray, scene);
 			put_pixel(scene->img, pixel.x, scene->img->height - 1 - pixel.y, color);
 			pixel.x++;
 		}

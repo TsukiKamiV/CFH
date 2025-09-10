@@ -185,6 +185,13 @@ typedef struct	s_hit
 	t_object	*obj;
 }				t_hit;
 
+typedef struct	s_hitcheck
+{
+	t_hit	tmp;
+	t_hit	closest;
+	bool	hit;
+}				t_hitcheck;
+
 typedef struct s_quad 
 {
 	double	a;
@@ -278,7 +285,8 @@ void	render_plane(t_image *img, t_plane *pl);
 
 //ray.c
 t_ray	generate_ray(t_camera *cam, t_point2 pixel, t_image img);
-t_color		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是为了debug
+t_color	trace_ray(t_ray ray, t_scene *scene);
+//t_color		trace_ray(t_ray ray, t_scene *scene, t_point2 pixel);//引入pixel是为了debug
 
 //ray_hit.c
 int	hit_plane(t_ray ray, t_plane *pl, t_hit *hit);
@@ -292,7 +300,8 @@ bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit);
 //ray_utils.c
 t_vec3	ray_at(t_ray ray, double t);
 bool	is_closer_hit(t_hit *tmp, t_hit *closest);
-void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *hit);
+void	check_hit_obj(t_object *obj, t_ray ray, t_hitcheck *hc);
+//void	check_hit_obj(t_object *obj, t_ray ray, t_hit *tmp, t_hit *closest, bool *hit);
 t_vec3	compute_view_offset(t_basis basis, t_viewport vp, t_uv uv);
 t_vec3	pixel_pos_from_offset(t_vec3 ll_corner, t_vec3 offset);
 

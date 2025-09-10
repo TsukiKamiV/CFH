@@ -66,6 +66,7 @@ SRC_FILES = \
 	init/parse_scene/parse_amb.c\
 	init/parse_scene/parse_cam.c\
 	init/parse_scene/parse_light.c\
+	init/parse_scene/parse_light_utils.c\
 	init/parse_obj/parse_plane.c\
 	init/parse_obj/parse_sphere.c\
 	init/parse_obj/parse_cylinder.c\

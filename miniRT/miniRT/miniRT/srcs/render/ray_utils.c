@@ -30,21 +30,37 @@ bool	is_closer_hit(t_hit *tmp, t_hit *closest)
 	return (false);
 }
 
-void	check_hit_obj(t_object *obj, t_ray ray,
-		t_hit *tmp, t_hit *closest, bool *hit)
+
+void	check_hit_obj(t_object *obj, t_ray ray, t_hitcheck *hc)
 {
 	bool	res;
-
+	
 	res = false;
 	if (obj->type == PLANE)
-		res = hit_plane(ray, (t_plane *)obj->element, tmp);
+		res = hit_plane(ray, (t_plane *)obj->element, &hc->tmp);
 	else if (obj->type == SPHERE)
-		res = hit_sphere(ray, (t_sphere *)obj->element, tmp);
+		res = hit_sphere(ray, (t_sphere *)obj->element, &hc->tmp);
 	else if (obj->type == CYLINDER)
-		res = hit_cylinder(ray, (t_cylinder *)obj->element, tmp);
-	if (res && is_closer_hit(tmp, closest))
-		*hit = true;
+		res = hit_cylinder(ray, (t_cylinder *)obj->element, &hc->tmp);
+	if (res && is_closer_hit(&hc->tmp, &hc->closest))
+		hc->hit = true;
 }
+
+//void	check_hit_obj(t_object *obj, t_ray ray,
+//		t_hit *tmp, t_hit *closest, bool *hit)
+//{
+//	bool	res;
+//
+//	res = false;
+//	if (obj->type == PLANE)
+//		res = hit_plane(ray, (t_plane *)obj->element, tmp);
+//	else if (obj->type == SPHERE)
+//		res = hit_sphere(ray, (t_sphere *)obj->element, tmp);
+//	else if (obj->type == CYLINDER)
+//		res = hit_cylinder(ray, (t_cylinder *)obj->element, tmp);
+//	if (res && is_closer_hit(tmp, closest))
+//		*hit = true;
+//}
 
 /*计算视平面偏移：horizontal * u + vertical * v*/
 t_vec3	compute_view_offset(t_basis basis, t_viewport vp, t_uv uv)
