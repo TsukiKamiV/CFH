@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:28:25 by luxu              #+#    #+#             */
-/*   Updated: 2025/09/08 14:31:53 by luxu             ###   ########.fr       */
+/*   Updated: 2025/09/10 13:20:51 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,17 +102,7 @@ int	parse_cylinder(char **tokens, t_scene *scene, t_params *ls)
 	}
 	if (parse_fill_cylinder(tokens, cy))
 		cy_exit(scene, ls, tokens, cy);
-	//{
-	//	free(cy);
-	//	free_tab(tokens);
-	//	exit_with_lines(scene, ls, NULL, ERR_PARAM);
-	//}
 	if (!create_and_fill_obj(scene, CYLINDER, cy))
 		cy_exit(scene, ls, tokens, cy);
-	//{
-	//	free_tab(tokens);
-	//	free (cy);
-	//	exit_with_lines(scene, ls, NULL, ERR_PARAM);
-	//}
 	return (0);
 }

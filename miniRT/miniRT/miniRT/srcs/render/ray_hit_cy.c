@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_hit_cy.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/10 13:42:18 by luxu              #+#    #+#             */
+/*   Updated: 2025/09/10 13:42:41 by luxu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/miniRT.h"
-
-
 
 static t_vec3	get_cap_center(t_cylinder *cy, int is_top)
 {
@@ -16,7 +26,7 @@ static bool	hit_cap(t_ray ray, t_cylinder *cy, t_vec3 center, t_hit *hit)
 	t_vec3	diff;
 	double	t;
 	double	r2;
-	
+
 	r2 = cy->radius * cy->radius;
 	if (fabs(vec3_dot(ray.direction, cy->axis)) < EPSILON)
 		return (false);
@@ -40,7 +50,7 @@ bool	hit_cylinder_cap(t_ray ray, t_cylinder *cy, t_hit *hit)
 	t_vec3	center;
 	int		i;
 	bool	hit_any;
-	
+
 	hit_any = false;
 	i = 0;
 	while (i < 2)
@@ -57,7 +67,7 @@ bool	hit_cylinder(t_ray ray, t_cylinder *cy, t_hit *hit)
 {
 	t_hit	tmp;
 	bool	hit_any;
-	
+
 	hit_any = false;
 	tmp.t = INFINITY;
 	if (hit_cylinder_body(ray, cy, &tmp))

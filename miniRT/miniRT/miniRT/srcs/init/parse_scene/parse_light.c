@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:42:47 by luxu              #+#    #+#             */
-/*   Updated: 2025/09/08 14:47:11 by luxu             ###   ########.fr       */
+/*   Updated: 2025/09/10 13:23:46 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,11 @@ static void	assign_light_pos(t_light *light, char **pos)
 	light->pos.z = atof(pos[2]);
 }
 
-static int	validate_light_ratio(char **tokens, char **pos, char **rgb, t_scene *scene)
+static int	validate_light_ratio(char **tokens, char **pos, \
+		char **rgb, t_scene *scene)
 {
 	double	tmp_ratio;
-	
+
 	tmp_ratio = strtod(tokens[2], NULL);
 	if (tmp_ratio < 0.0 || tmp_ratio > 1.0)
 	{
@@ -74,8 +75,6 @@ static int	validate_light_ratio(char **tokens, char **pos, char **rgb, t_scene *
 	scene->light->ratio = tmp_ratio;
 	return (1);
 }
-
-
 
 int	parse_light(char **tokens, t_scene *scene, t_params *ls)
 {

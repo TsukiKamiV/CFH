@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:40:10 by luxu              #+#    #+#             */
-/*   Updated: 2025/09/08 14:42:08 by luxu             ###   ########.fr       */
+/*   Updated: 2025/09/10 13:24:35 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,11 @@ static void	parse_cam_orientation(t_scene *scene, char **tokens, \
 	scene->cam->orient = tmp_orient;
 }
 
-static int fill_cam_fov(char **tokens, t_scene *scene, char **pos, char **orient)
+static int	fill_cam_fov(char **tokens, t_scene *scene, \
+		char **pos, char **orient)
 {
 	double	tmp_fov;
-	
+
 	tmp_fov = atof(tokens[3]);
 	if (tmp_fov < 0.0 || tmp_fov > 180.0)
 	{

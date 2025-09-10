@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:38:24 by luxu              #+#    #+#             */
-/*   Updated: 2025/09/08 14:39:28 by luxu             ###   ########.fr       */
+/*   Updated: 2025/09/10 13:22:19 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 static void	fill_amb_ratio(char **tokens, t_scene *scene, t_params *ls)
 {
 	double	tmp;
-	
+
 	tmp = strtod(tokens[1], NULL);
 	if (tmp < 0.0 || tmp > 1.0)
 	{

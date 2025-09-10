@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 13:23:47 by luxu              #+#    #+#             */
-/*   Updated: 2025/09/08 13:29:49 by luxu             ###   ########.fr       */
+/*   Updated: 2025/09/10 13:19:26 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	dispatch_element(char **tokens, t_scene *scene, t_params *ls)
 int	process_line(t_scene *scene, t_params *ls, char *s)
 {
 	char	**tokens;
-	
+
 	if (line_has_illegal_character(s))
 		exit_with_lines(scene, ls, "illegal characters", ERR_PARAM);
 	tokens = ft_split(s, ' ');

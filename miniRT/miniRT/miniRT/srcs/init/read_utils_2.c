@@ -6,7 +6,7 @@
 /*   By: luxu <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 14:17:44 by luxu              #+#    #+#             */
-/*   Updated: 2025/09/08 14:22:24 by luxu             ###   ########.fr       */
+/*   Updated: 2025/09/10 13:18:33 by luxu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	trim_newline(char *s)
 char	**read_file_with_gnl(int fd, char *line, char **tab)
 {
 	int	i;
-	
+
 	i = 0;
 	line = get_next_line(fd);
 	while (line)
