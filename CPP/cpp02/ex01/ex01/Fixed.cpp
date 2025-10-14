@@ -1,0 +1,66 @@
+//
+//  Fixed.cpp
+//  ex01
+//
+//  Created by Luyao Xu on 08/10/2025.
+//
+
+#include "Fixed.hpp"
+
+Fixed::Fixed(): _rawBits(0) {
+	std::cout << "Default constructor called" << std::endl;
+}
+
+Fixed::Fixed(const Fixed &other) : _rawBits(0) {
+	std::cout << "Copy constructor called" << std::endl;
+	*this = other;
+}
+
+Fixed &Fixed::operator=(const Fixed &other) {
+	std::cout << "Copy assignment operator called" << std::endl;
+	if (this != &other) {
+		this->_rawBits = other._rawBits;
+	}
+	return *this;
+}
+
+Fixed::~Fixed() {
+	std::cout << "Destructor called" << std::endl;
+}
+
+/*====================ADDED IN EX01======================*/
+
+Fixed::Fixed(int n) {
+	std::cout << "Int constructor called" << std::endl;
+	this->_rawBits = n << _fracBits;
+}
+
+Fixed::Fixed(float f) {
+	std::cout << "Float constructor called" << std::endl;
+	int times256 = (1 << _fracBits);
+	float	f_tmp = f * times256;
+	float	rf_tmp = roundf(f_tmp);
+	this->_rawBits = static_cast<int>(rf_tmp);
+}
+
+float	Fixed::toFloat(void) const {
+	return static_cast<float>(this->_rawBits) / static_cast<float>(1 << _fracBits);
+}
+
+int	Fixed::toInt(void) const {
+	return this->_rawBits >> _fracBits;
+}
+
+int	Fixed::getRawBits(void) const {
+	std::cout << "getRawBits member function called" << std::endl;
+	return this->_rawBits;
+}
+
+void Fixed::setRawBits(int const raw) {
+	this->_rawBits = raw;
+}
+
+std::ostream &operator<< (std::ostream &os, const Fixed &value) {
+	os << value.toFloat();
+	return os;
+}
