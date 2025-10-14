@@ -26,7 +26,7 @@ t_color	compute_diffuse(t_scene *scene, t_hit *hit)
 	dot_nl = vec3_dot(hit->normal, light_dir);
 	if (dot_nl <= 0)
 		return (create_color(0, 0, 0));
-	if (is_in_shadow(scene, hit->point, light_dir))
+	if (is_in_shadow(scene, hit->point, hit->normal, light_dir))
 		return (create_color(0, 0, 0));
 	res.r = hit->color.r * (scene->light->color.r / 255.0) * \
 		(scene->light->ratio * dot_nl);
@@ -46,25 +46,25 @@ static bool	hit_shadow_object(t_ray ray, t_object *obj, t_hit *tmp_hit, \
 	if (obj->type == PLANE)
 	{
 		if (hit_plane(ray, (t_plane *)obj->element, tmp_hit))
-			if (tmp_hit->t > 0 && tmp_hit->t < light_dist)
+			if (tmp_hit->t > SHADOW_T_MIN && tmp_hit->t < light_dist - EPSILON)
 				return (true);
 	}
 	else if (obj->type == SPHERE)
 	{
 		if (hit_sphere(ray, (t_sphere *)obj->element, tmp_hit))
-			if (tmp_hit->t > 0 && tmp_hit->t < light_dist)
+			if (tmp_hit->t > SHADOW_T_MIN && tmp_hit->t < light_dist - EPSILON)
 				return (true);
 	}
 	else if (obj->type == CYLINDER)
 	{
 		if (hit_cylinder(ray, (t_cylinder *)obj->element, tmp_hit))
-			if (tmp_hit->t > 0 && tmp_hit->t < light_dist)
+			if (tmp_hit->t > SHADOW_T_MIN && tmp_hit->t < light_dist - EPSILON)
 				return (true);
 	}
 	return (false);
 }
 
-bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 light_dir)
+bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 n, t_vec3 light_dir)
 {
 	t_ray		shadow_ray;
 	t_vec3		origin;
@@ -72,10 +72,10 @@ bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 light_dir)
 	t_hit		tmp_hit;
 	double		light_dist;
 
-	origin = vec3_add(p, vec3_scale(light_dir, EPSILON));
+	origin = vec3_add(p, vec3_scale(n, EPSILON));
 	shadow_ray.origin = origin;
 	shadow_ray.direction = light_dir;
-	light_dist = vec3_length(vec3_sub(scene->light->pos, p));
+	light_dist = vec3_length(vec3_sub(scene->light->pos, origin));
 	obj = scene->objs;
 	while (obj)
 	{

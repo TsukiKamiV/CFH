@@ -29,21 +29,50 @@
  *pixel_pos = lower_left_corner + horizontal * u_ratio + vertical * v_ratio;
  *光线方向：direction = normalize(pixel_pos - cam->pos);
  */
+//static void	init_viewport_and_basis(t_camera *cam, t_image img, \
+//		t_viewport *vp, t_basis *basis)
+//{
+//	double	fov_rad;
+//
+//	vp->aspect_ratio = (double)img.width / (double)img.height;
+//	fov_rad = cam->fov * M_PI / 180.0;
+//	vp->width = 2.0 * tan(fov_rad / 2.0);
+//	vp->height = vp->width / vp->aspect_ratio;
+//	vp->focal_length = 1.0;
+//	basis->w = vec3_normalize(vec3_scale(cam->orient, -1));
+//	basis->u = vec3_normalize(vec3_cross(basis->w, (t_vec3){0, 1, 0}));
+//	basis->v = vec3_cross(basis->u, basis->w);
+//}
+
 static void	init_viewport_and_basis(t_camera *cam, t_image img, \
-		t_viewport *vp, t_basis *basis)
+									t_viewport *vp, t_basis *basis)
 {
 	double	fov_rad;
-
+	t_vec3	up;
+	double	dotwu;
+	
 	vp->aspect_ratio = (double)img.width / (double)img.height;
 	fov_rad = cam->fov * M_PI / 180.0;
-	vp->height = 2.0 * tan(fov_rad / 2.0);
-	vp->width = vp->aspect_ratio * vp->height;
+	vp->width = 2.0 * tan(fov_rad / 2.0);
+	vp->height = vp->width / vp->aspect_ratio;
 	vp->focal_length = 1.0;
 	basis->w = vec3_normalize(vec3_scale(cam->orient, -1));
-	basis->u = vec3_normalize(vec3_cross((t_vec3){0, 1, 0}, basis->w));
+	up = (t_vec3){0, 1, 0};
+	dotwu = vec3_dot(basis->w, up);
+	if (dotwu > 0.999 || dotwu < -0.999)
+		up = (t_vec3){1, 0, 0};
+	basis->u = vec3_normalize(vec3_cross(up, basis->w));
 	basis->v = vec3_cross(basis->w, basis->u);
 }
-
+/**
+ * 计算视平面的左下角坐标：
+ * 1. 根据基向量(basis)和viewport宽高，生成横向和纵向向量
+ * 2. 从相机位置出发，依次减去横向向量的一半和纵向向量的一半，
+ *    将参考点移动到视平面的中心。
+ * 3. 再沿着相机后方向量(basis.w)的反方向，平移focal_length的距离，
+ *    得到完整的视平面左下角坐标。
+ * 结果用于之后计算像素在视平面上的精确位置。
+ */
 static void	compute_lower_left_corner(t_camera *cam, t_viewport vp, \
 		t_basis basis, t_vec3 *ll_corner)
 {

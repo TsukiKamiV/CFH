@@ -9,13 +9,11 @@ int	main(int argc, char *argv[])
 		exit (EXIT_FAILURE);
 	
 	map = ft_init_map(argv[1]);
-	
-	
 	game = malloc(sizeof(t_game));
 	if (!game)
 		return (0);
 	game->mlx_ptr = mlx_init();
-	
+	game->map = map;
 	ft_check_map(game);
 	game->total_collectables = ft_find_collectables(game);
 	ft_init_window(game);

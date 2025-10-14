@@ -12,6 +12,7 @@
 
 #include "../../includes/miniRT.h"
 
+
 static void	compute_quadratic(t_ray ray, t_sphere *sp, t_quad *q)
 {
 	t_vec3	oc;
@@ -23,6 +24,9 @@ static void	compute_quadratic(t_ray ray, t_sphere *sp, t_quad *q)
 	q->discriminant = (q->b * q->b) - (4 * q->a * q->c);
 }
 
+/**
+ *判断delta
+ */
 bool	select_root(t_quad q, double *t)
 {
 	double	root;
@@ -39,6 +43,12 @@ bool	select_root(t_quad q, double *t)
 	*t = root;
 	return (true);
 }
+
+/**
+ *@brief 使用一元二次方程求解判别式判断是否有交点
+ *射线方程： P(t) = O + tD (O->射线起点，D->射线方向）
+ *球面方程：|P - C|平方 = r平方
+ */
 
 bool	hit_sphere(t_ray ray, t_sphere *sphere, t_hit *rec)
 {

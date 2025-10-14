@@ -24,6 +24,7 @@
 # include "../libft/libft.h"
 
 # define EPSILON 		1e-4
+# define SHADOW_T_MIN	1e-4
 # define EXIT_SUCCESS_MLX	0
 # define EXIT_SUCCESS_KEY	1
 # define ERR_MLX 		2
@@ -56,12 +57,6 @@ typedef struct s_params
 	char	**tab;
 	int		count;
 }				t_params;
-//typedef struct s_params
-//{
-//	t_line	*head;
-//	t_line	*tail;
-//	int		count;
-//}				t_params;
 
 typedef struct s_point2
 {
@@ -83,17 +78,30 @@ typedef struct s_viewport
 	double	focal_length;
 }				t_viewport;
 
-typedef struct s_basis//代表摄像机坐标系的三个正交基向量
+/**
+
+ * 表示相机坐标系的三个正交基向量：
+ * - u：水平方向（右）
+ * - v：垂直方向（上）
+ * - w：相机后方方向（-orient）
+ */
+typedef struct s_basis
 {
 	t_vec3	u;
 	t_vec3	v;
 	t_vec3	w;
 }				t_basis;
 
+/**
+ * t_uv
+ * 表示像素在视平面上的归一化坐标比例：
+ * - u：横向比例 [0,1]
+ * - v：纵向比例 [0,1]
+ */
 typedef struct s_uv
 {
-	double	u;
-	double	v;
+	double	u;//0->图像最左边; 1->图像最右边
+	double	v;//0->图像最上边 1->图像最下边
 }				t_uv;
 
 typedef struct s_color
@@ -319,7 +327,7 @@ t_color	compute_lighting(t_scene *scene, t_hit *hit);
 
 //diffuse.c
 t_color	compute_diffuse(t_scene *scene, t_hit *hit);
-bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 dir);
+bool	is_in_shadow(t_scene *scene, t_vec3 p, t_vec3 n, t_vec3 dir);
 
 //free
 //exit_free.c
