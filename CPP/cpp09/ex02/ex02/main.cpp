@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
 		std::cerr << "Error" << std::endl;
 		return 1;
 	}
-	std::cout << "Before: ";
+	std::cout << "Before:";
 	for (int i = 1; i < argc; i++) {
 		parsePositiveInt(argv[i], value);
 		std::cout << " " << value;

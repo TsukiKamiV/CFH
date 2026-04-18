@@ -16,8 +16,6 @@ class PmergeMe {
 private:
 	int	* _sequence;
 	size_t _size;
-	std::vector<int>	_vect;
-	std::deque<int>		_deque;
 	
 	struct Pair {
 		int small;
@@ -33,9 +31,6 @@ private:
 	
 	template <typename Container>
 	Container formMainChain(const std::vector<PmergeMe::Pair>&);
-	
-	template <typename Container>
-	void	runOne(Container &c, const char *label, long long* elapsedUs);
 	
 	template <typename Container>
 	void	printOne(Container &c, const char *label) const;
@@ -59,43 +54,13 @@ public:
 	~PmergeMe();
 	
 	void	print() const;
-	//void	printVector() const;
-	//void	printDeque() const;
 	void	run();
-	//void	runVector();
-	//void	runDeque();
+	void	runVector();
+	void	runDeque();
 
 	template <typename Container>
 	void    printContainer(const Container& c) const;
 };
-
-
-template <typename Container>
-void	PmergeMe::printOne(Container &c, const char *label) const {
-	typename Container::const_iterator it = c.begin();
-	typename Container::const_iterator end = c.end();
-	std::cout << label << ": ";
-	while (it != end) {
-		std::cout << *it;
-		++it;
-		if (it != end)
-			std::cout << " ";
-	}
-	std::cout << std::endl;
-}
-
-template <typename Container>
-void	PmergeMe::runOne(Container &c, const char *label, long long* elapsedUs) {
-	(void)label;
-	struct timeval start;
-	struct timeval end;
-	//long long	elapsedUs;
-	//printContainer(_vect);
-	gettimeofday(&start, NULL);
-	this->fordJohnsonSort(c);
-	gettimeofday(&end, NULL);
-	*elapsedUs = (end.tv_sec - start.tv_sec) * 1000000LL + (end.tv_usec - start.tv_usec);
-}
 
 /**========================以下为算法类模板函数的具体实现========================**/
 
@@ -103,15 +68,15 @@ void	PmergeMe::runOne(Container &c, const char *label, long long* elapsedUs) {
 template <typename Container>
 void	PmergeMe::fordJohnsonSort(Container& c)  {
 	typename Container::size_type size = c.size();
-	//std::cout << "Container size: " <<  c.size() << std::endl;
+	//递归出口=>终止条件是0-1个元素，天然有序
 	if (size <= 1)
 		return;
 	bool	hasLeftOver = false;
 	int		leftOverVal = 0;
+	//先处理奇数长度的leftover
 	if (size % 2 == 1) {
 		hasLeftOver = true;
 		leftOverVal = c.back();
-		//std::cout << "has leftover bool: " << hasLeftOver << ", Left over val: " << leftOverVal << std::endl;
 	}
 	std::vector<PmergeMe::Pair> vp = makePair(c);
 	Container aChain;
@@ -121,27 +86,30 @@ void	PmergeMe::fordJohnsonSort(Container& c)  {
 		std::sort(aChain.begin(), aChain.end());
 	else
 		this->fordJohnsonSort(aChain);
-	//std::sort(vp.begin(), vp.end(), static_cast<bool (*)(const Pair&, const Pair&)>(+[](const Pair& lhs, const Pair& rhs) {return lhs.large < rhs.large;}));
-	std::sort(vp.begin(), vp.end(), cmpPairLarge);
+	std::vector<Pair> orderedPair;
+	orderedPair.reserve(vp.size());
+	typename Container::const_iterator opIt = aChain.begin();
+	while (opIt != aChain.end()) {
+		int currentLarge = *opIt;
+		std::vector<Pair>::const_iterator vpIt = vp.begin();
+		while (vpIt != vp.end()) {
+			if (vpIt->large == currentLarge) {
+				orderedPair.push_back(*vpIt);
+				break;
+			}
+			++vpIt;
+		}
+		++opIt;
+	}
 	Container mainChain;
-	if( !vp.empty())
-		mainChain.push_back(vp[0].small);
-	for(typename Container::iterator it = aChain.begin(); it != aChain.end(); ++it)
+	if( !orderedPair.empty())
+		mainChain.push_back(orderedPair[0].small);
+	for(typename Container::const_iterator it = aChain.begin(); it != aChain.end(); ++it)
 		mainChain.push_back(*it);
-	
-	//formMainChain<Container> => 显式提供返回类型，让模板函数在接收参数阶段就知道要返回的Container类型
-	//编译器只有在“模板参数出现在函数参数类型里”时，才可以自动推导。
-	//Container mainChain = formMainChain<Container>(vp);
-	//printContainer(mainChain);
-	//if (mainChain.size() <= 2)
-	//	std::sort(mainChain.begin(), mainChain.end());
-	//else
-	//	this->fordJohnsonSort(mainChain);
-	insertJacobsthal(mainChain, vp);
+	insertJacobsthal(mainChain, orderedPair);
 	if (hasLeftOver)
 		insertLeftOver(mainChain, leftOverVal);
 	c = mainChain;
-	//printContainer(mainChain);
 }
 
                /*MAKE PAIR*/
@@ -171,20 +139,6 @@ std::vector<PmergeMe::Pair> PmergeMe::makePair(const Container &c) {
 		limit-=2;
 	}
 	return v;
-}
-
-               /*MAIN CHAIN*/
-//在真正的FordJohnson算法里，b序列（small）的第一个数字（一定是整组的最小数）应该直接放在mainChain开头，而不是在jacobSthal阶段再插入
-template <typename Container>
-Container PmergeMe::formMainChain(const std::vector<PmergeMe::Pair>& pairs) {
-	Container c;
-	for(std::vector<Pair>::size_type i = 0; i < pairs.size(); ++i) {
-		if(i == 0)
-			c.push_back(pairs[i].small);
-		c.push_back(pairs[i].large);
-	}
-	//PmergeMe::printContainer(c);
-	return c;
 }
 
 template <typename Container>
@@ -217,7 +171,6 @@ void	PmergeMe::insertLeftOver(Container &mainChain, int leftOverVal) {
 	mainChain.insert(pos, leftOverVal);
 }
 
-/*[NOT USED]Container printer template function*/
 template <typename Container>
 void	PmergeMe::printContainer(const Container& c) const {
 	typename Container::const_iterator it = c.begin();

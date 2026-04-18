@@ -1,44 +1,101 @@
 
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe() {}
+PmergeMe::PmergeMe() {
+	this->_sequence = NULL;
+	this->_size = 0;
+}
 PmergeMe::PmergeMe(int argc, char **argv) {
 	int i;
 	int value;
 	
+	this->_size = argc - 1;
+	this->_sequence = new int[this->_size];
 	i = 1;
 	while (i < argc) {
 		value = std::strtol(argv[i], NULL, 10);
-		this->_vect.push_back(value);
+		this->_sequence[i - 1] = value;
 		i++;
 	}
-	this->_deque.assign(this->_vect.begin(), this->_vect.end());
 }
 PmergeMe::PmergeMe(const PmergeMe &other) {
-	*this = other;
+	size_t i;
+	this->_size = other._size;
+	if (this->_size > 0)
+		this->_sequence = new int[this->_size];
+	else
+		this->_sequence = NULL;
+	i = 0;
+	while (i < this->_size) {
+		this->_sequence[i] = other._sequence[i];
+		i++;
+	}
 }
 PmergeMe& PmergeMe::operator=(const PmergeMe &other) {
-	if (this != &other) {
-		*this = other;
+	size_t	i;
+	
+	if (this != &other)
+	{
+		delete[] this->_sequence;
+		this->_size = other._size;
+		if (this->_size > 0)
+			this->_sequence = new int[this->_size];
+		else
+			this->_sequence = NULL;
+		i = 0;
+		while (i < this->_size)
+		{
+			this->_sequence[i] = other._sequence[i];
+			i++;
+		}
 	}
-	return *this;
+	return (*this);
 }
-PmergeMe::~PmergeMe() {}
+PmergeMe::~PmergeMe() {
+	delete[] this->_sequence;
+}
 
 void	PmergeMe::print() const {
-	this->printOne(this->_vect, "std::vector<int>");
-	this->printOne(this->_deque, "std::deque<int>");
+	//this->printOne(this->_vect, "std::vector<int>");
+	//this->printOne(this->_deque, "std::deque<int>");
 }
 
 void	PmergeMe::run() {
-	long long vectUs;
-	long long dequeUs;
-	this->runOne(this->_vect, "std::vector<int>", &vectUs);
-	this->runOne(this->_deque, "std::deque<int>", &dequeUs);
 	std::cout << "After: ";
-	printContainer(this->_vect);
-	std::cout << "Time to process a range of " << this->_vect.size() << " elements with std::vector<int>: " << vectUs << " us" << std::endl;
-	std::cout << "Time to process a range of " << this->_deque.size() << " elements with std::deque<int>: " << dequeUs << " us" << std::endl;
+	this->runVector();
+	this->runDeque();
+}
+
+void	PmergeMe::runVector() {
+	std::vector<int> vect;
+	struct timeval start;
+	struct timeval end;
+	long long elapsedUS;
+	gettimeofday(&start, NULL);
+	vect.reserve(this->_size);
+	for (size_t i = 0; i < this->_size; ++i)
+		vect.push_back(this->_sequence[i]);
+	this->fordJohnsonSort(vect);
+	gettimeofday(&end, NULL);
+	elapsedUS = (end.tv_sec - start.tv_sec) * 1000000LL + (end.tv_usec - start.tv_usec);
+	printContainer(vect);
+	std::cout << "Time to process a range of " << vect.size() << " elements with std::vector<int>: " << elapsedUS << " us" << std::endl;
+}
+
+void	PmergeMe::runDeque() {
+	std::deque<int> deq;
+	struct timeval start;
+	struct timeval end;
+	long long elapsedUS;
+	gettimeofday(&start, NULL);
+	for (size_t i = 0; i < this->_size; ++i)
+		deq.push_back(this->_sequence[i]);
+	this->fordJohnsonSort(deq);
+	gettimeofday(&end, NULL);
+	elapsedUS = (end.tv_sec - start.tv_sec) * 1000000LL + (end.tv_usec - start.tv_usec);
+	//std::cout << "After: ";
+	//printContainer(deq);
+	std::cout << "Time to process a range of " << deq.size() << " elements with std::deque<int>: " << elapsedUS << " us" << std::endl;
 }
 
 std::vector<size_t> PmergeMe::smallChainOrder(const std::vector<Pair> &p) {
