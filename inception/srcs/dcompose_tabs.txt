@@ -1,0 +1,75 @@
+# Docker compose will read the yml file for :
+## 	- services
+##	- networks
+##	- volumes
+##	- build context
+##	- environment
+
+# Volumes are used to keep important data persistent outside containers.
+# This means the data can survive even if a container is stopped/removed/recreated.
+# In this project:
+#	- wordpress_data stores the WordPress website files;
+#	- mariadb_data stores the MariaDB database files.
+
+# Services starting order : mariaDB -> WordPress -> Nginx
+# Although it doesn't guarantee that mariaDB is fully functional at the start of WordPress.
+# Dependencies only set up the startup order. They have nothing to do with the network environment or the volumes sharing.
+
+services:
+	nginx:
+		build: ./requirements/nginx
+		container_name: nginx
+		# "ports" maps a container port to the host machine,
+		# so the service can be accessed from outside Docker.
+		ports:
+			- "443:443"
+		volumes:
+			- wordpress_data:/var/www/html
+		depends_on:
+			- wordpress
+		networks:
+			- inception
+		restart: always
+
+	wordpress:
+		build: ./requirements/wordpress
+		container_name: wordpress
+		# "expose" makes a port available only to other containers
+		# on the same Docker network, not to the host.
+		expose:
+			- "9000"
+		volumes:
+			- wordpress_data:/var/www/html
+		depends_on:
+			- mariadb
+		env_file:
+			- .env
+		networks:
+			- inception
+		restart: always
+	
+	mariadb:
+		build: ./requirements/mariadb
+		container_name: mariadb
+		expose:
+			- "3306"
+		volumes: 
+			- mariadb_data:/var/lib/mysql
+		env_file:
+			- .env
+		networks:
+			- inception
+		restart: always
+
+volumes:
+	wordpress_data:
+	mariadb_data:
+
+
+# The bridge network can be understood like a virtual switch.
+# Each container is like a small machine connected to this switch.
+# Once they are attached to the same bridge network,
+# they can communicate with each other inside Docker.
+networks:
+	inception:
+		driver: bridge
