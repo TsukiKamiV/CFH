@@ -53,7 +53,7 @@ stop:
 restart: down up
 
 logs:
-	$(DC) logs -fi
+	$(DC) logs -f
 
 ps:
 	$(DC) ps
