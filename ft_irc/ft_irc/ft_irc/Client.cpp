@@ -5,7 +5,11 @@ Client::Client() :
 	_ip(""),
 	_nick(""),
 	_username(""),
-	_host(""),
+	_userHost(""),
+	_hostField(""),
+	_serverName(""),
+	_realName(""),
+	_prefix(""),
 	_buffer(""),
 	_sendBuffer(""),
 	_registered(false),
@@ -18,7 +22,11 @@ Client::Client(int fd, const std::string &ip):
 	_ip(ip),
 	_nick(""),
 	_username(""),
-	_host(""),
+	_userHost(""),
+	_hostField(""),
+	_serverName(""),
+	_realName(""),
+	_prefix(""),
 	_buffer(""),
 	_sendBuffer(""),
 	_registered(false),
@@ -56,16 +64,41 @@ const std::string &Client::getUsername() const {
 	return this->_username;
 }
 
-void	Client::setUsername(const std::string &username) {
-	this->_username = username;
+void	Client::setUsername(const std::vector<std::string> &params) {
+	this->_username = params[0];
+	this->_userHost = params[1];
+	this->_serverName = params[2];
+	this->_realName = params[3];
 }
 
-const std::string	&Client::getHost() const {
-	return this->_host;
+const std::string	&Client::getHostField() const {
+	return this->_hostField;
 }
 
-void	Client::setHost(const std::string &host) {
-	this->_host = host;
+void	Client::setHostField(const std::string &hostField) {
+	this->_hostField = hostField;
+}
+
+const std::string	&Client::getUserHost() const {
+	return this->_userHost;
+}
+
+const std::string 	&Client::getServerName() const {
+	return this->_serverName;
+}
+
+const std::string	&Client::getRealName() const {
+	return this->_realName;
+}
+
+std::string Client::getPrefix() const {
+	std::string host;
+	host = getHostField();
+	if (host.empty())
+		host = getIP();
+	if (host.empty())
+		host = "unknown";
+	return (this->getNick() + "!" + this->getUsername() + "@" + host);
 }
 
 const std::string &Client::getBuffer() const {

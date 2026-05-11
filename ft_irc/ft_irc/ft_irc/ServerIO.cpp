@@ -95,9 +95,19 @@ void	Server::processLine(size_t clientIndex, const std::string &line) {
 		handleTopic(clientIndex, msg);
 	else if (msg.command == "PRIVMSG")
 		handlePrivmsg(clientIndex, msg);
+	else if (msg.command == "PING")
+		handlePing(clientIndex, msg);
+	else if (msg.command == "PONG")
+		handlePong(clientIndex, msg);
+	else if (msg.command == "CAP")
+		return ;
+	else if (msg.command == "WHO")
+		return ;
+	else if (msg.command == "QUIT")
+		handleQuit(clientIndex, msg);
 	else {
 		std::cout << "[INFO] Unknown command: " << msg.command << std::endl;
-		sendToClient(clientIndex, "[INFO] unknown command\r\n");
+		sendToClient(clientIndex, Replies::ERR_UNKNOWNCOMMAND("localhost", getReplyTarget(clientIndex), msg.command));
 	}
 }
 
@@ -151,7 +161,7 @@ void	Server::sendToClient(size_t clientIndex, const std::string &message) {
 	if (message.empty())
 		return ;
 	handleSendBuffer(clientIndex, message);
-	updateClientPollEvent(clientIndex);
+	//updateClientPollEvent(clientIndex);
 	//POLLIN => this fd is readable (has something inside to recv())
 	//POLLOUT => this fd is writable (socket can continue to send())
 	//when you have something left in _sendBuffer, you wait for poll to tell you "now you can continue to send
@@ -178,11 +188,48 @@ void	Server::channelBroadcast(int channelIndex, const std::string &message) {
 	}
 }
 
+void	Server::channelBroadcastExcept(int channelIndex, const std::string &message, int exceptFd) {
+	size_t	i, j;
+	const std::vector<int>	*memberFds;
+	
+	if (channelIndex < 0)
+		return ;
+	if (channelIndex >= static_cast<int>(_channels.size()))
+		return ;
+	memberFds = &_channels[channelIndex].getMemberFds();
+	i = 0;
+	while (i < memberFds->size()) {
+		if ((*memberFds)[i] != exceptFd) {
+			j = 0;
+			while (j < _clients.size()) {
+				if (_clients[j].getFd() == (*memberFds)[i]){
+					sendToClient(j, message);
+					break;
+				}
+				j++;
+			}
+		}
+		i++;
+	}
+}
+
 void	Server::broadcastNickChange(int clientFd, const std::string &oldNick, const std::string &newNick) {
 	size_t	channelIndex;
 	size_t	memberIndex;
 	size_t	clientIndex;
 	const std::vector<int>	*memberFds;
+	std::string	oldPrefix;
+	size_t		sourceIndex;
+	
+	sourceIndex = 0;
+	while (sourceIndex < _clients.size()) {
+		if (_clients[sourceIndex].getFd() == clientFd)
+			break;
+		sourceIndex++;
+	}
+	if (sourceIndex >= _clients.size())
+		return ;
+	oldPrefix = oldNick + "!" + _clients[sourceIndex].getUsername() + "@" + _clients[sourceIndex].getHostField();
 	
 	channelIndex = 0;
 	while (channelIndex < _channels.size()) {
@@ -194,7 +241,7 @@ void	Server::broadcastNickChange(int clientFd, const std::string &oldNick, const
 					clientIndex = 0;
 					while (clientIndex < _clients.size()) {
 						if (_clients[clientIndex].getFd() == (*memberFds)[memberIndex]) {
-							sendToClient(clientIndex, "[NICK] in " + _channels[channelIndex].getName() + ": " + oldNick + " is now known as " + newNick + "\r\n");
+							sendToClient(clientIndex, Replies::RPL_NICK(oldPrefix, newNick));
 							break;
 						}
 						clientIndex++;
@@ -207,3 +254,10 @@ void	Server::broadcastNickChange(int clientFd, const std::string &oldNick, const
 	}
 }
 
+std::string	Server::getReplyTarget(size_t clientIndex) const {
+	if (clientIndex >= _clients.size())
+		return ("*");
+	if (_clients[clientIndex].getNick().empty())
+		return ("*");
+	return (_clients[clientIndex].getNick());
+}

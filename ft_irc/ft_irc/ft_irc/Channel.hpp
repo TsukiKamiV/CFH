@@ -49,6 +49,7 @@ public:
 	bool	hasOperator(int clientFd) const;
 	int		addOperator(int clientFd);
 	int		removeOperator(int clientFd);
+	std::vector<int> getOperatorFds() const;
 	
 	bool	hasInvite(int clientFd) const;
 	int		addInvite(int clientFd);

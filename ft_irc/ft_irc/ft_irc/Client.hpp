@@ -2,6 +2,7 @@
 #define CLIENT_HPP
 
 #include <string>
+#include <vector>
 
 class Client {
 private:
@@ -9,7 +10,11 @@ private:
 	std::string _ip;
 	std::string	_nick;
 	std::string _username;
-	std::string	_host;
+	std::string	_userHost;
+	std::string _hostField;
+	std::string _serverName;
+	std::string _realName;
+	std::string	_prefix;
 	std::string	_buffer;
 	std::string _sendBuffer;
 	bool		_registered;
@@ -32,10 +37,16 @@ public:
 	void				setNick(const std::string &nick);
 	
 	const std::string	&getUsername() const;
-	void				setUsername(const std::string &username);
+	const std::string	&getUserHost() const;
+	const std::string 	&getServerName() const;
+	const std::string	&getRealName() const;
+	void				setUsername(const std::vector<std::string> &params);
 	
-	const std::string	&getHost() const;
-	void				setHost(const std::string &host);
+	const std::string	&getHostField() const;
+	void				setHostField(const std::string &hostField);
+	
+	std::string	getPrefix() const;
+	//void				setPrefix(const std::string &nick, const std::string &username, const std::string &host);
 	
 	const std::string	&getBuffer() const;
 	std::string			&getBuffer();

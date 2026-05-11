@@ -42,7 +42,8 @@ static bool	isValidPassword(const char *password) {
 		return false;
 	int i = 0;
 	while (password[i] != '\0') {
-		if (password[i] == ' ')
+		if (password[i] == ' ' || password[i] == '\t'
+			|| password[i] == '\r' || password[i] == '\n')
 			return false;
 		i++;
 	}

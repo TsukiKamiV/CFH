@@ -246,6 +246,8 @@ static void	printSummaryLine(const std::string &line)
 	std::string	endMark;
 
 	longId = extractTagValue(line, "[LONG-");
+	if (longId == "N/A")
+		longId = extractTagValue(line, "[SHORTLONG-]");
 	blockId = extractTagValue(line, "[BLOCK-");
 	tailId = extractTagValue(line, "[TAIL-");
 	if (line.find("---END---") != std::string::npos)

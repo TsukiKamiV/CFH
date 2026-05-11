@@ -122,7 +122,7 @@ int Server::createListeningSocket(long port) {
 		return -1;
 	}
 	//listen => 10 => backlog (当服务器socket已经在监听的时候，内核为“等待被accept的新连接“准备的排队上限）或“等待接受的连接队列长度”
-	if (listen(serverFd, 10) == -1) {
+	if (listen(serverFd, MAX_CONNECTION) == -1) {
 		close(serverFd);
 		return -1;
 	}
@@ -131,14 +131,16 @@ int Server::createListeningSocket(long port) {
 
 //先把 fd 当前的“配置”读出来 → 在原有配置上加一个 NONBLOCK → 再写回去
 int	Server::setNonBlocking(int fd) {
-	int flags;
-	
-	flags = fcntl(fd, F_GETFL, 0);
-	if (flags == -1)
-		return -1;
-	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
+	//int flags;
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 		return -1;
 	return 0;
+	//flags = fcntl(fd, F_GETFL, 0);
+	//if (flags == -1)
+	//	return -1;
+	//if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
+	//	return -1;
+	//return 0;
 }
 
 static void	sigintHandler(int signum) {
@@ -217,20 +219,29 @@ void	Server::acceptNewClient() {
 	clientIp = inet_ntoa(clientAddr.sin_addr);
 	_clients.push_back(Client(clientFd, clientIp));
 	_fds.push_back(clientPoll);
+	if (clientIp == "127.0.0.1")
+		_clients.back().setHostField("localhost");
+	else
+		_clients.back().setHostField(clientIp);
 	std::cout << "[Poll] new client accepted from " << clientIp << ":" << ntohs(clientAddr.sin_port) << std::endl;
 	std::cout << "[OK] client fd " << clientFd << " added to server management." << std::endl;
 }
 
-void	Server::removeClient(size_t index) {
+void	Server::removeClient(size_t index, const std::string &reason) {
 	size_t	clientIndex;
 	int		fd;
+	std::string reasonStr;
 	
 	if (index == 0 || index >= _fds.size())
 		return ;
 	fd = _fds[index].fd;
 	close(fd);
 	clientIndex = index - 1;
-	removeClientFromChannels(fd);
+	if (reason.empty())
+		reasonStr = "Client quit";
+	else
+		reasonStr = reason;
+	removeClientFromChannels(clientIndex, fd, reasonStr);
 	if (clientIndex < _clients.size())
 		_clients.erase(_clients.begin() + clientIndex);
 	_fds.erase(_fds.begin() + index);
@@ -250,13 +261,13 @@ bool	Server::handleClientEvent(size_t index) {
 		throw std::runtime_error("Error: client index out of range.");
 	fd = _fds[index].fd;
 	if (_fds[index].revents & (POLLHUP | POLLERR | POLLNVAL)) {
-		removeClient(index);
+		removeClient(index, "Connection closed");
 		return true;
 	}
 	if (_fds[index].revents & POLLOUT)
 		handleSendBuffer(clientIndex, "");
 	if (_clients[clientIndex].shouldDisconnect() == true) {
-		removeClient(index);
+		removeClient(index, "Connection closed");
 		return true;
 	}
 	if ((_fds[index].revents & POLLIN) == 0)
@@ -264,7 +275,7 @@ bool	Server::handleClientEvent(size_t index) {
 	bytesRead = recv(fd, buffer, 512, 0);
 	if (bytesRead == 0) {
 		std::cout << "[INFO] client fd " << fd << " disconnected." << std::endl;
-		removeClient(index);
+		removeClient(index, "client disconnected");
 		return true;
 	}
 	if (bytesRead == -1) {

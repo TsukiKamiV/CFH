@@ -101,6 +101,10 @@ int		Channel::removeOperator(int clientFd) {
 	return (OPERATOR_NOT_FOUND);
 }
 
+std::vector<int> Channel::getOperatorFds() const {
+	return _operatorFds;
+}
+
 bool	Channel::hasInvite(int clientFd) const {
 	for (size_t i = 0; i < _invitedFds.size(); ++i) {
 		if (_invitedFds[i] == clientFd)
